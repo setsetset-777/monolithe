@@ -43,7 +43,7 @@ body {
   gap: 5em;
   flex-direction: column;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 header {
@@ -90,12 +90,13 @@ main div:not(:last-child):after {
 
 .marbling {
   color: var(--gold);
+  width: 100%;
 }
 
 .marbling svg {
   width: 100%;
   position: absolute;
-  bottom: -3px;
+  bottom: 0;
 }
 
 .marbling--narrow {
@@ -105,22 +106,17 @@ main div:not(:last-child):after {
   bottom: 0;
 }
 
-.marbling--narrow svg {
-  left: -3px;
-  right: -3px;
-}
-
 .marbling--wide {
   display: none;
 }
 
 .marbling--wide svg:first-child {
-  left: -3px;
+  left: 0;
   width: 40em;
 }
 
 .marbling--wide svg:last-child {
-  right: -3px;
+  right: 0;
   width: 15em;
 }
 
