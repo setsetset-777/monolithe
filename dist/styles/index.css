@@ -4,6 +4,8 @@
   --white: #ffffff;
   --font-size-l: 1.5em;
   --font-size-m: 1em;
+  --seperator-before: 1em;
+  --seperator-after: 1.5em;
 }
 
 html,
@@ -22,7 +24,6 @@ body {
   align-items: center;
   padding: 2em;
   box-sizing: border-box;
-  letter-spacing: 0.075rem;
   height: auto;
   min-height: 100%;
   position: relative;
@@ -66,7 +67,7 @@ h2 {
 main {
   display: flex;
   flex-direction: column;
-  gap: 2em;
+  gap: var(--seperator-after);
 }
 
 main div {
@@ -80,7 +81,7 @@ main div:not(:last-child):after {
   display: block;
   width: 2.5em;
   border-bottom: var(--white) solid 1px;
-  padding-bottom: 1.75em;
+  padding-bottom: var(--seperator-before);
 }
 
 .name {
