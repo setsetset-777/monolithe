@@ -124,7 +124,7 @@ main div:not(:last-child):after {
 @media (min-width: 600px) {
   .container {
     padding-top: calc(50vh - 10em);
-    padding-bottom: calc(50vh - 10em);
+    padding-bottom: 9em;
   }
 
   .content {
