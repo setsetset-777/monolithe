@@ -18,9 +18,7 @@
     "@setsetset-777/payloader": "^1.0.0",
     "@types/express": "^5.0.6",
     "ejs": "^4.0.1",
-    "express": "^5.2.1"
-  },
-  "devDependencies": {
+    "express": "^5.2.1",
     "tsx": "^4.21.0"
   }
 }
