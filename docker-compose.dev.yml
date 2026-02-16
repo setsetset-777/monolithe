@@ -1,0 +1,75 @@
+services:
+  client:
+    image: node:24-alpine
+    container_name: monolithe-client
+    working_dir: /workspace
+
+    environment:
+      NODE_ENV: development
+      MANIFEST_FILE: ".vite/manifest.json"
+      MAIN_FILE: "src/js/main.ts"
+      RESET_FILE: "src/styles/reset.scss"
+      CLIENT_DIST: "/workspace/client-dist"
+      CONFIG_DIST: "/workspace/config"
+
+    env_file: ".env"
+
+    command: sh -c "
+      npm i -g pnpm &&
+      pnpm install --ignore-scripts=false &&
+      pnpm --filter client dev"
+
+    volumes:
+      - ./:/workspace
+      - node_modules:/workspace/node_modules
+      - client-dist:/workspace/apps/client/dist
+      - config:/wokrspace/config
+      # Add for local toolbox debugging
+      # - ../toolbox:/workspace/toolbox
+
+    networks:
+      - monolithe
+
+  server:
+    image: node:24-alpine
+    container_name: monolithe-server
+    working_dir: /workspace
+    depends_on:
+      - client
+
+    command: sh -c "
+      npm i -g pnpm &&
+      pnpm install &&
+      pnpm --filter server dev"
+
+    env_file: ".env"
+
+    environment:
+      NODE_ENV: development
+      MANIFEST_FILE: ".vite/manifest.json"
+      MAIN_FILE: "src/js/main.ts"
+      RESET_FILE: "src/styles/reset.scss"
+      CLIENT_DIST: "/workspace/client-dist"
+      CONFIG_DIST: "/workspace/config"
+
+    volumes:
+      - ./:/workspace
+      - node_modules:/workspace/node_modules
+      - client-dist:/workspace/client-dist
+      - config:/wokrspace/config
+      # Add for local toolbox debugging
+      # - ../toolbox:/workspace/toolbox
+
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - monolithe
+
+networks:
+  monolithe:
+    name: monolithe
+
+volumes:
+  client-dist:
+  config:
+  node_modules:

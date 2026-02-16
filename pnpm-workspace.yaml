@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  # Add for local toolbox debugging
+  # - toolbox/packages/*
+
+injectWorkspacePackages: true

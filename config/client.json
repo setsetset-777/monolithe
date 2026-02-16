@@ -1,0 +1,5 @@
+{
+  "manifestFile": ".vite/manifest.json",
+  "mainFile": "src/js/main.ts",
+  "resetFile": "src/styles/reset.scss"
+}
