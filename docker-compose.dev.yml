@@ -1,27 +1,22 @@
 services:
   client:
-    image: node:24-alpine
+    image: node:20-alpine
     container_name: monolithe-client
     working_dir: /workspace
 
     environment:
       NODE_ENV: development
-      MANIFEST_FILE: ".vite/manifest.json"
-      MAIN_FILE: "src/js/main.ts"
-      RESET_FILE: "src/styles/reset.scss"
-      CLIENT_DIST: "/workspace/client-dist"
-      CONFIG_DIST: "/workspace/config"
 
     env_file: ".env"
 
     command: sh -c "
       npm i -g pnpm &&
       pnpm install --ignore-scripts=false &&
+      pnpm --filter client build &&
       pnpm --filter client dev"
 
     volumes:
       - ./:/workspace
-      - node_modules:/workspace/node_modules
       - client-dist:/workspace/apps/client/dist
       - config:/wokrspace/config
       # Add for local toolbox debugging
@@ -31,7 +26,7 @@ services:
       - monolithe
 
   server:
-    image: node:24-alpine
+    image: node:20-alpine
     container_name: monolithe-server
     working_dir: /workspace
     depends_on:
@@ -54,7 +49,6 @@ services:
 
     volumes:
       - ./:/workspace
-      - node_modules:/workspace/node_modules
       - client-dist:/workspace/client-dist
       - config:/wokrspace/config
       # Add for local toolbox debugging

@@ -5,9 +5,9 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "node --watch index.ts",
+    "dev": "tsx --watch index.ts",
     "build": "echo \"build client\"",
-    "start": "node index.ts"
+    "start": "tsx index.ts"
   },
   "keywords": [],
   "author": "",
