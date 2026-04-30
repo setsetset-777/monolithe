@@ -1,10 +1,14 @@
 import "../styles/index.scss";
 
+import { addEmails } from "./scripts/mail";
+
 /**
  * Run main code
  */
 const init = () => {
   console.log("Init monolithe app");
+
+  addEmails();
 };
 
 /**
