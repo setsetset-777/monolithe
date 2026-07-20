@@ -10,15 +10,10 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
-COPY apps/payload/package.json apps/payload/package.json
-
-RUN ls -R
-RUN cat pnpm-workspace.yaml
-RUN find apps -name package.json
-
-RUN npm i -g pnpm@10 && pnpm i --frozen-lockfile;
-
+COPY pnpm-lock.yaml pnpm-workspace.yaml  ./
+RUN npm i -g pnpm@10
+RUN pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN)
+RUN pnpm fetch
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -31,7 +26,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npm i -g pnpm@10 && pnpm --filter ./apps/payload build;
+RUN npm i -g pnpm@10
+RUN pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN)
+RUN pnpm install --offline --frozen-lockfile
+RUN pnpm --filter ./apps/payload build;
 
 # Production image, copy all the files and run next
 FROM base AS runner
