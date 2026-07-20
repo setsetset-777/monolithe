@@ -12,6 +12,11 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
 COPY apps/*/package.json ./apps/*/package.json
+
+RUN ls -R
+RUN cat pnpm-workspace.yaml
+RUN find apps -name package.json
+
 RUN npm i -g pnpm@10 && pnpm i --frozen-lockfile;
 
 
