@@ -14,12 +14,5 @@
   },
   "author": "Loïc Hamet",
   "license": "ISC",
-  "homepage": "https://github.com/setsetset-777/monolithe",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp",
-      "unrs-resolver"
-    ]
-  }
+  "homepage": "https://github.com/setsetset-777/monolithe"
 }

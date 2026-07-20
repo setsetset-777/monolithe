@@ -4,3 +4,7 @@ packages:
   # - toolbox/packages/*
 
 injectWorkspacePackages: true
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
