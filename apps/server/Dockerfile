@@ -14,7 +14,7 @@ RUN npm install -g pnpm
 FROM base AS build
 COPY . .
 RUN --mount=type=secret,id=GITHUB_TOKEN \
-  export GITHUB_TOKEN=$(cat /run/secrets/GITHUB_TOKEN) && \
+  pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN) && \
   pnpm install
 RUN pnpm --filter client build
 
