@@ -6,7 +6,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 ENV CLIENT_DIST=/server/client/dist
 ENV CONFIG_PATH=/server/config
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10
 
 # -------------------------
 # Build
