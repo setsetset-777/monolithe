@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
-COPY apps/*/package.json ./apps/*/package.json
+COPY apps/payload/package.json apps/payload/package.json
 
 RUN ls -R
 RUN cat pnpm-workspace.yaml
