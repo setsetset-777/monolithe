@@ -10,10 +10,12 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY pnpm-lock.yaml pnpm-workspace.yaml  ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc  ./
+COPY apps/*/package.json ./apps/*/
 RUN npm i -g pnpm@10
-RUN pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN)
-RUN pnpm fetch
+RUN --mount=type=secret,id=GITHUB_TOKEN \
+  pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN) && \
+  pnpm fetch
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -27,8 +29,9 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm i -g pnpm@10
-RUN pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN)
-RUN pnpm install --offline --frozen-lockfile
+RUN --mount=type=secret,id=GITHUB_TOKEN \
+  pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN) && \
+  pnpm install --offline --frozen-lockfile
 RUN pnpm --filter ./apps/payload build;
 
 # Production image, copy all the files and run next
