@@ -27,7 +27,7 @@ jobs:
     name: Publish payload
     uses: setsetset-777/toolbox/.github/workflows/docker-publish.yml@main
     with:
-      image_name: ${{ github.repository }}
+      image_name: ${{ github.repository }}-payload
       registry: ghcr.io
       context: .
       dockerfile: apps/payload/Dockerfile
