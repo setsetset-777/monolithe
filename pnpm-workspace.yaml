@@ -4,3 +4,5 @@ packages:
   # - toolbox/packages/*
 
 injectWorkspacePackages: true
+onlyBuiltDependencies:
+  - sharp

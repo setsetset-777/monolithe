@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsx --watch index.ts",
     "build": "echo \"build client\"",
-    "start": "tsx index.ts"
+    "start": "tsx index.ts",
+    "docker-dev": "pnpm dev"
   },
   "keywords": [],
   "author": "",

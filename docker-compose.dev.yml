@@ -1,44 +1,48 @@
 services:
-  client:
-    image: node:20-alpine
-    container_name: monolithe-client
+  install:
+    image: node:22-alpine
     working_dir: /workspace
+    volumes:
+      - ./:/workspace
+      - node_modules:/workspace/node_modules
+      - pnpm_store:/pnpm/store
+    command: >
+      sh -c "
+        npm i -g pnpm@10 &&
+        pnpm config set //npm.pkg.github.com/:_authToken $GITHUB_TOKEN &&
+        pnpm install
+      "
 
-    environment:
-      NODE_ENV: development
-
-    env_file: ".env"
-
-    command: sh -c "
-      npm i -g pnpm &&
-      pnpm install --ignore-scripts=false &&
-      pnpm --filter client build &&
-      pnpm --filter client dev"
-
+  client:
+    image: node:22-alpine
+    working_dir: /workspace
+    command: sh -c "npm i -g pnpm@10 && pnpm --filter client build && pnpm --filter client dev"
+    container_name: monolithe-client
+    depends_on:
+      install:
+        condition: service_completed_successfully
     volumes:
       - ./:/workspace
       - client-dist:/workspace/apps/client/dist
-      - config:/wokrspace/config
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+      # - config:/workspace/config
       # Add for local toolbox debugging
       # - ../toolbox:/workspace/toolbox
-
     networks:
       - monolithe
 
   server:
-    image: node:20-alpine
-    container_name: monolithe-server
+    image: node:22-alpine
     working_dir: /workspace
+    command: sh -c "npm i -g pnpm@10 && pnpm --filter server dev"
+    container_name: monolithe-server
     depends_on:
-      - client
-
-    command: sh -c "
-      npm i -g pnpm &&
-      pnpm install &&
-      pnpm --filter server dev"
-
+      client:
+        condition: service_started
+      install:
+        condition: service_completed_successfully
     env_file: ".env"
-
     environment:
       NODE_ENV: development
       MANIFEST_FILE: ".vite/manifest.json"
@@ -46,16 +50,55 @@ services:
       RESET_FILE: "src/styles/reset.scss"
       CLIENT_DIST: "/workspace/client-dist"
       CONFIG_DIST: "/workspace/config"
-
     volumes:
       - ./:/workspace
       - client-dist:/workspace/client-dist
-      - config:/wokrspace/config
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+      # - config:/workspace/config
       # Add for local toolbox debugging
       # - ../toolbox:/workspace/toolbox
-
     ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
+      - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"
+    networks:
+      - monolithe
+
+  payload:
+    image: node:22-alpine
+    working_dir: /workspace
+    command: sh -c "npm i -g pnpm@10 && pnpm --filter ./apps/payload dev"
+    container_name: monolithe-payload
+    ports:
+      - "${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}"
+    volumes:
+      - ./:/workspace
+      - ./media:/workspace/media
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+    depends_on:
+      mongo:
+        condition: service_started
+      install:
+        condition: service_completed_successfully
+    environment:
+      CI: "true"
+    env_file:
+      - .env
+    networks:
+      - monolithe
+
+  # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
+  mongo:
+    image: mongo:latest
+    # container_name: monolithe-mongo
+    ports:
+      - "${MONGO_PORT:-27017}:${MONGO_PORT:-27017}"
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - data:/data/db
+    logging:
+      driver: none
     networks:
       - monolithe
 
@@ -65,5 +108,7 @@ networks:
 
 volumes:
   client-dist:
-  config:
+  # config:
+  data:
+  pnpm_store:
   node_modules:
