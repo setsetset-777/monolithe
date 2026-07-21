@@ -31,7 +31,6 @@ const getToken = async () => {
   }
 
   try {
-    console.log('fetch token')
     const res = await fetch(`${config.apiUrl}/users/login`, {
       method: 'POST',
       headers: {

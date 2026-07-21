@@ -60,8 +60,7 @@ export const invalidateRoutesManifest = () => {
 }
 
 export const invalidateRoutesManifestHook:
-  | CollectionAfterChangeHook
-  | GlobalAfterChangeHook = () => {
+  CollectionAfterChangeHook | GlobalAfterChangeHook = () => {
   invalidateRoutesManifest()
 }
 
@@ -87,8 +86,6 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
       })
       const doc = global as unknown as Record<string, unknown>
       const parentPath = path || `/${doc[field]}`
-
-      console.log('slug', slug, parentPath)
 
       routes[locale as Locale]![slug] = {
         id: global.id,
@@ -118,7 +115,6 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
           }
         }
       }
-      console.log('routes', routes)
     }
   }
   return routes

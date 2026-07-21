@@ -48,10 +48,8 @@ export const initRouter = async (): Promise<RouterType> => {
       }
 
       /* Handle routes */
-      console.log('generalResponse', 'init')
       const generalResponse = await payloader.fetch('general', null, locale as string)
 
-      console.log('generalResponse', generalResponse)
       const routes: Routes = generalResponse.routes
       const generalData = generalResponse.data
       const route = Object.values(routes).find((value) => value.path === path)
