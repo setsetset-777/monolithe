@@ -21,6 +21,9 @@ services:
     depends_on:
       install:
         condition: service_completed_successfully
+    ports:
+      # Expose vite ports
+      - 5173:5173
     volumes:
       - ./:/workspace
       - client-dist:/workspace/apps/client/dist
@@ -42,14 +45,14 @@ services:
         condition: service_started
       install:
         condition: service_completed_successfully
-    env_file: ".env"
+    env_file: '.env'
     environment:
       NODE_ENV: development
-      MANIFEST_FILE: ".vite/manifest.json"
-      MAIN_FILE: "src/js/main.ts"
-      RESET_FILE: "src/styles/reset.scss"
-      CLIENT_DIST: "/workspace/client-dist"
-      CONFIG_DIST: "/workspace/config"
+      MANIFEST_FILE: '.vite/manifest.json'
+      MAIN_FILE: 'src/js/main.ts'
+      RESET_FILE: 'src/styles/reset.scss'
+      CLIENT_DIST: '/workspace/client-dist'
+      CONFIG_DIST: '/workspace/config'
     volumes:
       - ./:/workspace
       - client-dist:/workspace/client-dist
@@ -59,7 +62,7 @@ services:
       # Add for local toolbox debugging
       # - ../toolbox:/workspace/toolbox
     ports:
-      - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"
+      - '${SERVER_PORT:-3000}:${SERVER_PORT:-3000}'
     networks:
       - monolithe
 
@@ -69,7 +72,7 @@ services:
     command: sh -c "npm i -g pnpm@10 && pnpm --filter ./apps/payload dev"
     container_name: monolithe-payload
     ports:
-      - "${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}"
+      - '${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}'
     volumes:
       - ./:/workspace
       - ./media:/workspace/media
@@ -81,7 +84,7 @@ services:
       install:
         condition: service_completed_successfully
     environment:
-      CI: "true"
+      CI: 'true'
     env_file:
       - .env
     networks:
@@ -92,7 +95,7 @@ services:
     image: mongo:latest
     # container_name: monolithe-mongo
     ports:
-      - "${MONGO_PORT:-27017}:${MONGO_PORT:-27017}"
+      - '${MONGO_PORT:-27017}:${MONGO_PORT:-27017}'
     command:
       - --storageEngine=wiredTiger
     volumes:

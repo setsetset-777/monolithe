@@ -1,17 +1,19 @@
-import "../styles/index.scss";
+import '../styles/index.scss'
 
-import { addEmails } from "./scripts/mail";
+import './components'
+
+import { addEmails } from './scripts/mail'
 
 /**
  * Run main code
  */
 const init = () => {
-  console.log("Init monolithe app");
+  console.log('Init monolithe app')
 
-  addEmails();
-};
+  addEmails()
+}
 
 /**
  * Execute script on DOM ready
  */
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener('DOMContentLoaded', init)

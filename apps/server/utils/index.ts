@@ -1,13 +1,13 @@
-import path from "path";
-import fs from "fs";
+import path from 'path'
+import fs from 'fs'
 
-import config from "./config.ts";
+import config from './config.ts'
 
-export const clientDistPath = process.env.CLIENT_DIST || "../client/dist";
+export const clientDistPath = process.env.CLIENT_DIST || '../client/dist'
 
-export const clientAssetsPath = path.join(clientDistPath, "assets");
+export const clientAssetsPath = path.join(clientDistPath, 'assets')
 
-const { manifestFile, mainFile, resetFile } = config.client;
+const { manifestFile, mainFile } = config.client
 
 /**
  * Returns client assets access details
@@ -15,20 +15,17 @@ const { manifestFile, mainFile, resetFile } = config.client;
 export const getAssetsDetails = (
   clientDistPath: string,
 ): {
-  mainJs: string;
-  mainCss: string;
-  resetCss: string;
+  mainJs: string
+  mainCss: string
 } => {
-  const manifest = JSON.parse(
-    fs.readFileSync(path.join(clientDistPath, manifestFile), "utf-8"),
-  );
+  const manifest = JSON.parse(fs.readFileSync(path.join(clientDistPath, manifestFile), 'utf-8'))
 
-  const main = manifest[mainFile];
-  const reset = manifest[resetFile];
+  console.log('manifest', manifest)
+
+  const main = manifest[mainFile]
 
   return {
     mainJs: `/${main.file}`,
     mainCss: `/${main.css[0]}`,
-    resetCss: `/${reset.file}`,
-  };
-};
+  }
+}

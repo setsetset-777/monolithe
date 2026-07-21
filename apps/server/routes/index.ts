@@ -5,7 +5,6 @@ import type { Request, Response, NextFunction } from 'express'
 import payloader from '@packages/api'
 import logger from '@packages/logger'
 
-import { getAssetsDetails, clientDistPath } from '../utils/index.ts'
 import { getLocales } from '../utils/locales.ts'
 import type { HttpError, Locale } from '../types/index.ts'
 
@@ -18,18 +17,6 @@ type Routes = { [key: string]: Route }
 
 export const initRouter = async (): Promise<RouterType> => {
   const router = Router()
-
-  const { mainJs, mainCss, resetCss } = getAssetsDetails(clientDistPath)
-  const viewData = {
-    mainJs,
-    mainCss,
-    resetCss,
-    analytics: {
-      enable: process.env.ANALYTICS_ENABLE === 'true',
-      domain: process.env.ANALYTICS_DOMAIN,
-      id: process.env.ANALYTICS_ID,
-    },
-  }
 
   router.get('/{*paths}', async (req, res, next) => {
     const paths = req.params.paths || []
@@ -69,7 +56,6 @@ export const initRouter = async (): Promise<RouterType> => {
       const pageData = await payloader.global(slug, locale)
 
       res.render('main', {
-        ...viewData,
         pageSlug: route.slug,
         generalData,
         menu,
@@ -97,7 +83,6 @@ export const initRouter = async (): Promise<RouterType> => {
         process.env.NODE_ENV === 'production'
           ? 'Something went wrong. Please try again later.'
           : err.message,
-      ...viewData,
     })
   })
 

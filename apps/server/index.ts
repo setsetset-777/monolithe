@@ -6,7 +6,9 @@ import payloader from '@packages/api'
 import logger from '@packages/logger'
 
 import { initRouter } from './routes/index.ts'
-import { clientAssetsPath } from './utils/index.ts'
+import { clientAssetsPath, getAssetsDetails, clientDistPath } from './utils/index.ts'
+
+const { mainJs, mainCss } = getAssetsDetails(clientDistPath)
 
 payloader.init({
   enable: process.env.PAYLOAD_ENABLE === 'true',
@@ -17,6 +19,17 @@ payloader.init({
 })
 
 const app = express()
+
+app.locals.mainJs =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:5173/src/js/main.ts' : mainJs
+// In development styles are inject by vite via the above script
+app.locals.mainCss = process.env.NODE_ENV !== 'development' ? mainCss : null
+app.locals.analytics = {
+  enable: process.env.ANALYTICS_ENABLE === 'true',
+  domain: process.env.ANALYTICS_DOMAIN,
+  id: process.env.ANALYTICS_ID,
+}
+
 const router = await initRouter()
 
 const __filename = fileURLToPath(import.meta.url)

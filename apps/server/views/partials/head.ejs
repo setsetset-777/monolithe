@@ -22,8 +22,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-dark-32x32.png" media="(prefers-color-scheme: dark)">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-dark.png" media="(prefers-color-scheme: dark)">
 
-  <link href="<%= resetCss %>" rel="stylesheet" />
+  <% if (mainCss) {%>
   <link href="<%= mainCss %>" rel="stylesheet" />
+  <% } %>
 
   <script type="module" src="<%= mainJs %>"></script>
 
