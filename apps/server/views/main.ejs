@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+
+<%- include('./partials/head') %>
+
+<body data-theme="light">
+  <%- include('./partials/svgs') %>
+
+  <div class="container">
+    <%- include('./partials/menu') %>
+
+    <div data-react="content">
+      <%- include(`./pages/${pageSlug}`) %>
+    </div>
+
+    <%- include('./partials/footer') %>
+  </div>
+</body>
+</html>

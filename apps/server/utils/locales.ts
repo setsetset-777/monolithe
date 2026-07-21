@@ -1,21 +1,26 @@
-import payloader from "@setsetset-777/payloader";
+import payloader from '@packages/api'
+import logger from '@packages/logger'
 
-type LocaleCode = string;
+type LocaleCode = string
 
 export type Locales = {
-  localeCodes: LocaleCode[];
-  defaultLocale: LocaleCode;
-};
+  localeCodes: LocaleCode[]
+  defaultLocale: LocaleCode
+}
 
 export const getLocales: () => Promise<Locales> = async () => {
-  let locales = {
-    localeCodes: ["en"],
-    defaultLocale: "en",
-  };
+  try {
+    let locales = {
+      localeCodes: ['en'],
+      defaultLocale: 'en',
+    }
 
-  if (process.env.PAYLOAD_ENABLE) {
-    locales = (await payloader.locales()) as Locales;
+    if (process.env.PAYLOAD_ENABLE) {
+      locales = (await payloader.locales()) as Locales
+    }
+
+    return locales
+  } catch (e) {
+    throw e
   }
-
-  return locales;
-};
+}

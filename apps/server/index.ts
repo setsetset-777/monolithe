@@ -2,8 +2,8 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import payloader from '@setsetset-777/payloader'
-import logger from '@setsetset-777/logger'
+import payloader from '@packages/api'
+import logger from '@packages/logger'
 
 import { initRouter } from './routes/index.ts'
 import { clientAssetsPath } from './utils/index.ts'

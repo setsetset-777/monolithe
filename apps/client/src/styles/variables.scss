@@ -1,9 +1,25 @@
 :root {
-  --black: #1e1e1e;
-  --gold: #d4af37;
-  --white: #ffffff;
-  --font-size-l: 1.5em;
-  --font-size-m: 1em;
-  --seperator-before: 1em;
-  --seperator-after: 1.5em;
+  // COLORS
+  --color-gray-00: #ffffff;
+  --color-gray-10: #b4b4b4;
+  --color-gray-20: #a9a9a9;
+  --color-gray-50: #292929;
+  --color-gray-100: #1e1e1e;
+  --color-gold-10: #ffe14b;
+  --color-gold-20: #fed81d;
+  --color-gold-30: #d4af37;
+  --color-gold-40: #ab9420;
+  --color-gold-50: #6d5d0d;
+
+  // TYPOGRAPHY
+  --font-size-xs: 12rem;
+  --font-size-s: 16rem;
+  --font-size-m: 18rem;
+  --font-size-l: 24rem;
+  --font-size-xl: 32rem;
+  --font-size-xxl: 48rem;
+  --font-size-xxxl: 64rem;
+  --font-family-heading: Fenix, Garamond, serif;
+  --font-family-body: "DM Sans", "Helvetica Neu", Helvetica, sans-serif;
+  --font-family-mono: "DM Mono", Monaco, courrier;
 }
