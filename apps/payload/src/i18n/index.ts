@@ -1,0 +1,45 @@
+import type { LocalizationConfig } from 'payload'
+import type { TFunction } from '@payloadcms/translations'
+import { enTranslations } from '@payloadcms/translations/languages/en'
+import { frTranslations } from '@payloadcms/translations/languages/fr'
+import type { NestedKeysStripped } from '@payloadcms/translations'
+
+export const localization: LocalizationConfig = {
+  locales: ['fr'],
+  defaultLocale: 'fr',
+}
+
+export const localizedLabels = {
+  groups: {
+    pages: {
+      fr: 'Pages',
+      en: 'Pages',
+    },
+  },
+}
+
+export const customTranslations = {
+  en: {
+    validation: {
+      uniqueUrlSlug: 'The URL segment already exists.',
+    },
+  },
+  fr: {
+    general: {
+      globals: 'Globales',
+      createNew: 'Ajouter',
+      createNewLabel: 'Ajouter',
+    },
+    validation: {
+      uniqueUrlSlug: "Le segment d'URL existe déjà",
+    },
+  },
+}
+
+export type CustomTranslationsObject = typeof customTranslations.en &
+  typeof frTranslations &
+  typeof enTranslations
+
+export type CustomTranslationsKeys = NestedKeysStripped<CustomTranslationsObject>
+
+export type CustomTFunction = TFunction<CustomTranslationsKeys>

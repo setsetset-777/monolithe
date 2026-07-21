@@ -69,6 +69,11 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    mediaTags: MediaTag;
+    services: Service;
+    projects: Project;
+    parutions: Parution;
+    testimonials: Testimonial;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +83,11 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    mediaTags: MediaTagsSelect<false> | MediaTagsSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    parutions: ParutionsSelect<false> | ParutionsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -86,10 +96,24 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | 'fr' | 'fr'[];
+  globals: {
+    general: General;
+    pageHome: PageHome;
+    pagePresentation: PagePresentation;
+    pageServices: PageService;
+    pageProjects: PageProject;
+    pageContact: PageContact;
+  };
+  globalsSelect: {
+    general: GeneralSelect<false> | GeneralSelect<true>;
+    pageHome: PageHomeSelect<false> | PageHomeSelect<true>;
+    pagePresentation: PagePresentationSelect<false> | PagePresentationSelect<true>;
+    pageServices: PageServicesSelect<false> | PageServicesSelect<true>;
+    pageProjects: PageProjectsSelect<false> | PageProjectsSelect<true>;
+    pageContact: PageContactSelect<false> | PageContactSelect<true>;
+  };
+  locale: 'fr';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -149,6 +173,7 @@ export interface User {
 export interface Media {
   id: string;
   alt: string;
+  tags?: (string | MediaTag)[] | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -160,6 +185,89 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mediaTags".
+ */
+export interface MediaTag {
+  id: string;
+  label: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: string;
+  label?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: string;
+  title?: string | null;
+  urlSlug?: string | null;
+  description?: string | null;
+  service?: (string | null) | Service;
+  date?: number | null;
+  /**
+   * The image used to represent the project, eg. on the project list or the project hero.
+   */
+  mainImage?: (string | null) | Media;
+  gallery?:
+    | {
+        /**
+         * Images on this row will display next to each others on screens wide enough
+         */
+        'gallery-row'?:
+          | {
+              images?: (string | null) | Media;
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "parutions".
+ */
+export interface Parution {
+  id: string;
+  title?: string | null;
+  publisher?: string | null;
+  type?: ('paper' | 'web' | 'video') | null;
+  date?: string | null;
+  link?: string | null;
+  thumbnail?: (string | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: string;
+  name?: string | null;
+  description?: string | null;
+  /**
+   * Set to 'Private' for private clients.
+   */
+  company?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -192,6 +300,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'mediaTags';
+        value: string | MediaTag;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: string | Service;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: string | Project;
+      } | null)
+    | ({
+        relationTo: 'parutions';
+        value: string | Parution;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: string | Testimonial;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -263,6 +391,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  tags?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -274,6 +403,75 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mediaTags_select".
+ */
+export interface MediaTagsSelect<T extends boolean = true> {
+  label?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  label?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  urlSlug?: T;
+  description?: T;
+  service?: T;
+  date?: T;
+  mainImage?: T;
+  gallery?:
+    | T
+    | {
+        'gallery-row'?:
+          | T
+          | {
+              images?: T;
+              description?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "parutions_select".
+ */
+export interface ParutionsSelect<T extends boolean = true> {
+  title?: T;
+  publisher?: T;
+  type?: T;
+  date?: T;
+  link?: T;
+  thumbnail?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  company?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +512,400 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "general".
+ */
+export interface General {
+  id: string;
+  navigation?: {
+    navigationList?: ('pagePresentation' | 'pageServices' | 'pageProjects' | 'pageContact')[] | null;
+    /**
+     * This label is used for assistive technologies and won't be displayed
+     */
+    homeLinkLabel?: string | null;
+  };
+  footer?: {
+    logoCatch?: string | null;
+    contactText?: string | null;
+    contactLabel?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageHome".
+ */
+export interface PageHome {
+  id: string;
+  presentation?: {
+    catch?: string | null;
+    linkLabel?: string | null;
+    heroImage?: (string | null) | Media;
+  };
+  services?: {
+    title?: string | null;
+    pageLinkLabel?: string | null;
+  };
+  projects?: {
+    title?: string | null;
+    pageLlinkLabel?: string | null;
+    highlightedProjects?:
+      | {
+          project?: (string | null) | Project;
+          /**
+           * By default the displayed image will be the main one from the project. It is possible to upload an alternative one.
+           */
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pagePresentation".
+ */
+export interface PagePresentation {
+  id: string;
+  title?: string | null;
+  urlSlug?: string | null;
+  heroImage?: (string | null) | Media;
+  monolithePresentation?: string | null;
+  sections?:
+    | (
+        | {
+            title?: string | null;
+            text?: string | null;
+            image?: (string | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textWithTitleBlock';
+          }
+        | {
+            title?: string | null;
+            values?:
+              | {
+                  title?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'listBlock';
+          }
+        | {
+            title?: string | null;
+            parutionList?:
+              | {
+                  parution?: (string | null) | Parution;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'parutionsBlock';
+          }
+        | {
+            title?: string | null;
+            testimonialsList?:
+              | {
+                  testimonial?: (string | null) | Testimonial;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'testimonialsBlock';
+          }
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageServices".
+ */
+export interface PageService {
+  id: string;
+  title?: string | null;
+  urlSlug?: string | null;
+  heroImage?: (string | null) | Media;
+  sections?:
+    | (
+        | {
+            service?: (string | null) | Service;
+            description?: string | null;
+            'link-label'?: string | null;
+            image?: (string | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'singleLevelBlock';
+          }
+        | {
+            service?: (string | null) | Service;
+            description?: string | null;
+            linkLabel?: string | null;
+            subsections?:
+              | {
+                  title?: string | null;
+                  description?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'oneLevelBblock';
+          }
+      )[]
+    | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageProjects".
+ */
+export interface PageProject {
+  id: string;
+  title?: string | null;
+  urlSlug?: string | null;
+  heroImage?: (string | null) | Media;
+  backLinkLabel?: string | null;
+  projects?: (string | Project)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageContact".
+ */
+export interface PageContact {
+  id: string;
+  title?: string | null;
+  urlSlug?: string | null;
+  heroImage?: (string | null) | Media;
+  place?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  form?: {
+    title?: string | null;
+    introduction?: string | null;
+    actionLabel?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "general_select".
+ */
+export interface GeneralSelect<T extends boolean = true> {
+  navigation?:
+    | T
+    | {
+        navigationList?: T;
+        homeLinkLabel?: T;
+      };
+  footer?:
+    | T
+    | {
+        logoCatch?: T;
+        contactText?: T;
+        contactLabel?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageHome_select".
+ */
+export interface PageHomeSelect<T extends boolean = true> {
+  presentation?:
+    | T
+    | {
+        catch?: T;
+        linkLabel?: T;
+        heroImage?: T;
+      };
+  services?:
+    | T
+    | {
+        title?: T;
+        pageLinkLabel?: T;
+      };
+  projects?:
+    | T
+    | {
+        title?: T;
+        pageLlinkLabel?: T;
+        highlightedProjects?:
+          | T
+          | {
+              project?: T;
+              image?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pagePresentation_select".
+ */
+export interface PagePresentationSelect<T extends boolean = true> {
+  title?: T;
+  urlSlug?: T;
+  heroImage?: T;
+  monolithePresentation?: T;
+  sections?:
+    | T
+    | {
+        textWithTitleBlock?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
+        listBlock?:
+          | T
+          | {
+              title?: T;
+              values?:
+                | T
+                | {
+                    title?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        parutionsBlock?:
+          | T
+          | {
+              title?: T;
+              parutionList?:
+                | T
+                | {
+                    parution?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        testimonialsBlock?:
+          | T
+          | {
+              title?: T;
+              testimonialsList?:
+                | T
+                | {
+                    testimonial?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageServices_select".
+ */
+export interface PageServicesSelect<T extends boolean = true> {
+  title?: T;
+  urlSlug?: T;
+  heroImage?: T;
+  sections?:
+    | T
+    | {
+        singleLevelBlock?:
+          | T
+          | {
+              service?: T;
+              description?: T;
+              'link-label'?: T;
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
+        oneLevelBblock?:
+          | T
+          | {
+              service?: T;
+              description?: T;
+              linkLabel?: T;
+              subsections?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageProjects_select".
+ */
+export interface PageProjectsSelect<T extends boolean = true> {
+  title?: T;
+  urlSlug?: T;
+  heroImage?: T;
+  backLinkLabel?: T;
+  projects?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pageContact_select".
+ */
+export interface PageContactSelect<T extends boolean = true> {
+  title?: T;
+  urlSlug?: T;
+  heroImage?: T;
+  place?: T;
+  email?: T;
+  phone?: T;
+  form?:
+    | T
+    | {
+        title?: T;
+        introduction?: T;
+        actionLabel?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

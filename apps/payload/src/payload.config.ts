@@ -1,12 +1,31 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, GlobalSlug, TypedLocale } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
-import { Media } from './collections/Media'
+import { en } from '@payloadcms/translations/languages/en'
+import { fr } from '@payloadcms/translations/languages/fr'
+
+import { Users } from '@/collections/Users'
+import { Media } from '@/collections/Media'
+import { MediaTags } from '@/collections/MediaTags'
+import { Services } from '@/collections/Services'
+import { Projects } from '@/collections/Projects'
+import { Parutions } from '@/collections/Parutions'
+import { Testimonials } from '@/collections/Testimonials'
+
+import { General } from '@/globals/General'
+import { PageHome } from '@/globals/PageHome'
+import { PagePresentation } from '@/globals/PagePresentation'
+import { PageServices } from '@/globals/PageServices'
+import { PageProjects } from '@/globals/PageProjects'
+import { PageContact } from '@/globals/PageContact'
+
+import { localization, customTranslations } from '@/i18n'
+import { getRoutes } from './helpers/routes'
+import { Locale } from '@/types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,8 +36,20 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    autoLogin:
+      process.env.NODE_ENV === 'development'
+        ? {
+            email: process.env.ADMIN_EMAIL,
+          }
+        : false,
   },
-  collections: [Users, Media],
+  i18n: {
+    supportedLanguages: { en, fr },
+    translations: customTranslations,
+  },
+  localization,
+  collections: [Users, Media, MediaTags, Services, Projects, Parutions, Testimonials],
+  globals: [General, PageHome, PagePresentation, PageServices, PageProjects, PageContact],
   routes: {
     admin: '/',
   },
@@ -32,4 +63,25 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  endpoints: [
+    {
+      path: '/locales',
+      method: 'get',
+      handler: async (req) => {
+        return Response.json(localization)
+      },
+    },
+    {
+      path: '/general',
+      method: 'get',
+      handler: async (req) => {
+        const locale = (req.locale as Locale) ?? localization.defaultLocale
+        const routes = await getRoutes(req.payload, locale)
+        return Response.json({
+          routes: routes,
+          data: await req.payload.findGlobal({ slug: 'general' }),
+        })
+      },
+    },
+  ],
 })
