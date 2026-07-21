@@ -19,6 +19,9 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
+  routes: {
+    admin: '/',
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
