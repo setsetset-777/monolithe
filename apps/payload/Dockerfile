@@ -12,6 +12,7 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc  ./
 COPY apps/*/package.json ./apps/*/
+COPY packages/*/package.json ./packages/*/
 RUN npm i -g pnpm@10
 RUN --mount=type=secret,id=GITHUB_TOKEN \
   pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN) && \
