@@ -19,6 +19,7 @@
     "docker-dev": "pnpm dev"
   },
   "dependencies": {
+    "@packages/types": "workspace:*",
     "@payloadcms/db-mongodb": "3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",

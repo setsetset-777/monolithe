@@ -17,6 +17,7 @@
   "dependencies": {
     "@packages/api": "workspace:*",
     "@packages/logger": "workspace:*",
+    "@packages/types": "workspace:*",
     "@setsetset-777/logger": "^1.0.0",
     "@setsetset-777/payloader": "^1.0.0",
     "@types/express": "^5.0.6",

@@ -1,5 +1,4 @@
 import payloader from '@packages/api'
-import logger from '@packages/logger'
 
 type LocaleCode = string
 

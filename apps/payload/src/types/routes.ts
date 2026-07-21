@@ -1,17 +1,5 @@
-import { TypedLocale, GlobalSlug, CollectionSlug } from 'payload'
-
-export type Locale = TypedLocale
-
-export type Route = {
-  id: string
-  path: string
-  slug: GlobalSlug | CollectionSlug
-  urlSlug: string
-  parent?: GlobalSlug | CollectionSlug
-  title: string
-}
-
-export type Routes = Partial<Record<Locale, { [key: string]: Route }>>
+import type { GlobalSlug, CollectionSlug } from 'payload'
+import type { Routes } from '@packages/types'
 
 export type Manifest = {
   generatedAt: number

@@ -23,6 +23,9 @@ importers:
 
   apps/payload:
     dependencies:
+      '@packages/types':
+        specifier: workspace:*
+        version: file:packages/types(graphql@16.14.2)(typescript@5.7.3)
       '@payloadcms/db-mongodb':
         specifier: 3.86.0
         version: 3.86.0(payload@3.86.0(graphql@16.14.2)(typescript@5.7.3))
@@ -114,6 +117,9 @@ importers:
       '@packages/logger':
         specifier: workspace:*
         version: link:../../packages/logger
+      '@packages/types':
+        specifier: workspace:*
+        version: file:packages/types(graphql@16.14.2)
       '@setsetset-777/logger':
         specifier: ^1.0.0
         version: 1.0.0
@@ -140,6 +146,12 @@ importers:
         version: link:../logger
 
   packages/logger: {}
+
+  packages/types:
+    dependencies:
+      payload:
+        specifier: 3.86.0
+        version: 3.86.0(graphql@16.14.2)(typescript@5.9.3)
 
 packages:
 
@@ -1230,6 +1242,9 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@packages/types@file:packages/types':
+    resolution: {directory: packages/types, type: directory}
 
   '@parcel/watcher-android-arm64@2.5.6':
     resolution: {integrity: sha512-YQxSS34tPF/6ZG7r/Ih9xy+kP/WwediEUsqmtf0cuCV5TPPKw/PQHRhueUo6JdeFJaqV3pyjm0GdYjZotbRt/A==}
@@ -5477,6 +5492,26 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@packages/types@file:packages/types(graphql@16.14.2)':
+    dependencies:
+      payload: 3.86.0(graphql@16.14.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@packages/types@file:packages/types(graphql@16.14.2)(typescript@5.7.3)':
+    dependencies:
+      payload: 3.86.0(graphql@16.14.2)(typescript@5.7.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - graphql
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   '@parcel/watcher-android-arm64@2.5.6':
     optional: true
 
@@ -6828,7 +6863,7 @@ snapshots:
       eslint: 9.39.5
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint@9.39.5))(eslint@9.39.5)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint@9.39.5))(eslint@9.39.5))(eslint@9.39.5)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.5)
       eslint-plugin-react: 7.37.5(eslint@9.39.5)
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5)
@@ -6861,7 +6896,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.12.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint@9.39.5))(eslint@9.39.5))(eslint@9.39.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -6876,7 +6911,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.64.0(eslint@9.39.5)(typescript@5.7.3))(eslint@9.39.5))(eslint@9.39.5))(eslint@9.39.5):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -8156,6 +8191,46 @@ snapshots:
 
   pathe@2.0.3: {}
 
+  payload@3.86.0(graphql@16.14.2):
+    dependencies:
+      '@next/env': 15.5.20
+      '@payloadcms/translations': 3.86.0
+      '@types/busboy': 1.5.4
+      ajv: 8.18.0
+      bson-objectid: 2.0.4
+      busboy: 1.6.0
+      ci-info: 4.4.0
+      console-table-printer: 2.12.1
+      croner: 10.0.1
+      dataloader: 2.2.3
+      deepmerge: 4.3.1
+      file-type: 21.3.4
+      get-tsconfig: 4.8.1
+      graphql: 16.14.2
+      http-status: 2.1.0
+      image-size: 2.0.2
+      ipaddr.js: 2.2.0
+      jose: 5.10.0
+      json-schema-to-typescript: 15.0.3
+      minimist: 1.2.8
+      path-to-regexp: 6.3.0
+      pino: 9.14.0
+      pino-pretty: 13.1.2
+      pluralize: 8.0.0
+      qs-esm: 8.0.1
+      range-parser: 1.2.1
+      sanitize-filename: 1.6.3
+      ts-essentials: 10.0.3(typescript@5.9.3)
+      tsx: 4.22.4
+      undici: 7.28.0
+      uuid: 13.0.2
+      ws: 8.21.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   payload@3.86.0(graphql@16.14.2)(typescript@5.7.3):
     dependencies:
       '@next/env': 15.5.20
@@ -8186,6 +8261,46 @@ snapshots:
       range-parser: 1.2.1
       sanitize-filename: 1.6.3
       ts-essentials: 10.0.3(typescript@5.7.3)
+      tsx: 4.22.4
+      undici: 7.28.0
+      uuid: 13.0.2
+      ws: 8.21.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  payload@3.86.0(graphql@16.14.2)(typescript@5.9.3):
+    dependencies:
+      '@next/env': 15.5.20
+      '@payloadcms/translations': 3.86.0
+      '@types/busboy': 1.5.4
+      ajv: 8.18.0
+      bson-objectid: 2.0.4
+      busboy: 1.6.0
+      ci-info: 4.4.0
+      console-table-printer: 2.12.1
+      croner: 10.0.1
+      dataloader: 2.2.3
+      deepmerge: 4.3.1
+      file-type: 21.3.4
+      get-tsconfig: 4.8.1
+      graphql: 16.14.2
+      http-status: 2.1.0
+      image-size: 2.0.2
+      ipaddr.js: 2.2.0
+      jose: 5.10.0
+      json-schema-to-typescript: 15.0.3
+      minimist: 1.2.8
+      path-to-regexp: 6.3.0
+      pino: 9.14.0
+      pino-pretty: 13.1.2
+      pluralize: 8.0.0
+      qs-esm: 8.0.1
+      range-parser: 1.2.1
+      sanitize-filename: 1.6.3
+      ts-essentials: 10.0.3(typescript@5.9.3)
       tsx: 4.22.4
       undici: 7.28.0
       uuid: 13.0.2
@@ -8965,6 +9080,10 @@ snapshots:
   ts-essentials@10.0.3(typescript@5.7.3):
     optionalDependencies:
       typescript: 5.7.3
+
+  ts-essentials@10.0.3(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
 
   tsconfck@3.1.6(typescript@5.7.3):
     optionalDependencies:

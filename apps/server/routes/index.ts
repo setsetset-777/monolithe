@@ -6,7 +6,8 @@ import payloader from '@packages/api'
 import logger from '@packages/logger'
 
 import { getLocales } from '../utils/locales.ts'
-import type { HttpError, Locale } from '../types/index.ts'
+import type { HttpError } from '../types/index.ts'
+import type { Locale } from '@packages/types'
 
 type Route = {
   path: string
