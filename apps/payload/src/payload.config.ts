@@ -79,7 +79,10 @@ export default buildConfig({
         const routes = await getRoutes(req.payload, locale)
         return Response.json({
           routes: routes,
-          data: await req.payload.findGlobal({ slug: 'general' }),
+          data: {
+            ...(await req.payload.findGlobal({ slug: 'general' })),
+            services: (await req.payload.find({ collection: 'services' })).docs,
+          },
         })
       },
     },

@@ -20,8 +20,6 @@ export const getAssetsDetails = (
 } => {
   const manifest = JSON.parse(fs.readFileSync(path.join(clientDistPath, manifestFile), 'utf-8'))
 
-  console.log('manifest', manifest)
-
   const main = manifest[mainFile]
 
   return {

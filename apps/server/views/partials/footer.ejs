@@ -2,15 +2,7 @@
   <div class="footer__container">
     <div class="footer__column">
       <div class="footer__header footer-logo">
-        <svg
-          width="86"
-          viewBox="0 0 172 91"
-          version="2.0"
-          class=" footer-logo__svg"
-          alt="Monolithe"
-        >
-          <use href="#svg-logo" />
-        </svg>
+        <%- include('svgs/logo') %>
         <h4 class=" footer-logo__catch">
           <%- generalData.footer.logoCatch %>
         </h4>
@@ -29,7 +21,24 @@
       </div>
     </div>
     <div class="footer__column">
-
+      <div class="footer-services">
+        <h4 class="footer-services__title">
+          <%- routes.pageServices.title %>
+        </h4>
+        <ul>
+          <% for (let {label} of generalData.services) { %>
+            <li>
+              <a href="<%- routes.pageServices.path %>#<%-encodeURIComponent(label) %>">
+                <%- label %>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <p class="footer-777 777">
+        <span>Design & Code par</span>
+        <%- include('svgs/777', { class: "menu__logo", width: "114" }) %>
+      </p>
     </div>
   </div>
 </footer>
