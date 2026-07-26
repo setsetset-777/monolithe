@@ -1,0 +1,5 @@
+@mixin transition($property, $type: short) {
+  @if $type == short {
+    transition: #{$property} var(--ease-time-short) var(--ease-function);
+  }
+}

@@ -1,0 +1,9 @@
+@use 'component';
+
+@layer reset {
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+  }
+}

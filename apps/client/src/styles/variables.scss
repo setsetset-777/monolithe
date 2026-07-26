@@ -1,10 +1,12 @@
+@use "./utilities/functions";
+
 :root {
-  // COLORS
-  --color-gray-00: #ffffff;
+  // COLOR
   --color-gray-10: #b4b4b4;
   --color-gray-20: #a9a9a9;
   --color-gray-50: #292929;
   --color-gray-100: #1e1e1e;
+  --color-gray-00: #ffffff;
   --color-gold-10: #ffe14b;
   --color-gold-20: #fed81d;
   --color-gold-30: #d4af37;
@@ -12,14 +14,21 @@
   --color-gold-50: #6d5d0d;
 
   // TYPOGRAPHY
-  --font-size-xs: 12rem;
-  --font-size-s: 16rem;
-  --font-size-m: 18rem;
-  --font-size-l: 24rem;
-  --font-size-xl: 32rem;
-  --font-size-xxl: 48rem;
-  --font-size-xxxl: 64rem;
+  --font-size-base: #{functions.pxToRem(18px)};
+  --font-size-xs: #{functions.pxToRem(12px)};
+  --font-size-s: #{functions.pxToRem(16px)};
+  --font-size-m: #{functions.pxToRem(18px)};
+  --font-size-l: #{functions.pxToRem(24px)};
+  --font-size-xl: #{functions.pxToRem(32px)};
+  --font-size-xxl: #{functions.pxToRem(48px)};
+  --font-size-xxxl: #{functions.pxToRem(64px)};
   --font-family-heading: Fenix, Garamond, serif;
   --font-family-body: 'DM Sans', 'Helvetica Neu', Helvetica, sans-serif;
   --font-family-mono: 'DM Mono', Monaco, courrier;
+
+  // EASING
+  --ease-time-short: 150ms;
+  --ease-function: ease-in-out;
+
+  --width-container-max: 900px;
 }

@@ -1,0 +1,21 @@
+<div class="sidebar">
+  <div class="sidebar__container">
+    <div class="sidebar__content">
+      <a href="<%- routes.pageHome.path %>" aria-label="<%- generalData.navigation.homeLinkLabel %>">
+        <%- include('svgs/logo', { class: "logo"}) %>
+      </a>
+      <%- include('separator') %>
+      <nav class="menu">
+        <ul class="menu__list">
+          <% for (let {title, path} of menu) {%>
+            <li class="menu__item">
+              <a class="menu__link" href="<%= path %>">
+                <%= title %>
+              </a>
+          <% } %>
+        </ul>
+      </nav>
+      <%- include('separator') %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+@layer modules {
+
+  .separator {
+    $height: 0.125rem;
+    display: flex;
+    gap: 0.5rem;
+
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      width: $height;
+      height: $height;
+      background-color: currentColor;
+      transform: rotate(45deg);
+    }
+
+    div {
+      height: $height;
+      width: 5rem;
+      background-color: currentColor;
+    }
+  }
+
+}
