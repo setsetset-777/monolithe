@@ -48,8 +48,8 @@ export default buildConfig({
     translations: customTranslations,
   },
   localization,
-  collections: [Users, Media, MediaTags, Services, Projects, Parutions, Testimonials],
   globals: [General, PageHome, PagePresentation, PageServices, PageProjects, PageContact],
+  collections: [Users, Media, MediaTags, Services, Projects, Parutions, Testimonials],
   routes: {
     admin: '/',
   },

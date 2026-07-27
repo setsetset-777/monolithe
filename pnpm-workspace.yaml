@@ -4,6 +4,10 @@ packages:
   # Add for local toolbox debugging
   # - toolbox/packages/*
 
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
 injectWorkspacePackages: true
 onlyBuiltDependencies:
   - esbuild

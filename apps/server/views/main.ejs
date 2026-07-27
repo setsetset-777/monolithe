@@ -4,16 +4,16 @@
 <%- include('./partials/head') %>
 
 <body data-theme="light">
-  <%- include('./partials/svgs') %>
-
   <div class="container">
     <%- include('./partials/sidebar') %>
 
-    <div data-react="content">
-      <%- include(`./pages/${pageSlug}`) %>
-    </div>
+    <div class="content">
+      <main class="main">
+        <%- include(`./pages/${pageSlug}`) %>
+      </main>
 
-    <%- include('./partials/footer') %>
+      <%- include('./partials/footer') %>
+    </div>
   </div>
 </body>
 </html>

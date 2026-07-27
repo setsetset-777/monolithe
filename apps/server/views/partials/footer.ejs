@@ -1,13 +1,16 @@
 <footer class="footer">
   <div class="footer__container">
     <div class="footer__column">
+
       <div class="footer__header footer-logo">
-        <%- include('svgs/logo') %>
+        <%- include('./svgs/logo', { class: "footer-logo__svg" }) %>
         <h4 class=" footer-logo__catch">
           <%- generalData.footer.logoCatch %>
         </h4>
       </div>
-      <div class="separator"></div>
+
+      <%- include('./separator') %>
+
       <div class="footer__contact footer-contact">
         <p class="footer-contact__text">
           <%- generalData.footer.contactText %>
@@ -15,19 +18,19 @@
         <m-action class="footer-contact__action" href="<%- routes.pageContact.path %>">
           <%- generalData.footer.contactLabel %>
         </m-action>
-        <!--<a class="footer-contact__action action" href="<%- routes.pageContact.path %>">
-          <%- generalData.footer.contactLabel %>
-        </a>-->
       </div>
+
     </div>
+
     <div class="footer__column">
+
       <div class="footer-services">
         <h4 class="footer-services__title">
           <%- routes.pageServices.title %>
         </h4>
-        <ul>
+        <ul class="footer-services__list">
           <% for (let {label} of generalData.services) { %>
-            <li>
+            <li class="footer-services__item">
               <a href="<%- routes.pageServices.path %>#<%-encodeURIComponent(label) %>">
                 <%- label %>
               </a>
@@ -35,10 +38,14 @@
           <% } %>
         </ul>
       </div>
+
       <p class="footer-777 777">
         <span>Design & Code par</span>
-        <%- include('svgs/777', { class: "menu__logo", width: "114" }) %>
+        <a href="https://setsetset.net" aria-label="setsetset">
+          <%- include('./svgs/777', { class: "menu__logo", width: "114" }) %>
+        </a>
       </p>
     </div>
+
   </div>
 </footer>

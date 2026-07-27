@@ -1,25 +1,25 @@
-@layer modules {
+@use '../utilities';
 
+@layer modules {
   .separator {
-    $height: 0.125rem;
+    $size: utilities.pxToRem(2px);
     display: flex;
     gap: 0.5rem;
 
     &:before,
     &:after {
-      content: "";
+      content: '';
       display: block;
-      width: $height;
-      height: $height;
+      width: $size;
+      height: $size;
       background-color: currentColor;
       transform: rotate(45deg);
     }
 
     div {
-      height: $height;
+      height: $size;
       width: 5rem;
       background-color: currentColor;
     }
   }
-
 }

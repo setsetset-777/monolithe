@@ -6,6 +6,7 @@ import payloader from '@packages/api'
 import logger from '@packages/logger'
 
 import { getLocales } from '../utils/locales.ts'
+import { plantsMap } from '../utils/plants.ts'
 import type { HttpError } from '../types/index.ts'
 import type { Locale } from '@packages/types'
 
@@ -62,6 +63,9 @@ export const initRouter = async (): Promise<RouterType> => {
         menu,
         pageData,
         routes,
+        plants: {
+          map: plantsMap,
+        },
       })
     } catch (e) {
       logger.error('error', e)

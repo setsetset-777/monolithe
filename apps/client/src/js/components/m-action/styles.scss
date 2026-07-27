@@ -1,3 +1,43 @@
+@use '../../../styles/utilities';
+
+:host {
+  display: flex;
+}
+
 a {
-  color: var(--color-black-100);
+  $size: utilities.pxToRem(2px);
+
+  background-color: var(--color-gold-40);
+  color: var(--color-gray-100);
+  display: flex;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-s);
+  padding: utilities.pxToRem(10px) utilities.pxToRem(20px);
+  gap: utilities.pxToRem(20px);
+  align-items: center;
+  border-radius: 1px;
+  border: solid 1px var(--color-gold-40);
+  @include utilities.transition('backbround-color, color');
+  box-shadow: 2px 2px var(--color-gray-100);
+
+  &:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-gold-30);
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    width: $size;
+    height: $size;
+    background-color: currentColor;
+    transform: rotate(45deg);
+  }
 }

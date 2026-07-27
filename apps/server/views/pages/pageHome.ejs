@@ -1,1 +1,12 @@
-<h2><%- pageData.presentation.catch %></h2>
+<div class="page page--home page-home">
+  <div class="page-home__hero page-home-hero">
+    <div class="page-home-hero__content">
+      <h2><%- pageData.presentation.catch %></h2>
+      <%- include('../partials/separator') %>
+      <a href="<%= routes.pagePresentation.path %>"><%= pageData.presentation.linkLabel %></a>
+    </div>
+    <div class="page-home-hero__image">
+      <img src="<%= pageData.presentation.heroImage.url %>" alt="<%= pageData.presentation.heroImage.alt %>"/>
+    </div>
+  </div>
+</div>
