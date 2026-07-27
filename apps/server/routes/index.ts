@@ -37,7 +37,7 @@ export const initRouter = async (): Promise<RouterType> => {
       }
 
       /* Handle routes */
-      const generalResponse = await payloader.fetch('general', null, locale as string)
+      const generalResponse = await payloader.fetch({ slug: 'general', params: { locale } })
 
       const routes: Routes = generalResponse.routes
       const generalData = generalResponse.data
@@ -55,7 +55,7 @@ export const initRouter = async (): Promise<RouterType> => {
         throw new Error(`No route found for path : ${path}`)
       }
 
-      const pageData = await payloader.global(slug, locale)
+      const pageData = await payloader.global(slug, { locale })
 
       res.render('main', {
         pageSlug: route.slug,
@@ -66,6 +66,7 @@ export const initRouter = async (): Promise<RouterType> => {
         plants: {
           map: plantsMap,
         },
+        payloadUrl: process.env.PAYLOAD_URL,
       })
     } catch (e) {
       logger.error('error', e)

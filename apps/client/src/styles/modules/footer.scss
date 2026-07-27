@@ -36,8 +36,7 @@
       background-color: var(--color-gray-50);
       position: absolute;
       top: 0;
-      left: calc(-1 * (100vw - 100%) / 2);
-      right: calc((100vw - 100%) / -2);
+      @extend %bleed;
       bottom: 0;
       height: 100%;
     }

@@ -1,12 +1,20 @@
 <div class="page page--home page-home">
   <div class="page-home__hero page-home-hero">
+    <div class="page-home-hero__image">
+      <img
+        src="<%= payloadUrl + pageData.presentation.heroImage.sizes['1000'].url %>"
+        srcset="
+          <%= payloadUrl + pageData.presentation.heroImage.sizes['2000'].url %> 800w,
+          <%= payloadUrl + pageData.presentation.heroImage.sizes['3000'].url %> 1200w
+        "
+        sizes="100vw"
+        alt="<%= pageData.presentation.heroImage.alt %>"
+      >
+    </div>
     <div class="page-home-hero__content">
       <h2><%- pageData.presentation.catch %></h2>
       <%- include('../partials/separator') %>
       <a href="<%= routes.pagePresentation.path %>"><%= pageData.presentation.linkLabel %></a>
-    </div>
-    <div class="page-home-hero__image">
-      <img src="<%= pageData.presentation.heroImage.url %>" alt="<%= pageData.presentation.heroImage.alt %>"/>
     </div>
   </div>
 </div>

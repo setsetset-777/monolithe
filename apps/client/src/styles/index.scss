@@ -1,9 +1,10 @@
-@use "./utilities";
-@use "./reset";
-@use "./variables";
-@use "./fonts";
-@use "./base";
-@use "./layout";
-@use "./modules";
+@use './utilities';
+@use './reset';
+@use './variables';
+@use './fonts';
+@use './base';
+@use './layout';
+@use './pages';
+@use './modules';
 
-@layer utilities, reset, base, layout, modules, state;
+@layer utilities, reset, base, layout, pages, modules, state;

@@ -5,14 +5,16 @@
 
 <body data-theme="light">
   <div class="container">
-    <%- include('./partials/sidebar') %>
+    <div class="container__inner">
+      <%- include('./partials/sidebar') %>
 
-    <div class="content">
-      <main class="main">
-        <%- include(`./pages/${pageSlug}`) %>
-      </main>
+      <div class="content">
+        <main class="main">
+          <%- include(`./pages/${pageSlug}`) %>
+        </main>
 
-      <%- include('./partials/footer') %>
+        <%- include('./partials/footer') %>
+      </div>
     </div>
   </div>
 </body>

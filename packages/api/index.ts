@@ -61,11 +61,15 @@ const getToken = async () => {
  * Fetches a record from PayloadCMS
  * Default to a collection type
  */
-const fetchPayload = async (
-  slug: string,
-  type?: 'global' | 'collection' | 'auth' | null,
-  locale?: LocaleCode,
-): FetchData => {
+const fetchPayload = async ({
+  slug,
+  type,
+  params,
+}: {
+  slug: string
+  type?: 'global' | 'collection' | 'auth' | null
+  params?: Record<string, unknown>
+}): FetchData => {
   if (!config.enable) {
     throw 'No payload enabled. Fetch aborted.'
   }
@@ -73,13 +77,6 @@ const fetchPayload = async (
   try {
     const token = await getToken()
     let path = '/'
-    let params: {
-      locale?: LocaleCode
-    } = {}
-
-    if (['global', 'collection'].includes(type as string)) {
-      params.locale = locale
-    }
 
     if (type === 'global') {
       path += 'globals/'
@@ -87,8 +84,10 @@ const fetchPayload = async (
 
     path += slug.replace(/.$\//, '')
 
-    if (Object.keys(params).length > 0) {
-      path += `?${Object.entries(params).map(([k, v]) => `${k}=${v}`)}`
+    if (params && Object.keys(params).length > 0) {
+      path += `?${Object.entries(params)
+        .map(([k, v]) => `${k}=${v}`)
+        .join('&')}`
     }
 
     const url = `${config.apiUrl}${path}`
@@ -109,7 +108,7 @@ const fetchPayload = async (
 
     const data = await res.json()
 
-    logger.info(`Data received for ${url}: ${JSON.stringify(data)}`)
+    logger.info(`Data received for ${url}:`, data)
 
     return data
   } catch (e) {
@@ -121,27 +120,27 @@ const fetchPayload = async (
 /**
  * Fetches a global from PayloadCMS
  */
-const fetchGlobal = async (path: string, locale?: LocaleCode): FetchData =>
-  fetchPayload(path, 'global', locale)
+const fetchGlobal = async (path: string, params?: Record<string, unknown>): FetchData =>
+  fetchPayload({ slug: path, type: 'global', params: { depth: 3, ...params } })
 
 /**
  * Fetches a collection from PayloadCMS
  */
-const fetchCollection = async (path: string, locale?: LocaleCode): FetchData =>
-  fetchPayload(path, 'global', locale)
+const fetchCollection = async (path: string, params?: Record<string, unknown>): FetchData =>
+  fetchPayload({ slug: path, type: 'collection', params: { depth: 3, ...params } })
 
 /**
  * Fetches a page from PayloadCMS
  */
-const fetchPage = async (path: string, locale?: LocaleCode) => {
-  return fetchGlobal(path, locale) ?? fetchCollection(path, locale)
+const fetchPage = async (path: string, params?: Record<string, unknown>) => {
+  return fetchGlobal(path, params) ?? fetchCollection(path, params)
 }
 
 /**
  * Fetches locales supported by PayloadCMS
  */
 const fetchLocales = async (): Promise<LocalesData> =>
-  fetchPayload('locales') as unknown as LocalesData
+  fetchPayload({ slug: 'locales' }) as unknown as LocalesData
 
 export default {
   init: init,
