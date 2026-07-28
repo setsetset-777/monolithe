@@ -15,7 +15,7 @@
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      padding: utilities.pxToRem(120px) 0 utilities.pxToRem(80px) utilities.pxToRem(80px);
+      padding: utilities.pxToRem(120px) 0 var(--space-80) var(--space-80);
       justify-content: space-between;
       width: var(--width-sidebar);
       box-sizing: border-box;
@@ -35,7 +35,7 @@
     &__content {
       display: flex;
       flex-direction: column;
-      gap: #{utilities.pxToRem(48px)};
+      gap: #{var(--space-48)};
     }
 
     &:after {

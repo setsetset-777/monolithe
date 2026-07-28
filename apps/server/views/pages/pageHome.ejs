@@ -11,10 +11,31 @@
         alt="<%= pageData.presentation.heroImage.alt %>"
       >
     </div>
-    <div class="page-home-hero__content">
-      <h2><%- pageData.presentation.catch %></h2>
-      <%- include('../partials/separator') %>
-      <a href="<%= routes.pagePresentation.path %>"><%= pageData.presentation.linkLabel %></a>
+    <div class="page-home-hero__inner">
+      <div class="page-home-plants" aria-hidden>
+        <div class="page-home-plants__inner">
+          <% for(let i = 1; i <= 5; i++) { %>
+            <%- include(`../partials/svgs/plants/herbier-centre-${i}.svg`) %>
+          <% } %>
+        </div>
+      </div>
+      <div class="page-home-hero__content">
+        <h2 class="page-home-hero__catch"><%- pageData.presentation.catch %></h2>
+        <%- include('../partials/separator') %>
+        <%- include(`../partials/anchor`, {
+          href: routes.pagePresentation.path,
+          text: pageData.presentation.linkLabel,
+        }) %>
+      </div>
+    </div>
+    <div class="page-home-hero__footer">
+      <button class="page-home-hero__down"§ aria-label="Défiler" data-scroll="#content">
+        <%- include(`../partials/svgs/chevron-down.svg`) %>
+      </button>
     </div>
   </div>
+
+  <div id="content">
+    Hello
+  <div>
 </div>

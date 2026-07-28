@@ -1,5 +1,6 @@
 @use './utilities';
 @use 'sass:map';
+@use 'sass:color';
 
 $colors: (
   'gray-00': #ffffff,
@@ -17,7 +18,9 @@ $colors: (
 :root {
   @each $name, $hex in $colors {
     --color-#{$name}: #{$hex};
-    --color-#{$name}-rgb: #{red($hex)}, #{green($hex)}, #{blue($hex)};
+    --color-#{$name}-rgb:
+      #{color.channel($hex, 'red', $space: rgb)}, #{color.channel($hex, 'green', $space: rgb)},
+      #{color.channel($hex, 'blue', $space: rgb)};
   }
 
   --font-size-base: #{utilities.pxToRem(18px)};
@@ -35,12 +38,24 @@ $colors: (
   --ease-time-short: 150ms;
   --ease-function: ease-in-out;
 
+  --space-2: #{utilities.pxToRem(2px)};
+  --space-4: #{utilities.pxToRem(4px)};
+  --space-8: #{utilities.pxToRem(8px)};
+  --space-12: #{utilities.pxToRem(12px)};
+  --space-16: #{utilities.pxToRem(16px)};
+  --space-24: #{utilities.pxToRem(24px)};
+  --space-32: #{utilities.pxToRem(32px)};
+  --space-48: #{utilities.pxToRem(48px)};
+  --space-64: #{utilities.pxToRem(64px)};
+  --space-80: #{utilities.pxToRem(80px)};
+  --space-128: #{utilities.pxToRem(128px)};
+
   --width-container-max: #{utilities.pxToRem(1400px)};
-  --width-sidebar-skew: #{utilities.pxToRem(80px)};
+  --width-sidebar-skew: #{var(--space-80)};
   --width-sidebar: #{utilities.pxToRem(400px)};
-  --padding-content-horizontal: #{utilities.pxToRem(80px)};
-  --padding-footer-vertical: #{utilities.pxToRem(80px)};
-  --padding-content-left: calc(
-    var(--width-sidebar) + var(--width-sidebar-skew) + var(--padding-content-horizontal)
+  --padding-content-x: #{var(--space-80)};
+  --padding-footer-y: #{var(--space-80)};
+  --padding-content-x-start: calc(
+    var(--width-sidebar) + var(--width-sidebar-skew) + var(--padding-content-x)
   );
 }

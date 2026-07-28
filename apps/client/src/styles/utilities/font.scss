@@ -1,9 +1,11 @@
-@layer utilities {
+@mixin font-menu-large {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xxl);
+  color: inherit;
+}
 
-  %font-menu-large {
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-xxl);
-    color: inherit;
-  }
-
+@mixin font-heading-1 {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xxxl);
+  color: inherit;
 }

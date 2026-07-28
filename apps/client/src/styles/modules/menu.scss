@@ -1,20 +1,11 @@
-@use "../utilities";
+@use '../utilities';
 
 @layer modules {
-
   .menu {
     font-family: var(--font-family-heading);
 
-    &__container {
-
-    }
-
-    &__item {
-
-    }
-
     &__link {
-      @extend %font-menu-large;
+      @include utilities.font-menu-large;
       text-decoration: none;
       @include utilities.transition(color);
 
@@ -23,5 +14,4 @@
       }
     }
   }
-
 }

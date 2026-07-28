@@ -1,3 +1,4 @@
+@use './layers';
 @use './utilities';
 @use './reset';
 @use './variables';
@@ -6,5 +7,3 @@
 @use './layout';
 @use './pages';
 @use './modules';
-
-@layer utilities, reset, base, layout, pages, modules, state;

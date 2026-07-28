@@ -2,9 +2,10 @@
 
 @layer modules {
   .separator {
-    $size: utilities.pxToRem(2px);
+    $size: var(--space-2);
     display: flex;
     gap: 0.5rem;
+    position: relative;
 
     &:before,
     &:after {
