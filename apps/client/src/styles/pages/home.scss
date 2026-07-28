@@ -26,6 +26,7 @@
       height: 100%;
       position: absolute;
       @include utilities.bleed;
+      overflow: hidden;
 
       img {
         position: absolute;

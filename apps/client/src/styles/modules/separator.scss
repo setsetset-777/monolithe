@@ -2,10 +2,11 @@
 
 @layer modules {
   .separator {
-    $size: var(--space-2);
+    $size: utilities.pxToRem(2px);
     display: flex;
     gap: 0.5rem;
     position: relative;
+    align-items: center;
 
     &:before,
     &:after {
@@ -18,8 +19,8 @@
     }
 
     div {
-      height: $size;
-      width: 5rem;
+      height: #{$size / 2};
+      width: utilities.pxToRem(48px);
       background-color: currentColor;
     }
   }

@@ -89,11 +89,16 @@
     display: flex;
     gap: var(--space-8);
     align-items: baseline;
+    font-size: var(--font-size-xs);
 
     a {
       position: relative;
       top: utilities.pxToRem(3px);
       @include utilities.transition(color);
+
+      svg {
+        height: 1em;
+      }
 
       &:hover {
         color: var(--color-gold-30);
