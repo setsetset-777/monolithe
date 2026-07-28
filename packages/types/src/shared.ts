@@ -11,4 +11,6 @@ export type Route = {
   title: string
 }
 
-export type Routes = Partial<Record<string, { [key: string]: Route }>>
+export type LocalizedRoutes = { [key: string]: Route };
+
+export type Routes = Partial<Record<string, LocalizedRoutes>>

@@ -736,7 +736,7 @@ export interface PageService {
   sections?:
     | (
         | {
-            service?: (string | null) | Service;
+            title?: string | null;
             description?: string | null;
             'link-label'?: string | null;
             image?: (string | null) | Media;
@@ -745,7 +745,7 @@ export interface PageService {
             blockType: 'singleLevelBlock';
           }
         | {
-            service?: (string | null) | Service;
+            title?: string | null;
             description?: string | null;
             linkLabel?: string | null;
             subsections?:
@@ -761,6 +761,12 @@ export interface PageService {
             blockType: 'oneLevelBblock';
           }
       )[]
+    | null;
+  list?:
+    | {
+        title?: string | null;
+        id?: string | null;
+      }[]
     | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -937,7 +943,7 @@ export interface PageServicesSelect<T extends boolean = true> {
         singleLevelBlock?:
           | T
           | {
-              service?: T;
+              title?: T;
               description?: T;
               'link-label'?: T;
               image?: T;
@@ -947,7 +953,7 @@ export interface PageServicesSelect<T extends boolean = true> {
         oneLevelBblock?:
           | T
           | {
-              service?: T;
+              title?: T;
               description?: T;
               linkLabel?: T;
               subsections?:
@@ -961,6 +967,12 @@ export interface PageServicesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+      };
+  list?:
+    | T
+    | {
+        title?: T;
+        id?: T;
       };
   _status?: T;
   updatedAt?: T;

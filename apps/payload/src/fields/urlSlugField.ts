@@ -10,7 +10,7 @@ import type {
 } from 'payload'
 import { type CustomTFunction } from '@/i18n'
 import { getRoutes, routesConfig } from '@/helpers/routes'
-import type { Locale, Route } from '@/types'
+import type { Locale, Route } from '@packages/types'
 
 type UrlSlugField = {
   source: string
@@ -51,12 +51,14 @@ export const urlSlugField = ({
 
       const parentPage = routesConfig.pages.find(({ children }) => children?.slug === pageSlug)
 
-      routeWithUrlSlug = routes?.find(({ slug, urlSlug, parent, id: itemId }) => {
-        if (parentPage) {
-          return parentPage?.slug === parent && urlSlug === value && id !== itemId
-        }
-        return !parent && slug !== pageSlug && urlSlug === value
-      })
+      routeWithUrlSlug = Object.values(routes)?.find(
+        ({ slug, urlSlug, parent, id: itemId }: Route) => {
+          if (parentPage) {
+            return parentPage?.slug === parent && urlSlug === value && id !== itemId
+          }
+          return !parent && slug !== pageSlug && urlSlug === value
+        },
+      )
 
       const isUnique = !routeWithUrlSlug
 

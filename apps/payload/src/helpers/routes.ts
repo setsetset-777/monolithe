@@ -6,7 +6,8 @@ import type {
   GlobalAfterChangeHook,
   CollectionAfterChangeHook,
 } from 'payload'
-import type { Manifest, Route, Locale, Routes, RouteConfig } from '@/types'
+import type { Manifest, RouteConfig } from '@/types'
+import type { Locale, Routes, LocalizedRoutes } from '@packages/types'
 
 const { locales, defaultLocale } = localization
 const defaultSlugField = 'urlSlug'
@@ -64,13 +65,10 @@ export const invalidateRoutesManifestHook:
   invalidateRoutesManifest()
 }
 
-export const getRoutes = async (
-  payload: BasePayload,
-  locale: Locale,
-): Promise<Routes | undefined> => {
+export const getRoutes = async (payload: BasePayload, locale: Locale): Promise<LocalizedRoutes> => {
   locale = locale || (defaultLocale as Locale)
   const manifest = await getManifest(payload)
-  const routes = manifest.routes[locale]
+  const routes: LocalizedRoutes = manifest.routes[locale]!
   return routes
 }
 

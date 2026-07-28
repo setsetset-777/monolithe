@@ -18,11 +18,7 @@ const SingleLevelBlock: Block = {
     },
   },
   fields: [
-    {
-      name: 'service',
-      type: 'relationship',
-      relationTo: 'services',
-    },
+    titleField(),
     {
       name: 'description',
       type: 'textarea',
@@ -58,11 +54,7 @@ const MutliLevelBlock: Block = {
     },
   },
   fields: [
-    {
-      name: 'service',
-      type: 'relationship',
-      relationTo: 'services',
-    },
+    titleField(),
     {
       name: 'description',
       type: 'textarea',
@@ -126,6 +118,26 @@ export const PageServices: GlobalConfig = {
       name: 'sections',
       type: 'blocks',
       blocks: [SingleLevelBlock, MutliLevelBlock],
+    },
+    {
+      name: 'list',
+      type: 'array',
+      virtual: true,
+      admin: {
+        // hidden: true,
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+        },
+      ],
+      hooks: {
+        afterRead: [
+          async ({ siblingData }) =>
+            siblingData.sections.map((section: any) => ({ title: section.title })),
+        ],
+      },
     },
   ],
   versions: {

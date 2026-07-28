@@ -19,7 +19,6 @@ import { Testimonials } from '@/collections/Testimonials'
 import { General } from '@/globals/General'
 import { PageHome } from '@/globals/PageHome'
 import { PagePresentation } from '@/globals/PagePresentation'
-import { PageServices } from '@/globals/PageServices'
 import { PageProjects } from '@/globals/PageProjects'
 import { PageContact } from '@/globals/PageContact'
 
@@ -48,7 +47,7 @@ export default buildConfig({
     translations: customTranslations,
   },
   localization,
-  globals: [General, PageHome, PagePresentation, PageServices, PageProjects, PageContact],
+  globals: [General, PageHome, PagePresentation, PageProjects, PageContact],
   collections: [Users, Media, MediaTags, Services, Projects, Parutions, Testimonials],
   routes: {
     admin: '/',
@@ -81,7 +80,7 @@ export default buildConfig({
           routes: routes,
           data: {
             ...(await req.payload.findGlobal({ slug: 'general' })),
-            services: (await req.payload.find({ collection: 'services' })).docs,
+            services: (await req.payload.findGlobal({ slug: 'pageServices' })).list,
           },
         })
       },
