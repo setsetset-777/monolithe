@@ -29,10 +29,10 @@
           <%- routes.pageServices.title %>
         </h4>
         <ul class="footer-services__list">
-          <% for (let {label} of generalData.services) { %>
+          <% for (let {title} of generalData.services) { %>
             <li class="footer-services__item">
-              <a href="<%- routes.pageServices.path %>#<%-encodeURIComponent(label) %>">
-                <%- label %>
+              <a href="<%- routes.pageServices.path %>#<%-encodeURIComponent(title) %>">
+                <%- title %>
               </a>
             </li>
           <% } %>

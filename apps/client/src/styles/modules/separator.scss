@@ -1,4 +1,5 @@
 @use '../utilities';
+@use 'sass:math';
 
 @layer modules {
   .separator {
@@ -19,7 +20,7 @@
     }
 
     div {
-      height: #{$size / 2};
+      height: math.div($size, 2);
       width: utilities.pxToRem(48px);
       background-color: currentColor;
     }

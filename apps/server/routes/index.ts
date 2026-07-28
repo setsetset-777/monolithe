@@ -5,9 +5,10 @@ import type { Request, Response, NextFunction } from 'express'
 import payloader from '@packages/api'
 import logger from '@packages/logger'
 
-import { getLocales } from '../utils/locales.ts'
-import { plantsMap } from '../utils/plants.ts'
-import type { HttpError } from '../types/index.ts'
+import { getLocales } from '../utils/locales'
+import { plantsMap } from '../utils/plants'
+import { encodeSlug } from '../utils'
+import type { HttpError } from '../types/index'
 import type { Locale } from '@packages/types'
 
 type Route = {
@@ -67,6 +68,7 @@ export const initRouter = async (): Promise<RouterType> => {
           map: plantsMap,
         },
         payloadUrl: process.env.PAYLOAD_URL,
+        encodeSlug,
       })
     } catch (e) {
       logger.error('error', e)

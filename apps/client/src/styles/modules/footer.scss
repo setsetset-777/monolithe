@@ -22,7 +22,7 @@
       gap: var(--space-48);
 
       &:first-child {
-        width: utilities.pxToRem(346px);
+        width: var(--width-home-column-left);
       }
 
       &:last-child {

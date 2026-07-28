@@ -1,5 +1,5 @@
 <div class="page page--home page-home">
-  <div class="page-home__hero page-home-hero">
+  <section class="page-home-section page-home-section--hero page-home-hero">
     <div class="page-home-hero__image">
       <img
         src="<%= payloadUrl + pageData.presentation.heroImage.sizes['1000'].url %>"
@@ -11,7 +11,7 @@
         alt="<%= pageData.presentation.heroImage.alt %>"
       >
     </div>
-    <div class="page-home-hero__inner">
+    <div class="page-home-section__inner">
       <div class="page-home-plants" aria-hidden>
         <div class="page-home-plants__inner">
           <% for(let i = 1; i <= 5; i++) { %>
@@ -33,9 +33,28 @@
         <%- include(`../partials/svgs/chevron-down`) %>
       </button>
     </div>
-  </div>
+  </section>
 
-  <div id="content">
-    Hello
+  <div id="content" class="page-home__body">
+    <section class="page-home__section page-home-section page-home-section--services">
+      <div class="page-home-section__inner page-home-services">
+        <div class="page-home-services__head">
+          <h3 class="page-home-services__title"><%- pageData.services.title %></h3>
+          <%- include(`../partials/anchor`, {
+            href: routes.pageServices.path,
+            text: pageData.services.pageLinkLabel,
+          }) %>
+        </div>
+        <ul class="page-home-services__list">
+        <% for(let { title } of pageData.services.items) { %>
+          <li class="page-home-services__item">
+            <a href="#<%- encodeSlug(title) %>">
+              <%= title %>
+            </a>
+          </li>
+        <% } %>
+        </ul>
+      </div>
+    </section>
   <div>
 </div>

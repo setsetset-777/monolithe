@@ -127,5 +127,17 @@ export const PageHome: GlobalConfig = {
   },
   hooks: {
     afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterRead: [
+      async ({ doc, req }) => {
+        const services = await req.payload.findGlobal({
+          slug: 'pageServices',
+          locale: req.locale,
+        })
+
+        doc.services.items = services.list
+
+        return doc
+      },
+    ],
   },
 }

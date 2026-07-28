@@ -12,6 +12,7 @@
     flex-grow: 1;
     align-items: center;
     overflow-x: clip;
+    font-size: var(--font-size-m);
 
     &__inner {
       max-width: var(--width-container-max);

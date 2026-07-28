@@ -1,9 +1,25 @@
-import type { GlobalConfig, Block, GlobalAfterChangeHook } from 'payload'
+import type { GlobalConfig, Block, GlobalAfterChangeHook, Field } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { urlSlugField } from '@/fields/urlSlugField'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+
+const commonBlockFields: Field[] = [
+  {
+    name: 'service',
+    type: 'relationship',
+    relationTo: 'services',
+    required: true,
+  },
+  {
+    name: 'linkLabel',
+    type: 'text',
+    label: {
+      fr: 'Intitulé du lien',
+    },
+  },
+]
 
 const SingleLevelBlock: Block = {
   slug: 'singleLevelBlock',
@@ -18,19 +34,12 @@ const SingleLevelBlock: Block = {
     },
   },
   fields: [
-    titleField(),
+    ...commonBlockFields,
     {
       name: 'description',
       type: 'textarea',
       admin: {
         rows: 5,
-      },
-    },
-    {
-      name: 'link-label',
-      type: 'text',
-      label: {
-        fr: 'Intitulé du lien',
       },
     },
     {
@@ -54,21 +63,7 @@ const MutliLevelBlock: Block = {
     },
   },
   fields: [
-    titleField(),
-    {
-      name: 'description',
-      type: 'textarea',
-      admin: {
-        rows: 5,
-      },
-    },
-    {
-      name: 'linkLabel',
-      type: 'text',
-      label: {
-        fr: 'Intitulé du lien',
-      },
-    },
+    ...commonBlockFields,
     {
       name: 'subsections',
       type: 'array',
@@ -124,7 +119,7 @@ export const PageServices: GlobalConfig = {
       type: 'array',
       virtual: true,
       admin: {
-        // hidden: true,
+        hidden: true,
       },
       fields: [
         {
@@ -134,8 +129,17 @@ export const PageServices: GlobalConfig = {
       ],
       hooks: {
         afterRead: [
-          async ({ siblingData }) =>
-            siblingData.sections.map((section: any) => ({ title: section.title })),
+          async ({ siblingData, req }) => {
+            return await Promise.all(
+              siblingData.sections.map(async ({ service }: any) => {
+                const { label } = await req.payload.findByID({
+                  collection: 'services',
+                  id: service,
+                })
+                return { title: label }
+              }),
+            )
+          },
         ],
       },
     },

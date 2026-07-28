@@ -736,17 +736,16 @@ export interface PageService {
   sections?:
     | (
         | {
-            title?: string | null;
+            service: string | Service;
+            linkLabel?: string | null;
             description?: string | null;
-            'link-label'?: string | null;
             image?: (string | null) | Media;
             id?: string | null;
             blockName?: string | null;
             blockType: 'singleLevelBlock';
           }
         | {
-            title?: string | null;
-            description?: string | null;
+            service: string | Service;
             linkLabel?: string | null;
             subsections?:
               | {
@@ -943,9 +942,9 @@ export interface PageServicesSelect<T extends boolean = true> {
         singleLevelBlock?:
           | T
           | {
-              title?: T;
+              service?: T;
+              linkLabel?: T;
               description?: T;
-              'link-label'?: T;
               image?: T;
               id?: T;
               blockName?: T;
@@ -953,8 +952,7 @@ export interface PageServicesSelect<T extends boolean = true> {
         oneLevelBblock?:
           | T
           | {
-              title?: T;
-              description?: T;
+              service?: T;
               linkLabel?: T;
               subsections?:
                 | T

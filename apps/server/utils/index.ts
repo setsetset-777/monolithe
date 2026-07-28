@@ -27,3 +27,7 @@ export const getAssetsDetails = (
     mainCss: `/${main.css[0]}`,
   }
 }
+
+export const encodeSlug = (slug: string): string => {
+  return slug.replaceAll(' ', '-').toLowerCase()
+}
