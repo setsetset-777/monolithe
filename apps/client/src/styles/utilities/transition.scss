@@ -5,4 +5,8 @@
   @if $type == short {
     transition-duration: var(--ease-time-short);
   }
+
+  @if $type == medium {
+    transition-duration: var(--ease-time-medium);
+  }
 }

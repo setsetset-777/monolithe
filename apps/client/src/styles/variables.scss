@@ -36,6 +36,7 @@ $colors: (
   --font-family-mono: 'DM Mono', Monaco, courrier;
 
   --ease-time-short: 150ms;
+  --ease-time-medium: 300ms;
   --ease-function: ease-in-out;
 
   --space-2: #{utilities.pxToRem(2px)};

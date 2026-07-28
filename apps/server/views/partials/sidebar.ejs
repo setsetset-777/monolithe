@@ -2,14 +2,14 @@
   <div class="sidebar__container">
     <div class="sidebar__content">
       <a href="<%- routes.pageHome.path %>" aria-label="<%- generalData.navigation.homeLinkLabel %>">
-        <%- include('./svgs/logo', { class: "logo"}) %>
+        <%- include('./svgs/logo', { class: "sidebar__logo"}) %>
       </a>
       <%- include('./separator') %>
-      <nav class="menu">
-        <ul class="menu__list">
-          <% for (let {title, path} of menu) {%>
-            <li class="menu__item">
-              <a class="menu__link" href="<%= path %>">
+      <nav class="sidebar-menu">
+        <ul class="sidebar-menu__list">
+          <% for (let {title, path, slug} of menu) {%>
+            <li class="sidebar-menu__item">
+              <a class="sidebar-menu__link" href="<%= path %>" data-slug="<%= slug %>">
                 <%= title %>
               </a>
             </li>
@@ -18,9 +18,9 @@
       </nav>
       <%- include('./separator') %>
     </div>
-    <div class="plants">
-      <% for (let [key, svg] of Object.entries(plants.map)) {%>
-        <div class="plants__item" key="<%= key %>">
+    <div class="sidebar-plants">
+      <% for (let [slug, svg] of Object.entries(plants.map)) {%>
+        <div class="sidebar-plants__item" data-slug="<%= slug %>">
           <%- include(svg) %>
         </div>
       <% } %>

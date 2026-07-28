@@ -4,6 +4,7 @@ import './components'
 
 import { addEmails } from './scripts/mail'
 import { init as initScroll } from './scripts/scroll'
+import { init as initMenu } from './scripts/menu'
 
 /**
  * Run main code
@@ -13,6 +14,7 @@ const init = () => {
 
   addEmails()
   initScroll()
+  initMenu()
 }
 
 /**

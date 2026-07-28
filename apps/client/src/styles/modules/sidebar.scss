@@ -51,9 +51,60 @@
       left: 100%;
       z-index: 1;
     }
+
+    &__logo {
+      width: 180px;
+    }
   }
 
-  .logo {
-    width: 180px;
+  .sidebar-menu {
+    font-family: var(--font-family-heading);
+
+    &__link {
+      @include utilities.font-menu-large;
+      text-decoration: none;
+      @include utilities.transition(color);
+
+      &:hover {
+        color: var(--color-gray-00);
+      }
+    }
+  }
+
+  .sidebar-plants {
+    $root: &;
+    $size: 120px;
+
+    $slugs: (pagePresentation, pageServices, pageProjects, pageContact);
+
+    position: relative;
+    max-height: $size;
+    flex-grow: 1;
+    margin-top: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    &__item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      @include utilities.transition(opacity, medium);
+
+      svg {
+        height: 100%;
+      }
+
+      #{$root}[data-active] & {
+        opacity: 0;
+      }
+
+      @each $slug in $slugs {
+        #{$root}[data-active='#{$slug}'] &[data-slug='#{$slug}'] {
+          opacity: 1;
+        }
+      }
+    }
   }
 }
