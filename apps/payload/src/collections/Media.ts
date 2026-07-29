@@ -64,4 +64,9 @@ export const Media: CollectionConfig = {
       },
     ],
   },
+  admin: {
+    components: {
+      afterList: ['/components/MediaAdminZone'],
+    },
+  },
 }

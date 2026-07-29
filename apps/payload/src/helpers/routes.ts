@@ -53,6 +53,7 @@ export const getManifest = async (payload: BasePayload): Promise<Manifest> => {
   }
 
   payload.logger.info(`Manifest built: ${JSON.stringify(cachedManifest)}`)
+
   return cachedManifest
 }
 

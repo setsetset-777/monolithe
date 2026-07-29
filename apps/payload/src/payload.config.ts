@@ -24,7 +24,8 @@ import { PageProjects } from '@/globals/PageProjects'
 import { PageContact } from '@/globals/PageContact'
 
 import { localization, customTranslations } from '@/i18n'
-import { getRoutes } from './helpers/routes'
+import { getRoutes } from '@/helpers/routes'
+import regenerateMedia from '@/helpers/regenerateMedia'
 import { Locale } from '@packages/types'
 
 const filename = fileURLToPath(import.meta.url)
@@ -85,6 +86,28 @@ export default buildConfig({
             services,
           },
         })
+      },
+    },
+    {
+      path: '/regenerate-media',
+      method: 'post',
+      handler: async (req) => {
+        try {
+          await regenerateMedia(req.payload, 'media')
+          return Response.json({
+            ok: true,
+          })
+        } catch (err) {
+          return Response.json(
+            {
+              ok: false,
+              message: err instanceof Error ? err.message : String(err),
+            },
+            {
+              status: 500,
+            },
+          )
+        }
       },
     },
   ],
