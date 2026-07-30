@@ -35,8 +35,5 @@ COPY --from=build /out/server .
 COPY --from=build /app/apps/client/dist ./client/dist
 COPY --from=build /app/config ./config
 
-# Install only prod deps for server
-RUN pnpm install --prod
-
 EXPOSE 8001
 CMD ["pnpm", "start"]
