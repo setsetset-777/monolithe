@@ -1,5 +1,5 @@
 import { titleField } from '@/fields/titleField'
-import { urlSlugField } from '@/fields/urlSlugField'
+import { urlFields } from '@/fields/urlFields'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import type { CollectionAfterChangeHook } from 'payload'
 import type { CollectionConfig, Block } from 'payload'
@@ -22,7 +22,7 @@ export const Projects: CollectionConfig = {
   },
   fields: [
     titleField(),
-    urlSlugField({ source: 'title', slug }),
+    ...urlFields({ source: 'title', slug }),
     {
       name: 'description',
       type: 'textarea',

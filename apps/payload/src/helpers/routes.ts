@@ -6,11 +6,11 @@ import type {
   GlobalAfterChangeHook,
   CollectionAfterChangeHook,
 } from 'payload'
-import type { Manifest, RouteConfig } from '@/types'
+import type { Manifest, RouteConfig, RoutedPages } from '@/types'
 import type { Locale, Routes, LocalizedRoutes } from '@packages/types'
 
 const { locales, defaultLocale } = localization
-const defaultSlugField = 'urlSlug'
+const defaultSlugField = 'urlSlug' as const
 
 export let cachedManifest: Manifest | null | undefined = null
 
@@ -83,12 +83,12 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         slug: slug as GlobalSlug,
         locale: locale as Locale,
       })
-      const doc = global as unknown as Record<string, unknown>
-      const parentPath = path || `/${doc[field]}`
+
+      const doc: RoutedPages = global
 
       routes[locale as Locale]![slug] = {
         id: global.id,
-        path: parentPath,
+        path: path || (doc.url as string),
         slug: slug,
         urlSlug: doc[field] as string,
         title: doc.title as string,
@@ -102,11 +102,11 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         for (const collection of collections.docs) {
           const field = children.field || defaultSlugField
           // TODO: Review typing
-          const doc = collection as unknown as Record<string, unknown>
+          const doc: RoutedPages = global
           const urlSlug = doc[field] as string
           routes[locale as Locale]![collection.id] = {
             id: collection.id,
-            path: `${parentPath}/${doc[field]}`,
+            path: doc.url as string,
             slug: children.slug,
             urlSlug,
             parent: slug,

@@ -1,7 +1,7 @@
 import type { GlobalConfig, Block, GlobalAfterChangeHook, Field } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
-import { urlSlugField } from '@/fields/urlSlugField'
+import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 
@@ -107,7 +107,7 @@ export const PageServices: GlobalConfig = {
   },
   fields: [
     titleField(),
-    urlSlugField({ source: 'title', slug: 'pageServices' }),
+    ...urlFields({ source: 'title', slug: 'pageServices' }),
     heroImageField(),
     {
       name: 'sections',

@@ -1,5 +1,12 @@
 import type { GlobalSlug, CollectionSlug } from 'payload'
-import type { Routes } from '@packages/types'
+import type {
+  Routes,
+  PagePresentation,
+  PageProject,
+  PageProjectsSelect,
+  PageService,
+  PageContact,
+} from '@packages/types'
 
 export type Manifest = {
   generatedAt: number
@@ -8,11 +15,14 @@ export type Manifest = {
 
 export type RouteConfigPage = {
   slug: GlobalSlug | CollectionSlug
-  path?: string
-  field?: string
+  path?: string | null | undefined
+  field?: keyof RoutedPages
   children?: RouteConfigPage
 }
 
 export interface RouteConfig {
   pages: RouteConfigPage[]
 }
+
+export type RoutedPages =
+  PagePresentation | PageProject | PageProjectsSelect | PageService | PageContact

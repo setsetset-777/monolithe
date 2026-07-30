@@ -23,7 +23,7 @@
         <h2 class="page-home-hero__catch"><%- pageData.presentation.catch %></h2>
         <%- include('../partials/separator') %>
         <%- include(`../partials/anchor`, {
-          href: routes.pagePresentation.path,
+          href: pageData.presentation.link,
           text: pageData.presentation.linkLabel,
         }) %>
       </div>
@@ -41,8 +41,8 @@
         <div class="page-home-services__head">
           <h3 class="page-home-services__title"><%- pageData.services.title %></h3>
           <%- include(`../partials/anchor`, {
-            href: routes.pageServices.path,
-            text: pageData.services.pageLinkLabel,
+            href: pageData.services.link,
+            text: pageData.services.linkLabel,
           }) %>
         </div>
         <ul class="page-home-services__list">

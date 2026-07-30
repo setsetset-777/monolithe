@@ -257,6 +257,7 @@ export interface Project {
   id: string;
   title?: string | null;
   urlSlug?: string | null;
+  url?: string | null;
   description?: string | null;
   service?: (string | null) | Service;
   date?: number | null;
@@ -527,6 +528,7 @@ export interface ServicesSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
+  url?: T;
   description?: T;
   service?: T;
   date?: T;
@@ -645,11 +647,11 @@ export interface PageHome {
   };
   services?: {
     title?: string | null;
-    pageLinkLabel?: string | null;
+    linkLabel?: string | null;
   };
   projects?: {
     title?: string | null;
-    pageLlinkLabel?: string | null;
+    linkLabel?: string | null;
     highlightedProjects?:
       | {
           project?: (string | null) | Project;
@@ -672,6 +674,7 @@ export interface PagePresentation {
   id: string;
   title?: string | null;
   urlSlug?: string | null;
+  url?: string | null;
   heroImage?: (string | null) | Media;
   monolithePresentation?: string | null;
   sections?:
@@ -734,6 +737,7 @@ export interface PageService {
   id: string;
   title?: string | null;
   urlSlug?: string | null;
+  url?: string | null;
   heroImage?: (string | null) | Media;
   sections?:
     | (
@@ -781,6 +785,7 @@ export interface PageProject {
   id: string;
   title?: string | null;
   urlSlug?: string | null;
+  url?: string | null;
   heroImage?: (string | null) | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
@@ -795,6 +800,7 @@ export interface PageContact {
   id: string;
   title?: string | null;
   urlSlug?: string | null;
+  url?: string | null;
   heroImage?: (string | null) | Media;
   place?: string | null;
   email?: string | null;
@@ -845,13 +851,13 @@ export interface PageHomeSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
-        pageLinkLabel?: T;
+        linkLabel?: T;
       };
   projects?:
     | T
     | {
         title?: T;
-        pageLlinkLabel?: T;
+        linkLabel?: T;
         highlightedProjects?:
           | T
           | {
@@ -871,6 +877,7 @@ export interface PageHomeSelect<T extends boolean = true> {
 export interface PagePresentationSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
+  url?: T;
   heroImage?: T;
   monolithePresentation?: T;
   sections?:
@@ -937,6 +944,7 @@ export interface PagePresentationSelect<T extends boolean = true> {
 export interface PageServicesSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
+  url?: T;
   heroImage?: T;
   sections?:
     | T
@@ -986,6 +994,7 @@ export interface PageServicesSelect<T extends boolean = true> {
 export interface PageProjectsSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
+  url?: T;
   heroImage?: T;
   backLinkLabel?: T;
   projects?: T;
@@ -1000,6 +1009,7 @@ export interface PageProjectsSelect<T extends boolean = true> {
 export interface PageContactSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
+  url?: T;
   heroImage?: T;
   place?: T;
   email?: T;

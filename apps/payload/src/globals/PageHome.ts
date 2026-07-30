@@ -30,7 +30,7 @@ export const PageHome: GlobalConfig = {
           type: 'text',
           label: {
             en: 'Link label',
-            fr: 'Libellé du lien',
+            fr: 'Libellé du lien vers la page',
           },
         },
         {
@@ -57,10 +57,10 @@ export const PageHome: GlobalConfig = {
           },
         },
         {
-          name: 'pageLinkLabel',
+          name: 'linkLabel',
           type: 'text',
           label: {
-            en: 'Page link label',
+            en: 'Link label',
             fr: 'Libellé du lien vers la page',
           },
         },
@@ -83,10 +83,10 @@ export const PageHome: GlobalConfig = {
           },
         },
         {
-          name: 'pageLlinkLabel',
+          name: 'linkLabel',
           type: 'text',
           label: {
-            en: 'Page link label',
+            en: 'Link label',
             fr: 'Libellé du lien vers la page',
           },
         },
@@ -129,12 +129,24 @@ export const PageHome: GlobalConfig = {
     afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
     afterRead: [
       async ({ doc, req }) => {
+        const presentation = await req.payload.findGlobal({
+          slug: 'pagePresentation',
+          locale: req.locale,
+        })
         const services = await req.payload.findGlobal({
           slug: 'pageServices',
           locale: req.locale,
         })
+        const projects = await req.payload.findGlobal({
+          slug: 'pageProjects',
+          locale: req.locale,
+        })
 
         doc.services.items = services.list
+
+        doc.presentation.link = presentation.url
+        doc.services.link = services.url
+        doc.projects.link = projects.url
 
         return doc
       },
