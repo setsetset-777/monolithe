@@ -1,9 +1,13 @@
-import { getPayload } from 'payload'
+import { getPayload, TypedUser } from 'payload'
 import config from '../../src/payload.config.js'
 
-export const testUser = {
+export const testUser: Omit<
+  TypedUser,
+  'id' | 'updatedAt' | 'createdAt' | 'deletedAt' | 'collection'
+> = {
   email: 'dev@payloadcms.com',
   password: 'test',
+  role: 'user',
 }
 
 /**
