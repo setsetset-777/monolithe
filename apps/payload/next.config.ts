@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
     root: path.resolve(dirname, '../../'),
   },
   output: 'standalone',
+  // Remove workspace payload path from output server.js file
+  outputFileTracingRoot: path.join(__dirname, '../../'),
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
