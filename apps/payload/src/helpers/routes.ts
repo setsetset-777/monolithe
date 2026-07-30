@@ -6,8 +6,7 @@ import type {
   GlobalAfterChangeHook,
   CollectionAfterChangeHook,
 } from 'payload'
-import type { Manifest, RouteConfig, RoutedPages } from '@/types'
-import type { Locale, Routes, LocalizedRoutes } from '@packages/types'
+import type { Manifest, RouteConfig, RoutedPages, Locale, Routes, LocalizedRoutes } from '@/types'
 
 const { locales, defaultLocale } = localization
 const defaultSlugField = 'urlSlug' as const

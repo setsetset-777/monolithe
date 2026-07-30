@@ -26,7 +26,7 @@ import { PageContact } from '@/globals/PageContact'
 import { localization, customTranslations } from '@/i18n'
 import { getRoutes } from '@/helpers/routes'
 import regenerateMedia from '@/helpers/regenerateMedia'
-import { Locale } from '@packages/types'
+import { Locale } from '@/types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -57,7 +57,7 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
-    outputFile: path.resolve(dirname, '../../../packages/types/src/payload-types.ts'),
+    outputFile: path.resolve(dirname, 'types/payload.ts'),
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',

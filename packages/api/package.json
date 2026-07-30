@@ -1,5 +1,5 @@
 {
-  "name": "@packages/api",
+  "name": "@monolithe/api",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
@@ -18,6 +18,6 @@
   "license": "ISC",
   "packageManager": "pnpm@10.26.2",
   "dependencies": {
-    "@packages/logger": "workspace:*"
+    "@monolithe/logger": "workspace:*"
   }
 }

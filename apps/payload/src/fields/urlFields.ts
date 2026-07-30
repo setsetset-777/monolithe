@@ -10,8 +10,7 @@ import type {
 } from 'payload'
 import { type CustomTFunction } from '@/i18n'
 import { getRoutes, routesConfig } from '@/helpers/routes'
-import type { Locale, Route } from '@packages/types'
-import { RouteConfigPage } from '@/types'
+import type { Locale, Route, RouteConfigPage } from '@/types'
 
 type UrlFieldsProps = {
   source: string

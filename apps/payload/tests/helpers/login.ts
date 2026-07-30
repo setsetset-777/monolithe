@@ -5,8 +5,9 @@ export interface LoginOptions {
   page: Page
   serverURL?: string
   user: {
-    email: string
-    password: string
+    email: string | null | undefined
+    password?: string | null | undefined
+    // role: string
   }
 }
 
@@ -20,8 +21,8 @@ export async function login({
 }: LoginOptions): Promise<void> {
   await page.goto(`${serverURL}/admin/login`)
 
-  await page.fill('#field-email', user.email)
-  await page.fill('#field-password', user.password)
+  await page.fill('#field-email', user.email as string)
+  await page.fill('#field-password', user.password as string)
   await page.click('button[type="submit"]')
 
   await page.waitForURL(`${serverURL}/admin`)

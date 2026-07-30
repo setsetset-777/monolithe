@@ -1,4 +1,4 @@
-import payloader from '@packages/api'
+import payloader from '@monolithe/api'
 
 type LocaleCode = string
 

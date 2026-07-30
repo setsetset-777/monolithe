@@ -2,8 +2,8 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express'
 import type { Request, Response, NextFunction } from 'express'
 
-import payloader from '@packages/api'
-import logger from '@packages/logger'
+import payloader from '@monolithe/api'
+import logger from '@monolithe/logger'
 
 import { getLocales } from '../utils/locales'
 import { plantsMap } from '../utils/plants'

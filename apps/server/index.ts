@@ -2,8 +2,8 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import payloader from '@packages/api'
-import logger from '@packages/logger'
+import payloader from '@monolithe/api'
+import logger from '@monolithe/logger'
 
 import { initRouter } from './routes/index.ts'
 import { clientAssetsPath, getAssetsDetails, clientDistPath } from './utils/index.ts'

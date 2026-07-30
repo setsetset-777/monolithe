@@ -1,4 +1,4 @@
-import logger from '@packages/logger'
+import logger from '@monolithe/logger'
 
 import type { PayloadConfig, LocaleCode, LocalesData, FetchData } from './types.ts'
 

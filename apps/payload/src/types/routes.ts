@@ -1,12 +1,11 @@
-import type { GlobalSlug, CollectionSlug } from 'payload'
+import type { GlobalSlug, CollectionSlug, TypedLocale } from 'payload'
 import type {
-  Routes,
   PagePresentation,
   PageProject,
   PageProjectsSelect,
   PageService,
   PageContact,
-} from '@packages/types'
+} from '@/types/payload'
 
 export type Manifest = {
   generatedAt: number
@@ -26,3 +25,18 @@ export interface RouteConfig {
 
 export type RoutedPages =
   PagePresentation | PageProject | PageProjectsSelect | PageService | PageContact
+
+export type Locale = TypedLocale
+
+export type Route = {
+  id: string
+  path: string
+  slug: GlobalSlug | CollectionSlug
+  urlSlug: string
+  parent?: GlobalSlug | CollectionSlug
+  title: string
+}
+
+export type LocalizedRoutes = { [key: string]: Route }
+
+export type Routes = Partial<Record<string, LocalizedRoutes>>
