@@ -1,6 +1,9 @@
 export const init = () => {
-  const items = document.querySelectorAll('nav.sidebar-menu a')
   const plants = document.querySelector('.sidebar-plants') as HTMLElement
+
+  if (!plants) return
+
+  const items = document.querySelectorAll('nav.sidebar-menu a')
 
   items.forEach((item) => {
     if (!(item instanceof HTMLElement)) return

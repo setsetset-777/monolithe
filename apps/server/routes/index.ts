@@ -9,7 +9,7 @@ import { getLocales } from '../utils/locales'
 import { plantsMap } from '../utils/plants'
 import { encodeSlug } from '../utils'
 import type { HttpError } from '../types/index'
-import type { Locale } from '@packages/types'
+import type { Locale } from '@monolithe/payload/types'
 
 type Route = {
   path: string

@@ -91,6 +91,14 @@ export const PageHome: GlobalConfig = {
           },
         },
         {
+          name: 'projectLinkLabel',
+          type: 'text',
+          label: {
+            en: 'Project link label',
+            fr: 'Libellé du lien vers le projet',
+          },
+        },
+        {
           name: 'highlightedProjects',
           type: 'array',
           label: {

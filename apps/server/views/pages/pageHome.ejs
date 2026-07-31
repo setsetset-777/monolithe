@@ -57,11 +57,45 @@
       </div>
     </section>
 
-    <%- include(`../partials/separator`) %>
+    <div class="content-padding">
+      <%- include(`../partials/separator`) %>
+    </div>
 
     <section class="page-home__section page-home-section page-home-section--projects">
       <div class="page-home-section__inner page-home-projects">
 
+        <div class="page-home-projects__slider page-home-slider" data-slider>
+          <div class="page-home-slider__slides">
+            <% for(let { project, image } of pageData.projects.highlightedProjects) { %>
+              <div class="page-home-slider__slide" data-slider-item>
+                <img
+                  class="page-home-slider__img"
+                  src="<%= payloadUrl + image.sizes['1000'].url %>"
+                  srcset="
+                    <%= payloadUrl + image.sizes['2000'].url %> 800w
+                  "
+                  sizes="100vw"
+                  alt="<%= image.alt %>"
+                  loading="lazy"
+                >
+                <a href="<%= project.url %>">
+                  <h4 class="page-home-slider__title"><%= project.title %></h4>
+                  <span class="page-home-slider__title"><%= pageData.projects.projectLinkLabel %></span>
+                </a>
+              </div>
+            <% } %>
+          </div>
+          <div class="page-home-slider__remote" data-slider-remote>
+            <% for(let i = 0; i < pageData.projects.highlightedProjects.length; i++) { %>
+              <button class="page-home-slider__button" aria-label="Afficher l'image <% i - 1 %>"></button>
+            <% } %>
+          </div>
+        </div>
+
+        <%- include(`../partials/anchor`, {
+          href: pageData.projects.link,
+          text: pageData.projects.linkLabel,
+        }) %>
       </div>
     </section>
   <div>

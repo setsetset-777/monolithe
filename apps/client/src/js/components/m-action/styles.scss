@@ -17,8 +17,8 @@ a {
   padding: utilities.pxToRem(10px) utilities.pxToRem(20px);
   gap: utilities.pxToRem(20px);
   align-items: center;
-  border-radius: 1px;
-  border: solid 1px var(--color-gold-40);
+  border-radius: var(--radius-1);
+  border: solid var(--radius-1) var(--color-gold-40);
   @include utilities.transition('backbround-color, color');
   box-shadow: 2px 2px var(--color-gray-100);
 

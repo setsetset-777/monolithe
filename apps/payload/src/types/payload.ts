@@ -652,6 +652,7 @@ export interface PageHome {
   projects?: {
     title?: string | null;
     linkLabel?: string | null;
+    projectLinkLabel?: string | null;
     highlightedProjects?:
       | {
           project?: (string | null) | Project;
@@ -858,6 +859,7 @@ export interface PageHomeSelect<T extends boolean = true> {
     | {
         title?: T;
         linkLabel?: T;
+        projectLinkLabel?: T;
         highlightedProjects?:
           | T
           | {

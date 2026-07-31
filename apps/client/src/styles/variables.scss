@@ -52,10 +52,12 @@ $colors: (
   --space-80: #{utilities.pxToRem(80px)};
   --space-128: #{utilities.pxToRem(128px)};
 
+  --radius-1: #{utilities.pxToRem(1px)};
+
   // COMPOSED
   --color-font-gold: var(--color-gold-30);
 
-  --width-container-max: #{utilities.pxToRem(1400px)};
+  --width-container-max: #{utilities.pxToRem(1600px)};
   --width-sidebar-skew: #{var(--space-80)};
   --width-sidebar: #{utilities.pxToRem(400px)};
   --width-home-column-left: #{utilities.pxToRem(320px)};
