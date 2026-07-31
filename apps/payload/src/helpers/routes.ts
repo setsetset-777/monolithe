@@ -100,11 +100,11 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
 
         for (const collection of collections.docs) {
           const field = children.field || defaultSlugField
-          // TODO: Review typing
-          const doc: RoutedPages = global
+          const doc: RoutedPages = collection
+
           const urlSlug = doc[field] as string
           routes[locale as Locale]![collection.id] = {
-            id: collection.id,
+            id: doc.id,
             path: doc.url as string,
             slug: children.slug,
             urlSlug,
