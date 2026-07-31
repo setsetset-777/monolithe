@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import payloader from '@monolithe/api'
+import { api } from '@monolithe/api'
 import logger from '@monolithe/logger'
 
 import { initRouter } from './routes/index.ts'
@@ -11,7 +11,7 @@ import { clientAssetsPath, getAssetsDetails, clientDistPath } from './utils/inde
 const { mainJs, mainCss } = getAssetsDetails(clientDistPath)
 const vitePort = process.env.VITE_PORT ?? '5173'
 
-payloader.init({
+api.init({
   enable: process.env.PAYLOAD_ENABLE === 'true',
   apiUrl: `${process.env.PAYLOAD_API_URL}`,
   serviceUser: `${process.env.PAYLOAD_SERVICE_USER}`,

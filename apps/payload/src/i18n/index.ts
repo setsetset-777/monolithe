@@ -1,10 +1,10 @@
-import type { LocalizationConfig } from 'payload'
+import type { LocalizationConfigWithNoLabels } from 'payload'
 import type { TFunction } from '@payloadcms/translations'
 import { enTranslations } from '@payloadcms/translations/languages/en'
 import { frTranslations } from '@payloadcms/translations/languages/fr'
 import type { NestedKeysStripped } from '@payloadcms/translations'
 
-export const localization: LocalizationConfig = {
+export const localization: LocalizationConfigWithNoLabels = {
   locales: ['fr'],
   defaultLocale: 'fr',
 }

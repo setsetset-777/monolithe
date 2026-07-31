@@ -1,7 +1,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, CollectionSlug, GlobalSlug } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -27,6 +27,7 @@ import { localization, customTranslations } from '@/i18n'
 import { getRoutes } from '@/helpers/routes'
 import regenerateMedia from '@/helpers/regenerateMedia'
 import { Locale } from '@/types'
+import { getPageData } from './helpers/getPageData'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -86,6 +87,30 @@ export default buildConfig({
             services,
           },
         })
+      },
+    },
+    {
+      path: '/page',
+      method: 'get',
+      handler: async (req) => {
+        let path = req.query.path as string
+
+        try {
+          return Response.json({
+            ok: true,
+            ...(await getPageData(path, req)),
+          })
+        } catch (e) {
+          return Response.json(
+            {
+              ok: false,
+              message: e instanceof Error ? e.message : String(e),
+            },
+            {
+              status: 404,
+            },
+          )
+        }
       },
     },
     {

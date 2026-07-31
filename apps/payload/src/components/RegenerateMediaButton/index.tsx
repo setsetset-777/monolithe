@@ -23,13 +23,11 @@ export default function RegenerateMediaButton() {
       const data = await response.json().catch(() => ({}))
 
       if (!response.ok) {
-        console.log('!error', data.message)
         setError(data.message || `Request failed (${response.status})`)
       }
 
       setIsReady(true)
     } catch (err) {
-      console.log('!catch')
       console.error(err)
       setError(err as string)
     } finally {

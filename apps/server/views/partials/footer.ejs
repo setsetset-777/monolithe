@@ -5,7 +5,7 @@
       <div class="footer__header footer-logo">
         <%- include('./svgs/logo', { class: "footer-logo__svg" }) %>
         <h4 class=" footer-logo__catch">
-          <%- generalData.footer.logoCatch %>
+          <%- general.footer.logoCatch %>
         </h4>
       </div>
 
@@ -13,10 +13,10 @@
 
       <div class="footer__contact footer-contact">
         <p class="footer-contact__text">
-          <%- generalData.footer.contactText %>
+          <%- general.footer.contactText %>
         </p>
         <m-action class="footer-contact__action" href="<%- routes.pageContact.path %>">
-          <%- generalData.footer.contactLabel %>
+          <%- general.footer.contactLabel %>
         </m-action>
       </div>
 
@@ -29,7 +29,7 @@
           <%- routes.pageServices.title %>
         </h4>
         <ul class="footer-services__list">
-          <% for (let {title} of generalData.services) { %>
+          <% for (let {title} of general.services) { %>
             <li class="footer-services__item">
               <a href="<%- routes.pageServices.path %>#<%-encodeURIComponent(title) %>">
                 <%- title %>

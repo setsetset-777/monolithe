@@ -2,13 +2,13 @@
   <section class="page-home-section page-home-section--hero page-home-hero">
     <div class="page-home-hero__image">
       <img
-        src="<%= payloadUrl + pageData.presentation.heroImage.sizes['1000'].url %>"
+        src="<%= payloadUrl + page.presentation.heroImage.sizes['1000'].url %>"
         srcset="
-          <%= payloadUrl + pageData.presentation.heroImage.sizes['2000'].url %> 800w,
-          <%= payloadUrl + pageData.presentation.heroImage.sizes['3000'].url %> 1200w
+          <%= payloadUrl + page.presentation.heroImage.sizes['2000'].url %> 800w,
+          <%= payloadUrl + page.presentation.heroImage.sizes['3000'].url %> 1200w
         "
         sizes="100vw"
-        alt="<%= pageData.presentation.heroImage.alt %>"
+        alt="<%= page.presentation.heroImage.alt %>"
       >
     </div>
     <div class="page-home-section__inner">
@@ -20,11 +20,11 @@
         </div>
       </div>
       <div class="page-home-hero__content">
-        <h2 class="page-home-hero__catch"><%- pageData.presentation.catch %></h2>
+        <h2 class="page-home-hero__catch"><%- page.presentation.catch %></h2>
         <%- include('../partials/separator') %>
         <%- include(`../partials/anchor`, {
-          href: pageData.presentation.link,
-          text: pageData.presentation.linkLabel,
+          href: page.presentation.link,
+          text: page.presentation.linkLabel,
         }) %>
       </div>
     </div>
@@ -39,14 +39,14 @@
     <section class="page-home__section page-home-section page-home-section--services">
       <div class="page-home-section__inner page-home-services">
         <div class="page-home-services__head">
-          <h3 class="page-home-services__title"><%- pageData.services.title %></h3>
+          <h3 class="page-home-services__title"><%- page.services.title %></h3>
           <%- include(`../partials/anchor`, {
-            href: pageData.services.link,
-            text: pageData.services.linkLabel,
+            href: page.services.link,
+            text: page.services.linkLabel,
           }) %>
         </div>
         <ul class="page-home-services__list">
-        <% for(let { title } of pageData.services.items) { %>
+        <% for(let { title } of page.services.items) { %>
           <li class="page-home-services__item">
             <a href="#<%- encodeSlug(title) %>">
               <%= title %>
@@ -66,7 +66,7 @@
 
         <div class="page-home-projects__slider page-home-slider" data-slider>
           <div class="page-home-slider__slides">
-            <% for(let { project, image } of pageData.projects.highlightedProjects) { %>
+            <% for(let { project, image } of page.projects.highlightedProjects) { %>
               <div class="page-home-slider__slide" data-slider-item>
                 <img
                   class="page-home-slider__img"
@@ -80,21 +80,21 @@
                 >
                 <a href="<%= project.url %>">
                   <h4 class="page-home-slider__title"><%= project.title %></h4>
-                  <span class="page-home-slider__title"><%= pageData.projects.projectLinkLabel %></span>
+                  <span class="page-home-slider__title"><%= page.projects.projectLinkLabel %></span>
                 </a>
               </div>
             <% } %>
           </div>
           <div class="page-home-slider__remote" data-slider-remote>
-            <% for(let i = 0; i < pageData.projects.highlightedProjects.length; i++) { %>
+            <% for(let i = 0; i < page.projects.highlightedProjects.length; i++) { %>
               <button class="page-home-slider__button" aria-label="Afficher l'image <% i - 1 %>"></button>
             <% } %>
           </div>
         </div>
 
         <%- include(`../partials/anchor`, {
-          href: pageData.projects.link,
-          text: pageData.projects.linkLabel,
+          href: page.projects.link,
+          text: page.projects.linkLabel,
         }) %>
       </div>
     </section>

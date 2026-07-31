@@ -2,14 +2,12 @@ import { Router } from 'express'
 import type { Router as RouterType } from 'express'
 import type { Request, Response, NextFunction } from 'express'
 
-import payloader from '@monolithe/api'
+import { api } from '@monolithe/api'
 import logger from '@monolithe/logger'
 
-import { getLocales } from '../utils/locales'
 import { plantsMap } from '../utils/plants'
 import { encodeSlug } from '../utils'
 import type { HttpError } from '../types/index'
-import type { Locale, LocalizedRoutes } from '@monolithe/payload/types'
 
 export const initRouter = async (): Promise<RouterType> => {
   const router = Router()
@@ -20,59 +18,22 @@ export const initRouter = async (): Promise<RouterType> => {
 
     try {
       /* Handle locales */
-      const { localeCodes: locales } = await getLocales()
+      const page = await api.fetchPage(url)
 
-      const locale = (locales.includes(paths[0]) && paths[0]) as Locale
-      let path = url
-
-      if (locale) {
-        // Remove locale
-        path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
-      }
-
-      /* Handle routes */
-      const generalResponse = await payloader.fetch({ slug: 'general', params: { locale } })
-
-      const routes: LocalizedRoutes = generalResponse.routes
-      const generalData = generalResponse.data
-      const route = Object.values(routes).find((value) => value?.path === path)
-
-      const menu = generalData.navigation.navigationList.map((slug: string) => routes[slug])
-
-      console.log('>>>> route', route)
-
-      if (!route) {
+      if (!page) {
         next(404)
         return
       }
 
-      const slug = route?.slug
-      if (!slug) {
-        throw new Error(`No route found for path : ${path}`)
-      }
+      const { data, general, routes, slug } = page
 
-      let pageData
-
-      console.log('>>>> route', route)
-
-      if (route.type === 'collection') {
-        pageData = await payloader.fetch({
-          slug: `${slug}/${route.id}`,
-          params: {
-            locale,
-          },
-        })
-      } else {
-        pageData = await payloader.global(slug, {
-          locale,
-        })
-      }
+      const menu = general.navigation.navigationList.map((slug: string) => routes[slug])
 
       res.render('main', {
-        pageSlug: route.slug,
-        generalData,
+        slug,
+        general,
         menu,
-        pageData,
+        page: data,
         routes,
         plants: {
           map: plantsMap,
