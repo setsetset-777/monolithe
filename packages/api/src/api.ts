@@ -66,6 +66,7 @@ export const fetchPage = async (path: string): Promise<FetchData> => {
     },
   })
 
+  try {
     const data = await fetchApi(url)
 
     return data

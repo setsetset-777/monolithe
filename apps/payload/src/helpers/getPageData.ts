@@ -1,6 +1,5 @@
-import { localization } from '@/i18n'
-import { Locale, LocalizedRoutes } from '@/types'
-import { getRoutes } from './routes'
+import { LocalizedRoutes } from '@/types'
+import { resolveRoute } from './routes'
 import { CollectionSlug, GlobalSlug, PayloadRequest } from 'payload'
 
 export const getPageData = async (
@@ -12,50 +11,33 @@ export const getPageData = async (
   general: any
   routes: LocalizedRoutes
 }> => {
-  const paths = path.split('/')
-  let locale = (localization.locales.includes(paths[0]) && paths[0]) as Locale
+  const { locale, route, routes } = await resolveRoute(path, req)
 
-  if (locale) {
-    // Remove locale
-    path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
-  }
-  try {
-    const routes = await getRoutes(req.payload, locale ?? req.locale)
-    const route = Object.values(routes).find((value) => value?.path === path)
-    if (!route) {
-      throw 'No route found'
-    }
+  const dataPromise =
+    route.type === 'collection'
+      ? req.payload.findByID({
+          collection: route.slug as CollectionSlug,
+          locale,
+          id: route.id,
+        })
+      : await req.payload.findGlobal({
+          slug: route.slug as GlobalSlug,
+          locale,
+        })
 
-    let data
+  const [data, general, services] = await Promise.all([
+    dataPromise,
+    req.payload.findGlobal({ slug: 'general' }),
+    req.payload.findGlobal({ slug: 'pageServices' }),
+  ])
 
-    if (route.type === 'collection') {
-      data = await req.payload.find({
-        collection: route.slug as CollectionSlug,
-        locale,
-        where: {
-          id: { equals: route.id },
-        },
-      })
-    } else {
-      data = await req.payload.findGlobal({
-        slug: route.slug as GlobalSlug,
-        locale,
-      })
-    }
-
-    const general = await req.payload.findGlobal({ slug: 'general' })
-    const services = (await req.payload.findGlobal({ slug: 'pageServices' })).list
-
-    return {
-      slug: route.slug,
-      data,
-      general: {
-        ...general,
-        services,
-      },
-      routes,
-    }
-  } catch (e) {
-    throw e
+  return {
+    slug: route.slug,
+    data,
+    general: {
+      ...general,
+      services: services.list,
+    },
+    routes,
   }
 }

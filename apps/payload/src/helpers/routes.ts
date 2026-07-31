@@ -5,8 +5,17 @@ import type {
   CollectionSlug,
   GlobalAfterChangeHook,
   CollectionAfterChangeHook,
+  PayloadRequest,
 } from 'payload'
-import type { Manifest, RouteConfig, RoutedPages, Locale, Routes, LocalizedRoutes } from '@/types'
+import type {
+  Manifest,
+  RouteConfig,
+  RoutedPages,
+  Locale,
+  Routes,
+  LocalizedRoutes,
+  Route,
+} from '@/types'
 
 const { locales, defaultLocale } = localization
 const defaultSlugField = 'urlSlug' as const
@@ -118,4 +127,36 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
     }
   }
   return routes
+}
+
+export const resolveRoute = async (
+  path: string,
+  req: PayloadRequest,
+): Promise<{
+  locale: Locale
+  route: Route
+  routes: LocalizedRoutes
+}> => {
+  const paths = path.replace(/^\/+/, '').split('/')
+  let locale = localization.locales.includes(paths[0])
+    ? (paths[0] as Locale)
+    : (req.locale as Locale)
+
+  if (locale) {
+    // Remove locale
+    path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
+  }
+
+  const routes = await getRoutes(req.payload, locale)
+  const route = Object.values(routes).find((value) => value?.path === path)
+
+  if (!route) {
+    throw new Error('No route found')
+  }
+
+  return {
+    locale,
+    routes,
+    route,
+  }
 }
