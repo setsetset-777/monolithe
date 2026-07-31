@@ -83,7 +83,7 @@ const fetchPayload = async ({
     }
 
     path += slug.replace(/.$\//, '')
-
+    console.log('params', params)
     if (params && Object.keys(params).length > 0) {
       path += `?${Object.entries(params)
         .map(([k, v]) => `${k}=${v}`)

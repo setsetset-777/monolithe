@@ -91,6 +91,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         slug: slug,
         urlSlug: doc[field] as string,
         title: doc.title as string,
+        type: 'global',
       }
       if (children) {
         const collections = await payload.find({
@@ -110,6 +111,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
             urlSlug,
             parent: slug,
             title: doc.title as string,
+            type: 'collection',
           }
         }
       }

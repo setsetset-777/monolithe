@@ -9,14 +9,7 @@ import { getLocales } from '../utils/locales'
 import { plantsMap } from '../utils/plants'
 import { encodeSlug } from '../utils'
 import type { HttpError } from '../types/index'
-import type { Locale } from '@monolithe/payload/types'
-
-type Route = {
-  path: string
-  slug: string
-}
-
-type Routes = { [key: string]: Route }
+import type { Locale, LocalizedRoutes } from '@monolithe/payload/types'
 
 export const initRouter = async (): Promise<RouterType> => {
   const router = Router()
@@ -40,11 +33,13 @@ export const initRouter = async (): Promise<RouterType> => {
       /* Handle routes */
       const generalResponse = await payloader.fetch({ slug: 'general', params: { locale } })
 
-      const routes: Routes = generalResponse.routes
+      const routes: LocalizedRoutes = generalResponse.routes
       const generalData = generalResponse.data
-      const route = Object.values(routes).find((value) => value.path === path)
+      const route = Object.values(routes).find((value) => value?.path === path)
 
       const menu = generalData.navigation.navigationList.map((slug: string) => routes[slug])
+
+      console.log('>>>> route', route)
 
       if (!route) {
         next(404)
@@ -56,7 +51,22 @@ export const initRouter = async (): Promise<RouterType> => {
         throw new Error(`No route found for path : ${path}`)
       }
 
-      const pageData = await payloader.global(slug, { locale })
+      let pageData
+
+      console.log('>>>> route', route)
+
+      if (route.type === 'collection') {
+        pageData = await payloader.fetch({
+          slug: `${slug}/${route.id}`,
+          params: {
+            locale,
+          },
+        })
+      } else {
+        pageData = await payloader.global(slug, {
+          locale,
+        })
+      }
 
       res.render('main', {
         pageSlug: route.slug,

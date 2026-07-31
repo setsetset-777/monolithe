@@ -35,6 +35,7 @@ export type Route = {
   urlSlug: string
   parent?: GlobalSlug | CollectionSlug
   title: string
+  type: 'global' | 'collection'
 }
 
 export type LocalizedRoutes = { [key: string]: Route }
