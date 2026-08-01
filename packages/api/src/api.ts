@@ -1,4 +1,4 @@
-import { FetchData, PayloadConfig } from './payloader'
+import { FetchData, PayloadConfig } from '@monolithe/payload'
 import logger from '@monolithe/logger'
 
 let token: string | null = null

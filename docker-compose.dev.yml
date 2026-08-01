@@ -1,90 +1,41 @@
 services:
-  install:
-    image: node:22-alpine
+  astro:
+    build:
+      context: .
+      dockerfile: docker/.Dockerfile.pnpm
     working_dir: /workspace
-    volumes:
-      - ./:/workspace
-      - node_modules:/workspace/node_modules
-      - pnpm_store:/pnpm/store
-    command: >
-      sh -c "
-        npm i -g pnpm@10 &&
-        pnpm config set //npm.pkg.github.com/:_authToken $GITHUB_TOKEN &&
-        pnpm install
-      "
-
-  client:
-    image: node:22-alpine
-    working_dir: /workspace
-    command: sh -c "npm i -g pnpm@10 && pnpm --filter client build && pnpm --filter client dev"
-    container_name: monolithe-client
-    depends_on:
-      install:
-        condition: service_completed_successfully
-    ports:
-      # Expose vite ports
-      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-    volumes:
-      - ./:/workspace
-      - client-dist:/workspace/apps/client/dist
-      - pnpm_store:/pnpm/store
-      - node_modules:/workspace/node_modules
-      # - config:/workspace/config
-      # Add for local toolbox debugging
-      # - ../toolbox:/workspace/toolbox
-    networks:
-      - monolithe
-
-  server:
-    image: node:22-alpine
-    working_dir: /workspace
-    command: sh -c "npm i -g pnpm@10 && pnpm --filter server dev"
-    container_name: monolithe-server
-    depends_on:
-      client:
-        condition: service_started
-      install:
-        condition: service_completed_successfully
-    env_file: '.env'
-    environment:
-      NODE_ENV: development
-      MANIFEST_FILE: '.vite/manifest.json'
-      MAIN_FILE: 'src/js/main.ts'
-      RESET_FILE: 'src/styles/reset.scss'
-      CLIENT_DIST: '/workspace/client-dist'
-      CONFIG_DIST: '/workspace/config'
-    volumes:
-      - ./:/workspace
-      - client-dist:/workspace/client-dist
-      - pnpm_store:/pnpm/store
-      - node_modules:/workspace/node_modules
-      # - config:/workspace/config
-      # Add for local toolbox debugging
-      # - ../toolbox:/workspace/toolbox
+    command: ['pnpm', '--filter', '@monolithe/astro', 'dev', '--port', '${SERVER_PORT}', '--host']
     ports:
       - '${SERVER_PORT:-3000}:${SERVER_PORT:-3000}'
+    volumes:
+      - ./:/workspace
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+      # - /workspace/apps/astro/.astro
+    tmpfs:
+      - /workspace/apps/astro/.astro
+    env_file:
+      - .env
+    stop_grace_period: 1s
     networks:
       - monolithe
 
   payload:
-    image: node:22-alpine
+    build:
+      context: .
+      dockerfile: docker/.Dockerfile.pnpm
     working_dir: /workspace
-    command: sh -c "npm i -g pnpm@10 && pnpm --filter ./apps/payload dev"
-    container_name: monolithe-payload
+    command: ['pnpm', '--filter', '@monolithe/payload', 'dev']
     ports:
       - '${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}'
     volumes:
       - ./:/workspace
-      - ./media:/workspace/media
+      - media:/workspace/media
       - pnpm_store:/pnpm/store
       - node_modules:/workspace/node_modules
     depends_on:
       mongo:
         condition: service_started
-      install:
-        condition: service_completed_successfully
-    environment:
-      CI: 'true'
     env_file:
       - .env
     networks:
@@ -110,8 +61,7 @@ networks:
     name: monolithe
 
 volumes:
-  client-dist:
-  # config:
   data:
   pnpm_store:
   node_modules:
+  media:
