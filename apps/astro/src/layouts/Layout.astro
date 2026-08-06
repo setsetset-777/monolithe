@@ -1,23 +1,116 @@
+---
+import Sidebar from '@/components/Sidebar.astro'
+import Footer from '@/components/Footer.astro'
+
+import type { GeneralData } from '@monolithe/api/types'
+
+const analytics = {
+  enable: import.meta.env.ANALYTICS_ENABLE,
+  id: import.meta.env.ANALYTICS_ID,
+  domain: import.meta.env.ANALYTICS_Domain,
+}
+
+type Props = {
+  general: GeneralData,
+  routes: any
+}
+
+const { general } = Astro.props
+
+const { home, menu } = general.navigation
+
+const { logoCatch, contact, services } = general.footer
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monolithe – Gravure  • Art funéraire</title>
+  <meta
+    name="description"
+    content="Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires" />
+
+    <!-- Default favicons (fallback) -->
+  <link rel="icon" type="image/x-icon" href="/favicon-light.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png">
+
+    <!-- Light mode favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon-light.ico" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-light-16x16.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png" media="(prefers-color-scheme: light)">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-light.png" media="(prefers-color-scheme: light)">
+
+    <!-- Dark mode favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon-dark.ico" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-dark-16x16.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-dark-32x32.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-dark.png" media="(prefers-color-scheme: dark)">
+
+    { analytics.enable && <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id}></script> }
+</head>
+
+<body data-theme="light">
+  <div class="container">
+    <div class="container__inner">
+      <Sidebar home={home} menu={menu} />
+
+      <div class="content">
+        <main class="main">
+          <slot />
+        </main>
+
+        <Footer logoCatch={logoCatch} contact={contact} services={services} />
+      </div>
+    </div>
+  </div>
+</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style lang="scss">
+html,
+body {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-00);
+  font-family: var(--font-family-body);
+  height: 100%;
+  font-size: var(--font-size-s);
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  position: relative;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  overflow-x: clip;
+  font-size: var(--font-size-m);
+
+  &__inner {
+    max-width: var(--width-container-max);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.main {
+  flex-grow: 1;
+}
 </style>

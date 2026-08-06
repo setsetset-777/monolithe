@@ -1,0 +1,40 @@
+---
+type Props = {
+  href: string;
+  className?: string;
+}
+
+const { href, className } = Astro.props
+---
+
+<a href={ href } class:list={[ className ]}>
+  <span>
+    <slot />
+  </span>
+</a>
+
+<style lang="scss">
+@use '../styles/utilities/' as *;
+a {
+  text-decoration: none;
+
+  span {
+    @include transition(color);
+    text-decoration: underline;
+    color: var(--color-gray-10);
+  }
+
+  &:before {
+    content: '→';
+    color: var(--color-gold-30);
+    margin-right: var(--space-8);
+    text-decoration: none;
+  }
+
+  &:hover {
+    span {
+      color: var(--color-gray-00);
+    }
+  }
+}
+</style>

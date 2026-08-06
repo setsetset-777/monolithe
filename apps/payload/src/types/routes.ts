@@ -1,4 +1,4 @@
-import type { GlobalSlug, CollectionSlug, TypedLocale } from 'payload'
+import type { TypedLocale } from 'payload'
 import type {
   PagePresentation,
   PageProject,
@@ -6,6 +6,7 @@ import type {
   PageService,
   PageContact,
 } from '@/types/payload'
+import type { PageSlug } from '@/types'
 
 export type Manifest = {
   generatedAt: number
@@ -13,8 +14,8 @@ export type Manifest = {
 }
 
 export type RouteConfigPage = {
-  slug: GlobalSlug | CollectionSlug
-  path?: string | null | undefined
+  slug: PageSlug
+  path?: string
   field?: keyof RoutedPages
   children?: RouteConfigPage
 }
@@ -31,9 +32,9 @@ export type Locale = TypedLocale
 export type Route = {
   id: string
   path: string
-  slug: GlobalSlug | CollectionSlug
+  slug: PageSlug
   urlSlug: string
-  parent?: GlobalSlug | CollectionSlug
+  parent?: PageSlug
   title: string
   type: 'global' | 'collection'
 }

@@ -1,0 +1,34 @@
+<div class="separator">
+  <div></div>
+</div>
+
+<style lang="scss">
+@use '../styles/utilities' as *;
+@use 'sass:math';
+
+@layer modules {
+  .separator {
+    $size: pxToRem(2px);
+    display: flex;
+    gap: 0.5rem;
+    position: relative;
+    align-items: center;
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      width: $size;
+      height: $size;
+      background-color: currentColor;
+      transform: rotate(45deg);
+    }
+
+    div {
+      height: math.div($size, 2);
+      width: pxToRem(48px);
+      background-color: currentColor;
+    }
+  }
+}
+</style>

@@ -38,7 +38,7 @@ export const initRouter = async (): Promise<RouterType> => {
         plants: {
           map: plantsMap,
         },
-        payloadUrl: process.env.PAYLOAD_URL,
+        payloadUrl: process.env.MEDIA_URL,
         encodeSlug,
       })
     } catch (e) {

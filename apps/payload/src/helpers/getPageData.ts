@@ -1,16 +1,9 @@
-import { LocalizedRoutes } from '@/types'
-import { resolveRoute } from './routes'
-import { CollectionSlug, GlobalSlug, PayloadRequest } from 'payload'
+import { PageResponse, PageData, PageHome, Media, Route } from '@/types'
+import { resolveRoute, routesConfig } from './routes'
+import { CollectionSlug, DataFromGlobalSlug, GlobalSlug, PayloadRequest } from 'payload'
 
-export const getPageData = async (
-  path: string,
-  req: PayloadRequest,
-): Promise<{
-  slug: string
-  data: any
-  general: any
-  routes: LocalizedRoutes
-}> => {
+export const getPageData = async (path: string, req: PayloadRequest): Promise<PageResponse> => {
+  console.log('getPageData')
   const { locale, route, routes } = await resolveRoute(path, req)
 
   const dataPromise =
@@ -25,7 +18,7 @@ export const getPageData = async (
           locale,
         })
 
-  const [data, general, services] = await Promise.all([
+  const [pageData, general, services] = await Promise.all([
     dataPromise,
     req.payload.findGlobal({ slug: 'general' }),
     req.payload.findGlobal({ slug: 'pageServices' }),
@@ -33,11 +26,69 @@ export const getPageData = async (
 
   return {
     slug: route.slug,
-    data,
+    data: formatPageData(pageData, route),
     general: {
-      ...general,
-      services: services.list,
+      navigation: {
+        home: {
+          url: routesConfig.pages.find((item) => item.slug === 'pageHome')!.path!,
+          linkLabel: "Retour à l'accueil",
+        },
+        menu: general.navigation?.items!,
+      },
+      footer: {
+        logoCatch: general.footer!.logoCatch as string,
+        contact: {
+          text: general.footer!.contactText as string,
+          label: general.footer!.contactLabel as string,
+          url: general.footer!.contactUrl as string,
+        },
+        services: {
+          title: services.title as string,
+          items: services.list?.map((service) => ({
+            title: service.title as string,
+            url: `${services.url}#${encodeURIComponent(service.title as string)}`,
+          }))!,
+          url: routes.pageServices.path,
+        },
+      },
     },
     routes,
+  }
+}
+
+function formatPageData<T extends GlobalSlug>(
+  pageData: DataFromGlobalSlug<T>,
+  route: Route,
+): PageData {
+  switch (route.slug) {
+    default:
+      const { presentation, services, projects } = pageData as PageHome
+
+      return {
+        presentation: {
+          heroImage: presentation?.heroImage as Media,
+          catch: presentation?.catch!,
+          url: presentation?.link!,
+          linkLabel: presentation?.linkLabel!,
+        },
+        services: {
+          title: services?.title!,
+          url: services?.link!,
+          linkLabel: services?.linkLabel!,
+          items: services?.items?.map((item) => ({
+            title: item.title!,
+            url: item.url!,
+          }))!,
+        },
+        projects: {
+          highlights: projects?.highlights?.map((item) => ({
+            title: item.title!,
+            url: item.link!,
+            image: item.image as Media,
+          }))!,
+          linkLabel: projects?.linkLabel!,
+          url: projects?.link!,
+        },
+      }
   }
 }

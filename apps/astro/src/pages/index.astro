@@ -1,11 +1,54 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import '../styles/index.scss'
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { page } from '@/lib/page'
+import Layout from '@/layouts/Layout.astro';
+import { api } from '@monolithe/api'
+import Home from './Home.astro';
+import Presentation from './Presentation.astro';
+import Services from './Services.astro';
+import Projects from './Projects.astro';
+import Project from './Project.astro';
+import Contact from './Contact.astro';
+
+api.init({
+  enable: process.env.PAYLOAD_ENABLE === 'true',
+  apiUrl: `${process.env.PAYLOAD_API_URL}`,
+  serviceUser: `${process.env.PAYLOAD_SERVICE_USER}`,
+  servicePassord: `${process.env.PAYLOAD_SERVICE_PASSWORD}`,
+  env: `${process.env.NODE_ENV}` === 'development' ? 'development' : 'production',
+})
+
+const { data, general, routes, slug } = await page(Astro.url.pathname)
+
+const pages = {
+  pageHome: Home,
+  pagePresentation: Presentation,
+  pageServices: Services,
+  pageProjects: Projects,
+  projects: Project,
+  pageContact: Contact,
+}
+
+const Page = pages[slug];
+
+if (!Page) {
+  return Astro.redirect('/404')
+}
+
 ---
-
-<Layout>
-	<Welcome />
+<Layout general={general} routes={routes}>
+  <Page {...data} />
 </Layout>
+
+<style lang="scss">
+html,
+body {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-00);
+  font-family: var(--font-family-body);
+  height: 100%;
+  font-size: var(--font-size-s);
+  scroll-behavior: smooth;
+}
+</style>

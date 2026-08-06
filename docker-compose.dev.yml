@@ -1,10 +1,10 @@
 services:
   astro:
-    build:
-      context: .
-      dockerfile: docker/.Dockerfile.pnpm
+    image: node:22-alpine
+    container_name: monolithe-astro
     working_dir: /workspace
-    command: ['pnpm', '--filter', '@monolithe/astro', 'dev', '--port', '${SERVER_PORT}', '--host']
+    command: >
+      sh -c "npm -g install pnpm && pnpm install && pnpm --filter @monolithe/astro dev --port ${SERVER_PORT} --host"
     ports:
       - '${SERVER_PORT:-3000}:${SERVER_PORT:-3000}'
     volumes:
@@ -21,11 +21,11 @@ services:
       - monolithe
 
   payload:
-    build:
-      context: .
-      dockerfile: docker/.Dockerfile.pnpm
+    image: node:22-alpine
+    container_name: monolithe-payload
     working_dir: /workspace
-    command: ['pnpm', '--filter', '@monolithe/payload', 'dev']
+    command: >
+      sh -c "npm -g install pnpm && pnpm install && pnpm --filter @monolithe/payload dev"
     ports:
       - '${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}'
     volumes:
@@ -44,7 +44,7 @@ services:
   # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
   mongo:
     image: mongo:latest
-    # container_name: monolithe-mongo
+    container_name: monolithe-mongo
     ports:
       - '${MONGO_PORT:-27017}:${MONGO_PORT:-27017}'
     command:

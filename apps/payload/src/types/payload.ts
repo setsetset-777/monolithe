@@ -619,17 +619,22 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface General {
   id: string;
-  navigation?: {
-    navigationList?: ('pagePresentation' | 'pageServices' | 'pageProjects' | 'pageContact')[] | null;
-    /**
-     * This label is used for assistive technologies and won't be displayed
-     */
-    homeLinkLabel?: string | null;
+  navigation: {
+    navigationList: ('pagePresentation' | 'pageServices' | 'pageProjects' | 'pageContact')[];
+    items?:
+      | {
+          title: string;
+          url: string;
+          slug: string;
+          id?: string | null;
+        }[]
+      | null;
   };
-  footer?: {
+  footer: {
     logoCatch?: string | null;
     contactText?: string | null;
-    contactLabel?: string | null;
+    contactLabel: string;
+    contactUrl?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -644,14 +649,24 @@ export interface PageHome {
     catch?: string | null;
     linkLabel?: string | null;
     heroImage?: (string | null) | Media;
+    link?: string | null;
   };
   services?: {
     title?: string | null;
     linkLabel?: string | null;
+    items?:
+      | {
+          title?: string | null;
+          url?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    link?: string | null;
   };
   projects?: {
     title?: string | null;
     linkLabel?: string | null;
+    link?: string | null;
     projectLinkLabel?: string | null;
     highlightedProjects?:
       | {
@@ -659,6 +674,14 @@ export interface PageHome {
           /**
            * By default the displayed image will be the main one from the project. It is possible to upload an alternative one.
            */
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    highlights?:
+      | {
+          title?: string | null;
+          link?: string | null;
           image?: (string | null) | Media;
           id?: string | null;
         }[]
@@ -823,7 +846,14 @@ export interface GeneralSelect<T extends boolean = true> {
     | T
     | {
         navigationList?: T;
-        homeLinkLabel?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              url?: T;
+              slug?: T;
+              id?: T;
+            };
       };
   footer?:
     | T
@@ -831,6 +861,7 @@ export interface GeneralSelect<T extends boolean = true> {
         logoCatch?: T;
         contactText?: T;
         contactLabel?: T;
+        contactUrl?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -847,23 +878,41 @@ export interface PageHomeSelect<T extends boolean = true> {
         catch?: T;
         linkLabel?: T;
         heroImage?: T;
+        link?: T;
       };
   services?:
     | T
     | {
         title?: T;
         linkLabel?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              url?: T;
+              id?: T;
+            };
+        link?: T;
       };
   projects?:
     | T
     | {
         title?: T;
         linkLabel?: T;
+        link?: T;
         projectLinkLabel?: T;
         highlightedProjects?:
           | T
           | {
               project?: T;
+              image?: T;
+              id?: T;
+            };
+        highlights?:
+          | T
+          | {
+              title?: T;
+              link?: T;
               image?: T;
               id?: T;
             };

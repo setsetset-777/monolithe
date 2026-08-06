@@ -8,6 +8,9 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./types": {
+      "types": "./src/types.ts"
     }
   },
   "scripts": {
@@ -19,5 +22,8 @@
   "packageManager": "pnpm@10.26.2",
   "dependencies": {
     "@monolithe/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@monolithe/payload": "workspace:*"
   }
 }

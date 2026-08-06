@@ -94,11 +94,11 @@ export default buildConfig({
       method: 'get',
       handler: async (req) => {
         let path = req.query.path as string
-
         try {
+          const pageData = await getPageData(path, req)
           return Response.json({
             ok: true,
-            ...(await getPageData(path, req)),
+            ...pageData,
           })
         } catch (e) {
           return Response.json(
@@ -107,7 +107,7 @@ export default buildConfig({
               message: e instanceof Error ? e.message : String(e),
             },
             {
-              status: 404,
+              status: 500,
             },
           )
         }

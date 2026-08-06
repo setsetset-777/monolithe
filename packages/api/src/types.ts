@@ -1,16 +1,11 @@
-export type FetchData = Promise<Record<string, any>>;
+export type * from '@monolithe/payload/types'
 
-export type LocaleCode = string;
+export type FetchData = Promise<Record<string, any>>
 
-export type LocalesData = {
-  localeCodes: LocaleCode[];
-  defaultLocale: LocaleCode;
-};
-
-export interface PayloadConfig {
-  enable: boolean;
-  apiUrl: string;
-  serviceUser: string;
-  servicePassord: string;
-  env: "production" | "development";
+export interface APIInitConfig {
+  enable: boolean
+  apiUrl: string
+  serviceUser: string
+  servicePassord: string
+  env: 'production' | 'development'
 }

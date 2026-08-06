@@ -1,0 +1,189 @@
+---
+import Separator from '@/components/Separator.astro'
+import Action from '@/components/Action.astro'
+import Logo from '@/assets/svgs/logo.svg'
+import Logo777 from '@/assets/svgs/777.svg'
+
+interface Props {
+  logoCatch: string
+  contact: {
+    text: string
+    label: string
+    url: string
+  }
+  services: {
+    title: string
+    items: { title: string }[]
+    url: string
+  },
+}
+
+const {
+  logoCatch,
+  contact,
+  services
+} = Astro.props
+
+---
+<footer class="footer">
+  <div class="container">
+    <div class="column">
+
+      <div class="header logo">
+        <Logo class:list={"logo__svg"}/>
+        <h4 class=" logo__catch">
+          { logoCatch }
+        </h4>
+      </div>
+
+      <Separator />
+
+      <div class="contact">
+        <p class="contact__text">
+          { contact.text }
+        </p>
+        <Action className="contact__action" href={ contact.url }>
+          { contact.label }
+        </Action>
+      </div>
+
+    </div>
+
+    <div class="column">
+
+      <div class="services">
+        <h4 class="services__title">
+          { services.title }
+        </h4>
+        <ul class="services__list">
+          { services.items.map(({ title }) => (
+            <li class="services__item">
+              <a href={ `${services.url}#${encodeURIComponent(title)}` }>
+                { title }
+              </a>
+            </li>
+          )) }
+        </ul>
+      </div>
+
+      <p class="setsetset">
+        <span>Design & Code par</span>
+        <a href="https://setsetset.net" aria-label="setsetset">
+          <Logo777 />
+        </a>
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<style lang="scss">
+@use '../styles/utilities' as *;
+
+.footer {
+  padding: var(--padding-footer-y) var(--padding-content-x) var(--padding-footer-y)
+    var(--padding-content-x-start);
+  position: relative;
+  color: var(--color-gray-10);
+  font-size: var(--font-size-s);
+
+  &:before {
+    content: '';
+    display: block;
+    background-color: var(--color-gray-50);
+    position: absolute;
+    top: 0;
+    @include bleed;
+    bottom: 0;
+    height: 100%;
+  }
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-64);
+  align-items: end;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+
+  &:first-child {
+    width: var(--width-home-column-left);
+  }
+
+  &:last-child {
+    gap: var(--space-48);
+  }
+}
+
+.logo {
+  color: var(--color-gold-30);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+
+  &__svg {
+    width: pxToRem(90px);
+  }
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.services {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+
+  &__title {
+    font-weight: bold;
+    font-size: var(--font-size-m);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  &__item {
+    a {
+      @include transition(color);
+
+      &:hover {
+        color: var(--color-gold-30);
+      }
+    }
+  }
+}
+
+.setsetset {
+  display: flex;
+  gap: var(--space-8);
+  align-items: baseline;
+  font-size: var(--font-size-xs);
+
+  a {
+    position: relative;
+    top: pxToRem(3px);
+    @include transition(color);
+
+    svg {
+      height: 1em;
+    }
+
+    &:hover {
+      color: var(--color-gold-30);
+    }
+  }
+}
+
+</style>

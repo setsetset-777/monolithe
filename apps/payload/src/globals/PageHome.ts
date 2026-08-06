@@ -38,6 +38,12 @@ export const PageHome: GlobalConfig = {
           type: 'upload',
           relationTo: 'media',
         },
+        {
+          name: 'link',
+          type: 'text',
+          virtual: true,
+          hidden: true,
+        },
       ],
     },
     {
@@ -64,6 +70,28 @@ export const PageHome: GlobalConfig = {
             fr: 'Libellé du lien vers la page',
           },
         },
+        {
+          name: 'items',
+          type: 'array',
+          virtual: true,
+          hidden: true,
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+            },
+            {
+              name: 'url',
+              type: 'text',
+            },
+          ],
+        },
+        {
+          name: 'link',
+          type: 'text',
+          virtual: true,
+          hidden: true,
+        },
       ],
     },
     {
@@ -89,6 +117,12 @@ export const PageHome: GlobalConfig = {
             en: 'Link label',
             fr: 'Libellé du lien vers la page',
           },
+        },
+        {
+          name: 'link',
+          type: 'text',
+          virtual: true,
+          hidden: true,
         },
         {
           name: 'projectLinkLabel',
@@ -127,6 +161,26 @@ export const PageHome: GlobalConfig = {
             },
           ],
         },
+        {
+          name: 'highlights',
+          type: 'array',
+          virtual: true,
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+            },
+            {
+              name: 'link',
+              type: 'text',
+            },
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
+        },
       ],
     },
   ],
@@ -155,6 +209,27 @@ export const PageHome: GlobalConfig = {
         doc.presentation.link = presentation.url
         doc.services.link = services.url
         doc.projects.link = projects.url
+
+        const highlights = []
+
+        for (let i = 0; i < doc.projects.highlightedProjects.length; i++) {
+          const item = doc.projects.highlightedProjects[i]
+          const page = await req.payload.findByID({
+            collection: 'projects',
+            id: typeof item.project === 'object' ? item.project.id : item.project,
+            locale: req.locale,
+          })
+
+          if (!page) continue
+
+          highlights.push({
+            image: item.image,
+            title: page.title,
+            link: page.url,
+          })
+        }
+
+        doc.projects.highlights = highlights
 
         return doc
       },

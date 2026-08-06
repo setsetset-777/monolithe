@@ -1,120 +1,112 @@
-import { FetchData, PayloadConfig } from '@monolithe/payload'
+import type { FetchData, PageResponse, APIInitConfig } from './types'
 import logger from '@monolithe/logger'
 
 let token: string | null = null
-let config: PayloadConfig = {
+let loginPromise: Promise<void> | null = null
+
+let config: APIInitConfig = {
   enable: false,
   apiUrl: '',
   serviceUser: '',
   servicePassord: '',
   env: 'production',
 }
-const loginRetryLimit = 5
-let loginRetry = loginRetryLimit
 
-export const init = (initConfig: PayloadConfig) => {
-  config = { ...config, ...initConfig }
-}
-
-const login = async (): Promise<boolean> => {
-  try {
-    const url = buildUrl({ slug: 'users/login' })
-
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: config.serviceUser,
-        password: config.servicePassord,
-      }),
-    })
-
-    if (!res.ok) {
-      throw new Error(`Error while fetchin ${config.apiUrl}/users/login`)
-    }
-
-    const data = await res.json()
-    token = data.token
-    loginRetry = loginRetryLimit
-    return true
-  } catch (e) {
-    loginRetry--
-    logger.error('Login failed')
-
-    if (loginRetry > 0) {
-      logger.info(`Retry login, try ${loginRetry}`)
-      login()
-    } else {
-      logger.info('Login retry reached limit')
-      return false
-    }
-    throw e
+export function init(initConfig: APIInitConfig) {
+  config = {
+    ...config,
+    ...initConfig,
   }
 }
 
-export const fetchPage = async (path: string): Promise<FetchData> => {
+async function fetchLogin() {
+  const url = buildUrl({ slug: 'users/login' })
+
+  logger.info(`Logging into Payload at ${url}`)
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: config.serviceUser,
+      password: config.servicePassord,
+    }),
+  })
+
+  if (!res.ok) {
+    throw new Error(`Unable to login (${res.status})`)
+  }
+
+  const data = await res.json()
+  token = data.token
+
+  logger.info('Payload login successful')
+}
+
+async function login(): Promise<void> {
+  if (loginPromise) {
+    return loginPromise
+  }
+
+  loginPromise = fetchLogin()
+
+  try {
+    await loginPromise
+  } finally {
+    loginPromise = null
+  }
+}
+
+async function request<T>(url: string): Promise<T> {
   if (!token) {
     await login()
   }
 
-  const url = buildUrl({
-    slug: 'page',
-    params: {
-      path,
+  let res = await fetch(url, {
+    headers: {
+      Authorization: config.env === 'development' ? '' : `Bearer ${token}`,
     },
   })
 
-  try {
-    const data = await fetchApi(url)
+  // Token expired: refresh once
+  if (res.status === 401) {
+    logger.info('Payload token expired. Refreshing.')
 
-    return data
-  } catch (e) {
-    throw e
-  }
-}
+    token = null
 
-const fetchApi = async (url: string): Promise<FetchData> => {
-  try {
-    const res = await fetch(url, {
-      method: 'GET',
+    await login()
+
+    res = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: config.env !== 'development' ? `Bearer ${token}` : '',
+        Authorization: config.env === 'development' ? '' : `Bearer ${token}`,
       },
     })
-
-    if (!res.ok) {
-      throw new Error(`Fetch page to Payload failed for ${url}`)
-    }
-
-    // Unauthorized. Re-fetch token
-    if (res.status === 401) {
-      const loginSuccess = await login()
-      if (loginSuccess) {
-        fetchPage(url)
-      } else {
-        throw new Error('Login failed, unable to fetch page')
-      }
-    }
-
-    return res.json()
-  } catch (e) {
-    console.error('Error while fetching API')
-    throw e
   }
+
+  if (!res.ok) {
+    throw new Error(`Payload request failed (${res.status}) for ${url}`)
+  }
+
+  return res.json()
 }
 
-const buildUrl = ({ slug, params }: { slug: string; params?: Record<string, string> }) => {
-  let url = `${config.apiUrl}/${slug}`
+export async function fetchPage(path: string): Promise<PageResponse> {
+  return request(
+    buildUrl({
+      slug: 'page',
+      params: { path },
+    }),
+  )
+}
+
+function buildUrl({ slug, params }: { slug: string; params?: Record<string, string> }) {
+  const url = new URL(`${config.apiUrl}/${slug}`)
 
   if (params) {
-    const queryString = Object.entries(params)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-      .join('&')
-    url += `?${queryString}`
+    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
   }
 
-  return url
+  return url.toString()
 }

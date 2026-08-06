@@ -1,0 +1,273 @@
+---
+import type { PageHomeData } from '@monolithe/payload/types'
+
+export type Props = {
+  projects: PageHomeData['projects']
+}
+
+const { projects } = Astro.props
+
+const mediaUrl = import.meta.env.MEDIA_URL
+---
+
+<div class="slider" data-slider>
+  <div class="slider__slides">
+    { projects.highlights.map(({ title, url, image}) => (
+      <div class="slider__slide" data-slider-item>
+        <img
+          class="slider__img"
+          src={ mediaUrl + image.sizes?.[1000]?.url }
+          srcset={`
+            ${mediaUrl + image.sizes?.[2000]?.url} 800w
+          `}
+          sizes="100vw"
+          alt={ image.alt }
+          loading="lazy"
+        >
+        <a href={ url }>
+          <h4 class="slider__title">{ title }</h4>
+          <span class="slider__title">{ projects.linkLabel }</span>
+        </a>
+      </div>
+    )) }
+  </div>
+  <div class="slider__remote" data-slider-remote>
+
+    { Array.from(Array(projects.highlights.length)).map((_, index) => (
+      <button class="slider__button" aria-label={`Afficher l'image ${ index - 1 }`}></button>
+    ))}
+  </div>
+</div>
+
+<script>
+const activeClass = 'active'
+const duration = 3000
+
+export const init = () => {
+  const slider = document.querySelector('[data-slider]') as HTMLElement
+
+  if (!slider) {
+    return
+  }
+
+  const slides = slider?.querySelectorAll('[data-slider-item]')
+  const remoteButtons = slider?.querySelectorAll('[data-slider-remote] button')
+
+  if (slides.length <= 0 || remoteButtons.length <= 0) {
+    console.log('No slides or buttons found for slide.')
+  }
+
+  let current = 0
+  let timeout: NodeJS.Timeout
+
+  const activateSlide = (index: number) => {
+    resetActiveSlides()
+
+    if (!slides[index] || !remoteButtons[index]) {
+      return
+    }
+
+    slides.forEach((slide) => slide.classList.remove(activeClass))
+    remoteButtons.forEach((slide) => slide.classList.remove(activeClass))
+
+    slides[index].classList.add(activeClass)
+    remoteButtons[index].classList.add(activeClass)
+
+    current = index
+    start()
+  }
+
+  const resetActiveSlides = () => {
+    slides.forEach((slide) => slide.classList.remove(activeClass))
+    remoteButtons.forEach((slide) => slide.classList.remove(activeClass))
+  }
+
+  const start = () => {
+    stop()
+
+    timeout = setTimeout(() => {
+      current++
+      if (current >= slides.length) {
+        current = 0
+      }
+      activateSlide(current)
+    }, duration)
+  }
+
+  const stop = () => {
+    clearTimeout(timeout)
+  }
+
+  slides.forEach((slide) => {
+    slide.addEventListener('mouseenter', stop)
+    slide.addEventListener('mouseleave', start)
+  })
+
+  remoteButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      activateSlide(index)
+    })
+  })
+
+  setTimeout(() => {
+    slider.dataset.slider = 'ready'
+    activateSlide(current)
+  }, 0)
+}
+
+init()
+</script>
+
+<style lang="scss">
+@use '../../styles/utilities/' as *;
+
+.slider {
+  $slider: &;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+
+  &__slides {
+    width: 100%;
+    padding-top: 69%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-1);
+    opacity: 0;
+    display: none;
+    transition: none;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      @include transition(filter);
+    }
+
+    a {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      padding: var(--space-48);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-8);
+      @include transition(opacity);
+      opacity: 0;
+      z-index: 1;
+
+      * {
+        position: relative;
+      }
+
+      h4 {
+        @include font-heading-3;
+      }
+
+      span {
+        @include transition(color);
+        color: var(--color-gray-10);
+
+        &:before {
+          content: '→';
+          color: var(--color-gold-30);
+          margin-right: var(--space-8);
+        }
+      }
+
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-gray-100);
+        opacity: 0.8;
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &.active {
+      opacity: 1;
+    }
+
+    &:hover {
+      img {
+        filter: blur(3px);
+      }
+    }
+
+    #{$slider}[data-slider='ready'] & {
+      display: block;
+      @include transition('opacity', medium);
+    }
+  }
+
+  &__remote {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-8);
+    justify-content: center;
+  }
+
+  &__button {
+    $sizeButton: pxToRem(16px);
+    $sizeBefore: pxToRem(8px);
+    cursor: pointer;
+    width: $sizeButton;
+    height: $sizeButton;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:before {
+      content: '';
+      display: block;
+      width: $sizeBefore;
+      height: $sizeBefore;
+      background-color: var(--color-gray-20);
+      transform: rotate(45deg);
+      border-radius: var(--radius-1);
+    }
+
+    &:hover {
+      &:before {
+        background-color: var(--color-gray-00);
+      }
+    }
+
+    &.active {
+      &:before {
+        background-color: var(--color-gray-00);
+        transform: rotate(45deg) scale(1.2);
+      }
+    }
+
+    #{$slider}[data-slider='ready'] & {
+      &:before {
+        @include transition('background-color, transform', medium);
+      }
+    }
+  }
+}
+</style>
