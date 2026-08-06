@@ -28,6 +28,7 @@ import { getRoutes } from '@/helpers/routes'
 import regenerateMedia from '@/helpers/regenerateMedia'
 import { Locale } from '@/types'
 import { getPageData } from './helpers/getPageData'
+import { getGeneralData } from './helpers/getGeneralData'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -78,14 +79,11 @@ export default buildConfig({
       method: 'get',
       handler: async (req) => {
         const locale = (req.locale as Locale) ?? localization.defaultLocale
-        const routes = await getRoutes(req.payload, locale)
-        const services = (await req.payload.findGlobal({ slug: 'pageServices' })).list
+        const general = await getGeneralData(req.payload, locale)
+        console.log(general)
         return Response.json({
-          routes: routes,
-          data: {
-            ...(await req.payload.findGlobal({ slug: 'general' })),
-            services,
-          },
+          ok: true,
+          ...general,
         })
       },
     },

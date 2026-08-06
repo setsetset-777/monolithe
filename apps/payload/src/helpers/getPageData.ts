@@ -3,7 +3,6 @@ import { resolveRoute, routesConfig } from './routes'
 import { CollectionSlug, DataFromGlobalSlug, GlobalSlug, PayloadRequest } from 'payload'
 
 export const getPageData = async (path: string, req: PayloadRequest): Promise<PageResponse> => {
-  console.log('getPageData')
   const { locale, route, routes } = await resolveRoute(path, req)
 
   const dataPromise =
@@ -27,32 +26,6 @@ export const getPageData = async (path: string, req: PayloadRequest): Promise<Pa
   return {
     slug: route.slug,
     data: formatPageData(pageData, route),
-    general: {
-      navigation: {
-        home: {
-          url: routesConfig.pages.find((item) => item.slug === 'pageHome')!.path!,
-          linkLabel: "Retour à l'accueil",
-        },
-        menu: general.navigation?.items!,
-      },
-      footer: {
-        logoCatch: general.footer!.logoCatch as string,
-        contact: {
-          text: general.footer!.contactText as string,
-          label: general.footer!.contactLabel as string,
-          url: general.footer!.contactUrl as string,
-        },
-        services: {
-          title: services.title as string,
-          items: services.list?.map((service) => ({
-            title: service.title as string,
-            url: `${services.url}#${encodeURIComponent(service.title as string)}`,
-          }))!,
-          url: routes.pageServices.path,
-        },
-      },
-    },
-    routes,
   }
 }
 

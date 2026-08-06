@@ -2,7 +2,7 @@
 import Sidebar from '@/components/Sidebar.astro'
 import Footer from '@/components/Footer.astro'
 
-import type { GeneralData } from '@monolithe/api/types'
+import type { FooterData, NavigationData } from '@monolithe/api/types'
 
 const analytics = {
   enable: import.meta.env.ANALYTICS_ENABLE,
@@ -11,15 +11,18 @@ const analytics = {
 }
 
 type Props = {
-  general: GeneralData,
-  routes: any
+  footer: FooterData
+  navigation: NavigationData
+  meta: {
+    title: string
+  }
 }
 
-const { general } = Astro.props
+const { footer, navigation, meta } = Astro.props
 
-const { home, menu } = general.navigation
+const { home, menu } = navigation
 
-const { logoCatch, contact, services } = general.footer
+const { logoCatch, contact, services } = footer
 ---
 
 <!doctype html>
@@ -28,7 +31,7 @@ const { logoCatch, contact, services } = general.footer
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monolithe – Gravure  • Art funéraire</title>
+  <title>Monolithe – Gravure  • Art funéraire – { meta.title }</title>
   <meta
     name="description"
     content="Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires" />

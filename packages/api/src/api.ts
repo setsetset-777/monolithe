@@ -1,4 +1,4 @@
-import type { FetchData, PageResponse, APIInitConfig } from './types'
+import type { FetchData, PageResponse, APIInitConfig, Locale, GeneralData } from './types'
 import logger from '@monolithe/logger'
 
 let token: string | null = null
@@ -11,6 +11,14 @@ let config: APIInitConfig = {
   servicePassord: '',
   env: 'production',
 }
+
+init({
+  enable: process.env.PAYLOAD_ENABLE === 'true',
+  apiUrl: `${process.env.PAYLOAD_API_URL}`,
+  serviceUser: `${process.env.PAYLOAD_SERVICE_USER}`,
+  servicePassord: `${process.env.PAYLOAD_SERVICE_PASSWORD}`,
+  env: `${process.env.NODE_ENV}` === 'development' ? 'development' : 'production',
+})
 
 export function init(initConfig: APIInitConfig) {
   config = {
@@ -92,20 +100,29 @@ async function request<T>(url: string): Promise<T> {
   return res.json()
 }
 
-export async function fetchPage(path: string): Promise<PageResponse> {
+export async function fetchPage(path: string, locale?: Locale): Promise<PageResponse> {
   return request(
     buildUrl({
       slug: 'page',
-      params: { path },
+      params: { path, locale },
     }),
   )
 }
 
-function buildUrl({ slug, params }: { slug: string; params?: Record<string, string> }) {
+export async function fetchGeneral(locale?: Locale): Promise<GeneralData> {
+  return request(
+    buildUrl({
+      slug: 'general',
+      params: { locale },
+    }),
+  )
+}
+
+function buildUrl({ slug, params }: { slug: string; params?: Record<string, string | undefined> }) {
   const url = new URL(`${config.apiUrl}/${slug}`)
 
   if (params) {
-    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
+    Object.entries(params).forEach(([k, v]) => typeof v === 'string' && url.searchParams.set(k, v))
   }
 
   return url.toString()

@@ -10,40 +10,43 @@ export type PageSlug = Extract<
 export interface PageResponse {
   slug: PageSlug
   data: PageData
-  general: GeneralData
-  routes: LocalizedRoutes
+}
+
+export interface FooterData {
+  logoCatch: string
+  contact: {
+    url: string
+    label: string
+    text: string
+  }
+  services: {
+    title: string
+    items: Array<{
+      title: string
+      url: string
+    }>
+    url: string
+  }
+}
+
+export interface NavigationData {
+  home: {
+    url: string
+    linkLabel: string
+  }
+  menu: NonNullable<
+    Array<{
+      title: string
+      url: string
+      slug: string
+    }>
+  >
 }
 
 export interface GeneralData {
-  navigation: {
-    home: {
-      url: string
-      linkLabel: string
-    }
-    menu: NonNullable<
-      Array<{
-        title: string
-        url: string
-        slug: string
-      }>
-    >
-  }
-  footer: {
-    logoCatch: string
-    contact: {
-      url: string
-      label: string
-      text: string
-    }
-    services: {
-      title: string
-      items: Array<{
-        title: string
-        url: string
-      }>
-      url: string
-    }
-  }
+  navigation: NavigationData
+  footer: FooterData
+  routes: LocalizedRoutes
 }
 
 export type PageData = PageHomeData
