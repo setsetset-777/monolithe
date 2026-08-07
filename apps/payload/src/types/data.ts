@@ -12,6 +12,15 @@ export interface PageResponse {
   data: PageData
 }
 
+export interface ServicesListData {
+  title: string
+  items: Array<{
+    title: string
+    url: string
+  }>
+  url: string
+}
+
 export interface FooterData {
   logoCatch: string
   contact: {
@@ -19,14 +28,7 @@ export interface FooterData {
     label: string
     text: string
   }
-  services: {
-    title: string
-    items: Array<{
-      title: string
-      url: string
-    }>
-    url: string
-  }
+  services: ServicesListData
 }
 
 export interface NavigationData {
@@ -58,14 +60,8 @@ export interface PageHomeData {
     url: string
     linkLabel: string
   }
-  services: {
-    title: string
-    url: string
+  services: ServicesListData & {
     linkLabel: string
-    items: Array<{
-      title: string
-      url: string
-    }>
   }
   projects: {
     highlights: Array<{

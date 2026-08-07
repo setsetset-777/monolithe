@@ -126,17 +126,21 @@ export const PageServices: GlobalConfig = {
           name: 'title',
           type: 'text',
         },
+        {
+          name: 'url',
+          type: 'text',
+        },
       ],
       hooks: {
         afterRead: [
           async ({ siblingData, req }) => {
             return await Promise.all(
               siblingData.sections.map(async ({ service }: any) => {
-                const { label } = await req.payload.findByID({
+                const { label, slugId } = await req.payload.findByID({
                   collection: 'services',
                   id: service,
                 })
-                return { title: label }
+                return { title: label, url: `${siblingData.url}/${slugId}` }
               }),
             )
           },

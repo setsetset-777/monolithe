@@ -18,17 +18,17 @@ export const getGeneralData = async (payload: Payload, locale: Locale): Promise<
       menu: general.navigation?.items!,
     },
     footer: {
-      logoCatch: general.footer!.logoCatch as string,
+      logoCatch: general.footer!.logoCatch!,
       contact: {
-        text: general.footer!.contactText as string,
-        label: general.footer!.contactLabel as string,
-        url: general.footer!.contactUrl as string,
+        text: general.footer!.contactText!,
+        label: general.footer!.contactLabel!,
+        url: general.footer!.contactUrl!,
       },
       services: {
-        title: services.title as string,
+        title: services.title!,
         items: services.list?.map((service) => ({
-          title: service.title as string,
-          url: `${services.url}#${encodeURIComponent(service.title as string)}`,
+          title: service.title!,
+          url: service.url!,
         }))!,
         url: routes.pageServices.path,
       },

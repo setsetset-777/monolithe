@@ -246,6 +246,7 @@ export interface MediaTag {
 export interface Service {
   id: string;
   label?: string | null;
+  slugId?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -518,6 +519,7 @@ export interface MediaTagsSelect<T extends boolean = true> {
  */
 export interface ServicesSelect<T extends boolean = true> {
   label?: T;
+  slugId?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -794,6 +796,7 @@ export interface PageService {
   list?:
     | {
         title?: string | null;
+        url?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1031,6 +1034,7 @@ export interface PageServicesSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        url?: T;
         id?: T;
       };
   _status?: T;

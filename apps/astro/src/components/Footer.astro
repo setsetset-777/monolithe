@@ -4,6 +4,8 @@ import Action from '@/components/Action.astro'
 import Logo from '@/assets/svgs/logo.svg'
 import Logo777 from '@/assets/svgs/777.svg'
 
+import type { ServicesListData } from '@monolithe/payload/types'
+
 interface Props {
   logoCatch: string
   contact: {
@@ -11,11 +13,7 @@ interface Props {
     label: string
     url: string
   }
-  services: {
-    title: string
-    items: { title: string }[]
-    url: string
-  },
+  services: ServicesListData
 }
 
 const {
@@ -56,9 +54,9 @@ const {
           { services.title }
         </h4>
         <ul class="services__list">
-          { services.items.map(({ title }) => (
+          { services.items.map(({ title, url }) => (
             <li class="services__item">
-              <a href={ `${services.url}#${encodeURIComponent(title)}` }>
+              <a href={ url }>
                 { title }
               </a>
             </li>

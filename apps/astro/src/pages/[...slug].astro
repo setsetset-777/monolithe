@@ -44,7 +44,7 @@ type Props = {
 const { route, navigation, footer } = Astro.props
 
 const View = pages[route.slug as PageSlug];
-console.log('route', route)
+
 const { data } = await getPage(route.path)
 
 if (!View) {
