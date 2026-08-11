@@ -1,0 +1,87 @@
+---
+import Image from '@/components/Image.astro'
+import type { HeroData } from '@monolithe/payload/types'
+import { getPlant } from '@/lib/herbiers'
+import Separator from '@/components/Separator.astro'
+
+type Props = HeroData
+
+const { title, image, slug } = Astro.props
+
+const Plant = getPlant(slug).plant
+---
+
+<section class="hero">
+  <div class="inner">
+    <div class="plant"><Plant /></div>
+    <h1>{title}</h1>
+    <Separator />
+  </div>
+  <div class="image">
+    {
+      image && image.url && (
+        <Image
+          src={image.url}
+          alt={image.alt}
+          srcset={{
+            '800w': image.sizes?.[2000]?.url,
+            '1200w': image.sizes?.[3000]?.url,
+          }}
+          modifiers={['fill']}
+        />
+      )
+    }
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .inner {
+    @include content-padding;
+    padding-top: var(--space-80);
+    padding-bottom: var(--space-128);
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  .plant {
+    color: var(--color-gold-40);
+    width: pxToRem(240px);
+  }
+
+  h1 {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xxl);
+    color: var(--color-gray-00);
+  }
+
+  .image {
+    @include bleed;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    filter: blur(3px);
+    overflow: hidden;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: var(--color-gray-50);
+      opacity: 0.8;
+      z-index: 1;
+    }
+  }
+</style>

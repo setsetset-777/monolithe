@@ -28,7 +28,8 @@ export async function getStaticPaths() {
     props: {
       route,
       navigation,
-      footer
+      footer,
+      slug: route.slug
     }
   }))
 
@@ -39,9 +40,10 @@ type Props = {
   route: Route,
   navigation: NavigationData
   footer: FooterData
+  slug: PageSlug
 }
 
-const { route, navigation, footer } = Astro.props
+const { route, navigation, footer, slug } = Astro.props
 
 const View = pages[route.slug as PageSlug];
 
@@ -53,7 +55,7 @@ if (!View) {
 
 
 ---
-<Layout navigation={navigation} footer={footer} meta={{ title: route.title }}>
+<Layout navigation={navigation} footer={footer} meta={{ title: route.title }} slug={slug}>
   <View {...data}  />
 </Layout>
 

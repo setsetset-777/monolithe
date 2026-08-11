@@ -3,6 +3,7 @@ import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 
 import { getHerbier } from '@/lib/herbiers'
+import type { PageSlug } from '@monolithe/payload/types'
 
 type Props = {
   home: {
@@ -12,20 +13,23 @@ type Props = {
   menu: {
     title: string
     url: string
-    slug: string
+    slug: PageSlug
   }[]
+  type?: 'big' | 'small'
+  slug: PageSlug
 }
 
 const {
   home,
-  menu
+  menu,
+  type = 'big',
+  slug
 } = Astro.props
 
 const herbier = getHerbier('left');
 
 ---
-
-<div class="sidebar">
+<div class:list={["sidebar", `sidebar--${type}`]}>
   <div class="container">
     <div class="content">
       <a href={ home.url } aria-label={ home.linkLabel }>
@@ -34,9 +38,9 @@ const herbier = getHerbier('left');
       <Separator />
       <nav class="menu">
         <ul class="menu__list">
-          { menu.map(({title, url, slug}) => (
+          { menu.map(({title, url, slug: itemSlug}) => (
             <li class="menu__item">
-              <a class="menu__link" href={ url } data-menu-item data-slug={ slug }>
+              <a class:list={[ "menu__link", slug === itemSlug && 'active' ]} href={ url } data-menu-item data-slug={ itemSlug }>
                 { title }
               </a>
             </li>
@@ -69,6 +73,18 @@ const herbier = getHerbier('left');
 @use '../styles/utilities' as *;
 
 .sidebar {
+  --container-width: var(--width-sidebar-big);
+  --logo-width: #{pxToRem(180px)};
+  --link-font-size: var(--font-size-xxl);
+  --menu-gap: 0;
+
+  &--small {
+    --container-width: var(--width-sidebar-small);
+    --logo-width: #{pxToRem(90px)};
+    --link-font-size: var(--font-size-xl);
+    --menu-gap: var(--space-8);
+  }
+
   height: 100%;
   display: flex;
   align-items: stretch;
@@ -99,7 +115,7 @@ const herbier = getHerbier('left');
   flex-direction: column;
   padding: pxToRem(120px) 0 var(--space-80) var(--space-80);
   justify-content: space-between;
-  width: var(--width-sidebar);
+  width: var(--container-width);
   box-sizing: border-box;
 
   &:before {
@@ -121,18 +137,26 @@ const herbier = getHerbier('left');
 }
 
 .logo {
-  width: 180px;
+  width: var(--logo-width);
 }
 
 .menu {
   font-family: var(--font-family-heading);
 
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--menu-gap);
+  }
+
   &__link {
-    @include font-menu-large;
+    font-family: var(--font-family-heading);
+    font-size: var(--link-font-size);
     text-decoration: none;
     @include transition(color);
 
-    &:hover {
+    &:hover,
+    &.active {
       color: var(--color-gray-00);
     }
   }

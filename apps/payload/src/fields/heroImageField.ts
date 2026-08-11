@@ -19,5 +19,6 @@ export const heroImageField = (
     label,
     type: 'upload',
     relationTo: 'media',
+    required: true,
   }
 }

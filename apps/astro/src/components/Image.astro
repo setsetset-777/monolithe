@@ -1,0 +1,46 @@
+---
+type Modifier = 'fill'
+
+type Props = {
+  src: string
+  alt?: string
+  srcset?: {
+    [size: string]: string
+  }
+  loading?: HTMLImageElement['loading']
+  sizes?: HTMLImageElement['sizes']
+  class?: string
+  modifiers: Modifier[]
+}
+
+const { src, alt, srcset = {}, loading = 'lazy', sizes = '100w', class: className, modifiers } = Astro.props
+
+const mediaUrl = import.meta.env.MEDIA_URL
+
+const formatSrc = (src: string) => `${mediaUrl}${src}`
+
+
+---
+
+<img
+  src={ formatSrc(src) }
+  srcset={Object.keys(srcset).map((key) => `${formatSrc(srcset[key])} ${key}`).join(',')}
+  sizes={ sizes }
+  alt={ alt }
+  class:list={["image", className, ...modifiers]}
+  loading={ loading }
+/>
+
+<style lang="scss">
+
+.image {
+  display: block;
+  width: 100%;
+}
+
+.fill {
+  object-fit: cover;
+  height: 100%;
+}
+
+</style>

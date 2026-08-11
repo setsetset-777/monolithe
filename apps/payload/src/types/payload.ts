@@ -256,7 +256,7 @@ export interface Service {
  */
 export interface Project {
   id: string;
-  title?: string | null;
+  title: string;
   urlSlug?: string | null;
   url?: string | null;
   description?: string | null;
@@ -290,10 +290,10 @@ export interface Project {
  */
 export interface Parution {
   id: string;
-  title?: string | null;
-  publisher?: string | null;
-  type?: ('paper' | 'web' | 'video') | null;
-  date?: string | null;
+  title: string;
+  publisher: string;
+  type: 'paper' | 'web' | 'video';
+  date: string;
   link?: string | null;
   thumbnail?: (string | null) | Media;
   updatedAt: string;
@@ -698,10 +698,10 @@ export interface PageHome {
  */
 export interface PagePresentation {
   id: string;
-  title?: string | null;
+  title: string;
   urlSlug?: string | null;
   url?: string | null;
-  heroImage?: (string | null) | Media;
+  heroImage: string | Media;
   monolithePresentation?: string | null;
   sections?:
     | (
@@ -761,10 +761,10 @@ export interface PagePresentation {
  */
 export interface PageService {
   id: string;
-  title?: string | null;
+  title: string;
   urlSlug?: string | null;
   url?: string | null;
-  heroImage?: (string | null) | Media;
+  heroImage: string | Media;
   sections?:
     | (
         | {
@@ -810,10 +810,10 @@ export interface PageService {
  */
 export interface PageProject {
   id: string;
-  title?: string | null;
+  title: string;
   urlSlug?: string | null;
   url?: string | null;
-  heroImage?: (string | null) | Media;
+  heroImage: string | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
   updatedAt?: string | null;
@@ -825,10 +825,10 @@ export interface PageProject {
  */
 export interface PageContact {
   id: string;
-  title?: string | null;
+  title: string;
   urlSlug?: string | null;
   url?: string | null;
-  heroImage?: (string | null) | Media;
+  heroImage: string | Media;
   place?: string | null;
   email?: string | null;
   phone?: string | null;

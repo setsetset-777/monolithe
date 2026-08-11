@@ -14,6 +14,7 @@ export const Parutions: CollectionConfig = {
         en: 'Title',
         fr: 'Titre',
       },
+      required: true,
     },
     {
       name: 'publisher',
@@ -22,10 +23,12 @@ export const Parutions: CollectionConfig = {
         en: 'Publisher',
         fr: 'Éditeur',
       },
+      required: true,
     },
     {
       name: 'type',
       type: 'select',
+      required: true,
       options: [
         {
           value: 'paper',
@@ -59,6 +62,7 @@ export const Parutions: CollectionConfig = {
           displayFormat: 'MMMM yyyy',
         },
       },
+      required: true,
     },
     {
       name: 'link',

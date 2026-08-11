@@ -59,11 +59,20 @@ $colors: (
 
   --width-container-max: #{utilities.pxToRem(1600px)};
   --width-sidebar-skew: #{var(--space-80)};
-  --width-sidebar: #{utilities.pxToRem(400px)};
+  --width-sidebar-big: #{utilities.pxToRem(400px)};
+  --width-sidebar-small: #{utilities.pxToRem(300px)};
+  --width-sidebar: var(--width-sidebar-big);
   --width-home-column-left: #{utilities.pxToRem(320px)};
   --padding-content-x: #{var(--space-80)};
   --padding-footer-y: #{var(--space-80)};
+}
+
+.body {
   --padding-content-x-start: calc(
     var(--width-sidebar) + var(--width-sidebar-skew) + var(--padding-content-x)
   );
+
+  &--sidebar-small {
+    --width-sidebar: var(--width-sidebar-small);
+  }
 }

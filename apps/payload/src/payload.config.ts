@@ -24,7 +24,6 @@ import { PageProjects } from '@/globals/PageProjects'
 import { PageContact } from '@/globals/PageContact'
 
 import { localization, customTranslations } from '@/i18n'
-import { getRoutes } from '@/helpers/routes'
 import regenerateMedia from '@/helpers/regenerateMedia'
 import { Locale } from '@/types'
 import { getPageData } from './helpers/getPageData'
@@ -80,7 +79,7 @@ export default buildConfig({
       handler: async (req) => {
         const locale = (req.locale as Locale) ?? localization.defaultLocale
         const general = await getGeneralData(req.payload, locale)
-        console.log(general)
+        console.log('General data: ', general)
         return Response.json({
           ok: true,
           ...general,
@@ -94,6 +93,7 @@ export default buildConfig({
         let path = req.query.path as string
         try {
           const pageData = await getPageData(path, req)
+          console.log('Page data: ', pageData)
           return Response.json({
             ok: true,
             ...pageData,

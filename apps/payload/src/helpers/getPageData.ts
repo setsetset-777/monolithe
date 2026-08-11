@@ -1,13 +1,23 @@
-import { PageResponse, PageData, PageHome, Media, Route } from '@/types'
-import { resolveRoute, routesConfig } from './routes'
+import {
+  PageResponse,
+  PageData,
+  PageHome,
+  Media,
+  Route,
+  PagePresentation,
+  Parution,
+  Testimonial,
+  PresentationSection,
+} from '@/types'
+import { resolveRoute } from './routes'
 import { CollectionSlug, DataFromGlobalSlug, GlobalSlug, PayloadRequest } from 'payload'
 
 export const getPageData = async (path: string, req: PayloadRequest): Promise<PageResponse> => {
   const { locale, route, routes } = await resolveRoute(path, req)
 
-  const dataPromise =
+  const pageData =
     route.type === 'collection'
-      ? req.payload.findByID({
+      ? await req.payload.findByID({
           collection: route.slug as CollectionSlug,
           locale,
           id: route.id,
@@ -16,12 +26,6 @@ export const getPageData = async (path: string, req: PayloadRequest): Promise<Pa
           slug: route.slug as GlobalSlug,
           locale,
         })
-
-  const [pageData, general, services] = await Promise.all([
-    dataPromise,
-    req.payload.findGlobal({ slug: 'general' }),
-    req.payload.findGlobal({ slug: 'pageServices' }),
-  ])
 
   return {
     slug: route.slug,
@@ -34,7 +38,7 @@ function formatPageData<T extends GlobalSlug>(
   route: Route,
 ): PageData {
   switch (route.slug) {
-    default:
+    case 'pageHome':
       const { presentation, services, projects } = pageData as PageHome
 
       return {
@@ -63,5 +67,74 @@ function formatPageData<T extends GlobalSlug>(
           url: projects?.link!,
         },
       }
+
+    case 'pagePresentation':
+      const {
+        title: heroTitle,
+        heroImage,
+        monolithePresentation,
+        sections,
+      } = pageData as PagePresentation
+
+      return {
+        hero: {
+          title: heroTitle,
+          image: heroImage as Media,
+          slug: route.slug,
+        },
+        presentation: monolithePresentation!,
+        sections: (sections ?? []).map((section): PresentationSection => {
+          const { title } = section
+          switch (section.blockType) {
+            case 'textWithTitleBlock':
+              const { text, image } = section
+              return {
+                title: title!,
+                text: text!,
+                image: image as Media,
+              }
+            case 'listBlock':
+              const { values } = section
+              return {
+                title: title!,
+                values: (values ?? []).map(({ title }) => ({
+                  title: title!,
+                })),
+              }
+            case 'parutionsBlock':
+              const { parutionList } = section
+              return {
+                title: title!,
+                list: (parutionList ?? []).map(({ parution }) => {
+                  const { title, publisher, type, date, link, thumbnail } = parution as Parution
+                  return {
+                    title: title!,
+                    publisher: publisher!,
+                    type: type!,
+                    date: date!,
+                    link: link!,
+                    thumbnail: thumbnail as Media,
+                  }
+                }),
+              }
+            case 'testimonialsBlock':
+              const { testimonialsList } = section
+              return {
+                title: title!,
+                list: (testimonialsList ?? []).map(({ testimonial }) => {
+                  const { name, description, company } = testimonial as Testimonial
+                  return {
+                    name: name!,
+                    description: description!,
+                    company: company!,
+                  }
+                }),
+              }
+          }
+        }),
+      }
+
+    default:
+      return null
   }
 }

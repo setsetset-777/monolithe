@@ -21,5 +21,6 @@ export const titleField = (
     type: 'text',
     label,
     localized,
+    required: true,
   }
 }

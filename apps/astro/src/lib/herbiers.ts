@@ -11,6 +11,7 @@ import HerbierCentre4 from '@/assets/svgs/plants/herbier-centre-4.svg'
 import HerbierCentre5 from '@/assets/svgs/plants/herbier-centre-5.svg'
 
 import type { SvgComponent } from 'astro/types'
+import type { PageSlug } from '@monolithe/payload/types'
 
 const pagesPlantsOrder = [
   'pageHome',
@@ -20,11 +21,13 @@ const pagesPlantsOrder = [
   'pageContact',
 ]
 
+type Plant = SvgComponent
+
 type HerbierType = 'left' | 'centre'
 
 type Herbier = {
   slug: (typeof pagesPlantsOrder)[number]
-  plant: SvgComponent
+  plant: Plant
 }
 
 type Herbiers = Array<Herbier>
@@ -41,4 +44,10 @@ export const getHerbier = (type: HerbierType): Herbiers => {
       plant: herbiers[type][index],
     }
   })
+}
+
+export const getPlant = (slug: PageSlug, type: HerbierType = 'left') => {
+  const herbier = getHerbier(type)
+  const index = pagesPlantsOrder.indexOf(slug)
+  return herbier[index]
 }

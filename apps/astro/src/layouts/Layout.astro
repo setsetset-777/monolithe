@@ -2,7 +2,7 @@
 import Sidebar from '@/components/Sidebar.astro'
 import Footer from '@/components/Footer.astro'
 
-import type { FooterData, NavigationData } from '@monolithe/api/types'
+import type { FooterData, NavigationData, PageSlug } from '@monolithe/api/types'
 
 const analytics = {
   enable: import.meta.env.ANALYTICS_ENABLE,
@@ -15,14 +15,21 @@ type Props = {
   navigation: NavigationData
   meta: {
     title: string
-  }
+  },
+  slug: PageSlug
 }
 
-const { footer, navigation, meta } = Astro.props
+const { footer, navigation, meta, slug } = Astro.props
 
 const { home, menu } = navigation
 
 const { logoCatch, contact, services } = footer
+
+const sidebarType = slug === 'pageHome' ? 'big' : 'small'
+
+const bodyModifiers = [
+  `sidebar-${slug === 'pageHome' ? 'big' : 'small'}`
+]
 ---
 
 <!doctype html>
@@ -55,10 +62,10 @@ const { logoCatch, contact, services } = footer
     { analytics.enable && <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id}></script> }
 </head>
 
-<body data-theme="light">
+<body data-theme="light" class:list={["body", ...bodyModifiers.map(a => `body--${a}`)]}>
   <div class="container">
     <div class="container__inner">
-      <Sidebar home={home} menu={menu} />
+      <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} />
 
       <div class="content">
         <main class="main">

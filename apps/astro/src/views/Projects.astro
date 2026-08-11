@@ -1,6 +1,16 @@
 ---
-type Props = {}
+import Hero from '@/components/Hero.astro'
 
-const {} = Astro.props
+import type { HeroData } from '@monolithe/payload/types'
+
+type Props = {
+  hero: HeroData
+  presentation: string
+}
+
+const { hero, presentation } = Astro.props
 ---
-<h1>Projects</h1>
+
+<div class="page">
+  <Hero {...hero} />
+</div>
