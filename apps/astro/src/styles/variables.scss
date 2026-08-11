@@ -65,6 +65,7 @@ $colors: (
   --width-home-column-left: #{utilities.pxToRem(320px)};
   --padding-content-x: #{var(--space-80)};
   --padding-footer-y: #{var(--space-80)};
+  --gap-grid: var(--space-64);
 }
 
 .body {

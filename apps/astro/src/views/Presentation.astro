@@ -1,17 +1,57 @@
 ---
 import Hero from '@/components/Hero.astro'
+import Logo from '@/assets/svgs/logo.svg'
+import Separator from '@/components/Separator.astro'
 
-import type { HeroData } from "@monolithe/payload/types"
+import type { HeroData } from '@monolithe/payload/types'
 
 type Props = {
   hero: HeroData
-  presentation: string,
+  presentation: string
 }
 
 const { hero, presentation } = Astro.props
 ---
 
 <div class="page">
-  <Hero { ...hero } />
+  <Hero {...hero} />
 
+  <div class="content">
+    <section class="presentation">
+      <div class="presentation__left">
+        <Logo class:list={'presentation__logo'} />
+      </div>
+      <p class="presentation__right">{presentation}</p>
+    </section>
+
+    <Separator />
+  </div>
 </div>
+
+<style lang="scss">
+  @use '../styles/utilities/' as *;
+
+  .content {
+    @include content-padding;
+  }
+
+  section {
+    @include grid;
+    padding: var(--space-128) 0;
+  }
+
+  .presentation {
+    &__left {
+      grid-column: span 4;
+    }
+
+    &__right {
+      grid-column: 5 / span 8;
+    }
+
+    &__logo {
+      color: var(--color-gold-40);
+      width: pxToRem(180px);
+    }
+  }
+</style>
