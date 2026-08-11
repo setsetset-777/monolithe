@@ -257,8 +257,8 @@ export interface Service {
 export interface Project {
   id: string;
   title: string;
-  urlSlug?: string | null;
-  url?: string | null;
+  urlSlug: string;
+  url: string;
   description?: string | null;
   service?: (string | null) | Service;
   date?: number | null;
@@ -647,6 +647,9 @@ export interface General {
  */
 export interface PageHome {
   id: string;
+  title: string;
+  url: string;
+  urlSlug: string;
   presentation?: {
     catch?: string | null;
     linkLabel?: string | null;
@@ -699,8 +702,8 @@ export interface PageHome {
 export interface PagePresentation {
   id: string;
   title: string;
-  urlSlug?: string | null;
-  url?: string | null;
+  urlSlug: string;
+  url: string;
   heroImage: string | Media;
   monolithePresentation?: string | null;
   sections?:
@@ -762,8 +765,8 @@ export interface PagePresentation {
 export interface PageService {
   id: string;
   title: string;
-  urlSlug?: string | null;
-  url?: string | null;
+  urlSlug: string;
+  url: string;
   heroImage: string | Media;
   sections?:
     | (
@@ -811,8 +814,8 @@ export interface PageService {
 export interface PageProject {
   id: string;
   title: string;
-  urlSlug?: string | null;
-  url?: string | null;
+  urlSlug: string;
+  url: string;
   heroImage: string | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
@@ -826,8 +829,8 @@ export interface PageProject {
 export interface PageContact {
   id: string;
   title: string;
-  urlSlug?: string | null;
-  url?: string | null;
+  urlSlug: string;
+  url: string;
   heroImage: string | Media;
   place?: string | null;
   email?: string | null;
@@ -875,6 +878,9 @@ export interface GeneralSelect<T extends boolean = true> {
  * via the `definition` "pageHome_select".
  */
 export interface PageHomeSelect<T extends boolean = true> {
+  title?: T;
+  url?: T;
+  urlSlug?: T;
   presentation?:
     | T
     | {

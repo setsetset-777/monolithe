@@ -49,6 +49,7 @@ export const urlFields = ({
       label,
       localized: true,
       hasMany: false,
+      required: true,
       validate: (async (value, { id, req: { payload, t: defaultT, locale } }) => {
         // Check if url slug is unique among the document siblings
         let routeWithUrlSlug: Route | undefined
@@ -97,6 +98,7 @@ export const urlFields = ({
       virtual: true,
       localized: true,
       hidden: true,
+      required: true,
       hooks: {
         afterRead: [
           async ({ siblingData, req }) => {

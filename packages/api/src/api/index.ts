@@ -1,10 +1,12 @@
-import type { FetchData, PageResponse, APIInitConfig, Locale, GeneralData } from './types'
+import type { InitConfig } from '../types'
+import type { Payload } from '../types/payload'
 import logger from '@monolithe/logger'
 
 let token: string | null = null
 let loginPromise: Promise<void> | null = null
 
-let config: APIInitConfig = {
+// Default config
+let config: InitConfig = {
   enable: false,
   apiUrl: '',
   serviceUser: '',
@@ -12,6 +14,45 @@ let config: APIInitConfig = {
   env: 'production',
 }
 
+// ------------
+// Exposed API
+// ------------
+
+/**
+ * Fetch global page
+ * @param path
+ * @param locale
+ * @returns
+ */
+export async function fetchPage(
+  path: string,
+  locale?: Payload.Locale,
+): Promise<Payload.PageResponse> {
+  return request(
+    buildUrl({
+      slug: 'page',
+      params: { path, locale },
+    }),
+  )
+}
+
+/**
+ * Fetch general page
+ * @param locale
+ * @returns
+ */
+export async function fetchGeneral(locale?: Payload.Locale): Promise<Payload.GeneralResponse> {
+  return request(
+    buildUrl({
+      slug: 'general',
+      params: { locale },
+    }),
+  )
+}
+
+// ------------
+// Initialise API
+// ------------
 init({
   enable: process.env.PAYLOAD_ENABLE === 'true',
   apiUrl: `${process.env.PAYLOAD_API_URL}`,
@@ -20,13 +61,24 @@ init({
   env: `${process.env.NODE_ENV}` === 'development' ? 'development' : 'production',
 })
 
-export function init(initConfig: APIInitConfig) {
+// ------------
+// Functions
+// ------------
+
+/**
+ * API initializer with env variables
+ * @param initConfig
+ */
+function init(initConfig: InitConfig) {
   config = {
     ...config,
     ...initConfig,
   }
 }
 
+/**
+ * Call Payload for login
+ */
 async function fetchLogin() {
   const url = buildUrl({ slug: 'users/login' })
 
@@ -53,6 +105,10 @@ async function fetchLogin() {
   logger.info('Payload login successful')
 }
 
+/**
+ * Wrap login fetch into a promise
+ * @returns
+ */
 async function login(): Promise<void> {
   if (loginPromise) {
     return loginPromise
@@ -67,6 +123,11 @@ async function login(): Promise<void> {
   }
 }
 
+/**
+ * Do request to payload
+ * @param url
+ * @returns
+ */
 async function request<T>(url: string): Promise<T> {
   if (!token) {
     await login()
@@ -100,25 +161,18 @@ async function request<T>(url: string): Promise<T> {
   return res.json()
 }
 
-export async function fetchPage(path: string, locale?: Locale): Promise<PageResponse> {
-  return request(
-    buildUrl({
-      slug: 'page',
-      params: { path, locale },
-    }),
-  )
-}
-
-export async function fetchGeneral(locale?: Locale): Promise<GeneralData> {
-  return request(
-    buildUrl({
-      slug: 'general',
-      params: { locale },
-    }),
-  )
-}
-
-function buildUrl({ slug, params }: { slug: string; params?: Record<string, string | undefined> }) {
+/**
+ * Helper to format url from slug and parameters
+ * @param { slug, params }
+ * @returns string
+ */
+function buildUrl({
+  slug,
+  params,
+}: {
+  slug: string
+  params?: Record<string, string | undefined>
+}): string {
   const url = new URL(`${config.apiUrl}/${slug}`)
 
   if (params) {

@@ -1,10 +1,10 @@
 ---
 import Image from '@/components/Image.astro'
-import type { HeroData } from '@monolithe/payload/types'
+import type { Hero } from '@monolithe/api/types'
 import { getPlant } from '@/lib/herbiers'
 import Separator from '@/components/Separator.astro'
 
-type Props = HeroData
+type Props = Hero
 
 const { title, image, slug } = Astro.props
 
@@ -24,8 +24,8 @@ const Plant = getPlant(slug).plant
           src={image.url}
           alt={image.alt}
           srcset={{
-            '800w': image.sizes?.[2000]?.url,
-            '1200w': image.sizes?.[3000]?.url,
+            '800w': image.sizes?.[2000]?.url!,
+            '1200w': image.sizes?.[3000]?.url!,
           }}
           modifiers={['fill']}
         />

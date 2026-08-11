@@ -1,7 +1,7 @@
 ---
 import Separator from '@/components/Separator.astro'
 import Anchor from '@/components/Anchor.astro'
-import Slider, { type Props as SliderProps} from '@/components/home/Slider.astro'
+import Slider, { type Props as SliderProps } from '@/components/home/Slider.astro'
 import ChevronDown from '@/assets/svgs/chevron-down.svg'
 import type { Media } from '@monolithe/api/types'
 import { getHerbier } from '@/lib/herbiers'
@@ -18,51 +18,53 @@ type Props = {
     url: string
     linkLabel: string
     items: Array<{
-      title: string,
+      title: string
       url: string
     }>
   }
-  projects: SliderProps["projects"]
+  projects: SliderProps['projects']
 }
 
 const { presentation, services, projects } = Astro.props
 
-const herbier = getHerbier('centre');
+const herbier = getHerbier('centre')
 
 const mediaUrl = import.meta.env.MEDIA_URL
 ---
+
 <div class="page">
   <section class="section section--hero hero">
     <div class="hero__image">
       <img
-        src={ mediaUrl + presentation.heroImage.sizes?.[1000]?.url }
+        src={mediaUrl + presentation.heroImage.sizes?.[1000]?.url}
         srcset={`
           ${mediaUrl + presentation.heroImage.sizes?.[2000]?.url} 800w,
           ${mediaUrl + presentation.heroImage.sizes?.[3000]?.url} 1200w
         `}
         sizes="100vw"
-        alt={ presentation.heroImage.alt }
-      >
+        alt={presentation.heroImage.alt}
+      />
     </div>
     <div class="section__inner">
       <div class="plants" data-plants>
         <div class="plants__inner">
-          { herbier.map(({ slug, plant }) => {
-            const Plant = plant
-            return (
-              <div class="plants__item" data-slug={slug}>
-                <Plant class:list={"plants__svg"}/>
-              </div>
-            )
-            }
-          ) }
+          {
+            herbier.map(({ slug, plant }) => {
+              const Plant = plant
+              return (
+                <div class="plants__item" data-slug={slug}>
+                  <Plant class:list={'plants__svg'} />
+                </div>
+              )
+            })
+          }
         </div>
       </div>
       <div class="hero__content">
-        <h2 class="hero__catch" set:html={ presentation.catch } />
+        <h2 class="hero__catch" set:html={presentation.catch} />
         <Separator />
-        <Anchor href={ presentation.url }>
-          { presentation.linkLabel }
+        <Anchor href={presentation.url}>
+          {presentation.linkLabel}
         </Anchor>
       </div>
     </div>
@@ -77,19 +79,19 @@ const mediaUrl = import.meta.env.MEDIA_URL
     <section class="section section--services">
       <div class="section__inner services">
         <div class="services__head">
-          <h3 class="services__title">{ services.title }</h3>
-          <Anchor href={ services.url }>
-            { services.linkLabel }
+          <h3 class="services__title">{services.title}</h3>
+          <Anchor href={services.url}>
+            {services.linkLabel}
           </Anchor>
         </div>
         <ul class="services__list">
-          { services.items.map(({ title, url }) => (
-            <li class="services__item">
-              <a href={url}>
-                { title }
-              </a>
-            </li>
-          ))}
+          {
+            services.items.map(({ title, url }) => (
+              <li class="services__item">
+                <a href={url}>{title}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </section>
@@ -100,11 +102,10 @@ const mediaUrl = import.meta.env.MEDIA_URL
 
     <section class="page-home__section section section--projects">
       <div class="section__inner projects">
-
-        <Slider projects={projects} class:list={"projects__slider"}/>
+        <Slider projects={projects} class:list={'projects__slider'} />
 
         <Anchor href={projects.url}>
-          { projects.linkLabel }
+          {projects.linkLabel}
         </Anchor>
       </div>
     </section>
@@ -112,212 +113,211 @@ const mediaUrl = import.meta.env.MEDIA_URL
 </div>
 
 <script lang="ts">
-const anchors = document.querySelectorAll('[data-scroll]')
+  const anchors = document.querySelectorAll('[data-scroll]')
 
-anchors.forEach((anchor) => {
-  if (!(anchor instanceof HTMLElement)) {
-    return
-  }
-  const selector = anchor.dataset.scroll
-  const target = document.querySelector(selector)
-  anchor.addEventListener('click', () => {
-    target.scrollIntoView()
+  anchors.forEach((anchor) => {
+    if (!(anchor instanceof HTMLElement)) {
+      return
+    }
+    const selector = anchor.dataset.scroll
+    const target = document.querySelector(selector)
+    anchor.addEventListener('click', () => {
+      target.scrollIntoView()
+    })
   })
-})
-
 </script>
 
 <style lang="scss">
-@use '../styles/utilities' as *;
+  @use '../styles/utilities' as *;
 
-.hero {
-  height: 100vh;
-  position: relative;
-  display: flex;
-  align-items: stretch;
-  flex-direction: column;
-  gap: var(--space-48);
-  padding-bottom: var(--space-16);
-  box-sizing: border-box;
+  .hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding-bottom: var(--space-16);
+    box-sizing: border-box;
 
-  &__image {
-    width: 100dvw;
-    height: 100%;
-    position: absolute;
-    @include bleed;
-    overflow: hidden;
-
-    img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
+    &__image {
+      width: 100dvw;
       height: 100%;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-      filter: grayscale(100%) blur(2px);
+      position: absolute;
+      @include bleed;
+      overflow: hidden;
+
+      img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        filter: grayscale(100%) blur(2px);
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          var(--color-gray-50) 50%,
+          rgba(var(--color-gray-50-rgb), 0) 300%
+        );
+      }
     }
 
-    &:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        var(--color-gray-50) 50%,
-        rgba(var(--color-gray-50-rgb), 0) 300%
-      );
+    &__content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-32);
+    }
+
+    &__catch {
+      @include font-heading-1;
+    }
+
+    &__footer {
+      @include content-padding;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__down {
+      color: var(--color-gray-10);
+      cursor: pointer;
+      @include transition('color, transform');
+      position: relative;
+
+      &:hover {
+        color: var(--color-gold-30);
+        transform: translateY(var(--space-2));
+      }
     }
   }
 
-  &__content {
-    position: relative;
+  .plants {
+    $size: pxToRem(465px);
+    max-height: $size;
+    flex-grow: 1;
+    margin-top: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__inner {
+      position: relative;
+      height: 100%;
+    }
+
+    &__item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: inline-flex;
+
+      &:first-child {
+        position: relative;
+      }
+
+      $total: 5;
+      @for $i from 1 through 5 {
+        &:nth-child(#{$total - $i + 1}) {
+          color: var(--color-gold-#{$i}0);
+          filter: blur(#{($i - 1) * 0.3}px);
+        }
+      }
+    }
+
+    &__svg {
+      height: 100%;
+    }
+  }
+
+  .section {
+    $root: &;
+
+    &__inner {
+      @include content-padding;
+      display: flex;
+      flex-direction: column;
+
+      #{$root}--hero & {
+        padding-top: var(--space-80);
+        gap: var(--space-80);
+        flex-grow: 1;
+        position: relative;
+      }
+
+      #{$root}--services &,
+      #{$root}--projects & {
+        padding-top: var(--space-80);
+        padding-bottom: var(--space-80);
+      }
+    }
+  }
+
+  .services {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-64);
+
+    &__head {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-16);
+      width: var(--width-home-column-left);
+    }
+
+    &__title {
+      @include font-heading-2;
+      color: var(--color-font-gold);
+    }
+
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-8);
+      align-items: center;
+
+      a {
+        @include font-heading-3;
+        text-decoration: none;
+
+        &:hover {
+          color: var(--color-font-gold);
+        }
+      }
+
+      &:before {
+        $size: pxToRem(4px);
+        content: '';
+        display: block;
+        width: $size;
+        height: $size;
+        background-color: var(--color-font-gold);
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  .projects {
     display: flex;
     flex-direction: column;
     gap: var(--space-32);
   }
-
-  &__catch {
-    @include font-heading-1;
-  }
-
-  &__footer {
-    @include content-padding;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  &__down {
-    color: var(--color-gray-10);
-    cursor: pointer;
-    @include transition('color, transform');
-    position: relative;
-
-    &:hover {
-      color: var(--color-gold-30);
-      transform: translateY(var(--space-2));
-    }
-  }
-}
-
-.plants {
-  $size: pxToRem(465px);
-  max-height: $size;
-  flex-grow: 1;
-  margin-top: var(--space-24);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  &__inner {
-    position: relative;
-    height: 100%;
-  }
-
-  &__item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    display: inline-flex;
-
-    &:first-child {
-      position: relative;
-    }
-
-    $total: 5;
-    @for $i from 1 through 5 {
-      &:nth-child(#{$total - $i + 1}) {
-        color: var(--color-gold-#{$i}0);
-        filter: blur(#{($i - 1) * 0.3}px);
-      }
-    }
-  }
-
-  &__svg {
-    height: 100%;
-  }
-}
-
-.section {
-  $root: &;
-
-  &__inner {
-    @include content-padding;
-    display: flex;
-    flex-direction: column;
-
-    #{$root}--hero & {
-      padding-top: var(--space-80);
-      gap: var(--space-80);
-      flex-grow: 1;
-      position: relative;
-    }
-
-    #{$root}--services &,
-    #{$root}--projects & {
-      padding-top: var(--space-80);
-      padding-bottom: var(--space-80);
-    }
-  }
-}
-
-.services {
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-64);
-
-  &__head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-16);
-    width: var(--width-home-column-left);
-  }
-
-  &__title {
-    @include font-heading-2;
-    color: var(--color-font-gold);
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-24);
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: row;
-    gap: var(--space-8);
-    align-items: center;
-
-    a {
-      @include font-heading-3;
-      text-decoration: none;
-
-      &:hover {
-        color: var(--color-font-gold);
-      }
-    }
-
-    &:before {
-      $size: pxToRem(4px);
-      content: '';
-      display: block;
-      width: $size;
-      height: $size;
-      background-color: var(--color-font-gold);
-      transform: rotate(45deg);
-    }
-  }
-}
-
-.projects {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-32);
-}
 </style>

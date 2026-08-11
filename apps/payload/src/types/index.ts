@@ -1,3 +1,5 @@
 export type * from './routes'
 export type * from './payload'
-export type * from './data'
+export type * from './sources'
+export type * from './shared'
+export type { Payload, CollectionSlug, GlobalSlug } from 'payload'

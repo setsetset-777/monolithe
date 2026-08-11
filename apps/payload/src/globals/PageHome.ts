@@ -1,5 +1,7 @@
 import { GlobalAfterChangeHook, GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
+import { urlFields } from '@/fields/urlFields'
+import { titleField } from '@/fields/titleField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 
 export const PageHome: GlobalConfig = {
@@ -9,6 +11,27 @@ export const PageHome: GlobalConfig = {
     fr: 'Accueil',
   },
   fields: [
+    titleField(),
+    {
+      name: 'url',
+      type: 'text',
+      defaultValue: '/',
+      required: true,
+      hidden: true,
+      admin: {
+        readOnly: true,
+      },
+    },
+    {
+      name: 'urlSlug',
+      type: 'text',
+      defaultValue: '',
+      hidden: true,
+      required: true,
+      admin: {
+        readOnly: true,
+      },
+    },
     {
       name: 'presentation',
       type: 'group',

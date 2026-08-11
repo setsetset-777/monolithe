@@ -1,11 +1,4 @@
-import type { TypedLocale } from 'payload'
-import type {
-  PagePresentation,
-  PageProject,
-  PageProjectsSelect,
-  PageService,
-  PageContact,
-} from '@/types/payload'
+import type { TypedLocale, DataFromGlobalSlug, DataFromCollectionSlug } from 'payload'
 import type { PageSlug } from '@/types'
 
 export type Manifest = {
@@ -14,7 +7,7 @@ export type Manifest = {
 }
 
 export type RouteConfigPage = {
-  slug: PageSlug
+  slug: RoutedPageSlug
   path?: string
   field?: keyof RoutedPages
   children?: RouteConfigPage
@@ -24,8 +17,20 @@ export interface RouteConfig {
   pages: RouteConfigPage[]
 }
 
+export type RoutedGlobalSlug =
+  'pageHome' | 'pagePresentation' | 'pageProjects' | 'pageServices' | 'pageContact'
+
+export type RoutedCollectionSlug = 'projects'
+
+export type RoutedPageSlug = RoutedGlobalSlug | RoutedCollectionSlug
+
 export type RoutedPages =
-  PagePresentation | PageProject | PageProjectsSelect | PageService | PageContact
+  | DataFromGlobalSlug<'pageHome'>
+  | DataFromGlobalSlug<'pagePresentation'>
+  | DataFromGlobalSlug<'pageProjects'>
+  | DataFromGlobalSlug<'pageServices'>
+  | DataFromGlobalSlug<'pageContact'>
+  | DataFromCollectionSlug<'projects'>
 
 export type Locale = TypedLocale
 
@@ -35,10 +40,12 @@ export type Route = {
   slug: PageSlug
   urlSlug: string
   parent?: PageSlug
-  title: string
   type: 'global' | 'collection'
+  meta: {
+    title: string
+  }
 }
 
 export type LocalizedRoutes = { [key: string]: Route }
 
-export type Routes = Partial<Record<string, LocalizedRoutes>>
+export type Routes = Partial<Record<Locale, LocalizedRoutes>>

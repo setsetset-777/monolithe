@@ -1,0 +1,7 @@
+export * from './general'
+export * from './home'
+export * from './presentation'
+export * from './services'
+export * from './projects'
+export * from './project'
+export * from './contact'

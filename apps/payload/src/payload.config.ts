@@ -26,8 +26,10 @@ import { PageContact } from '@/globals/PageContact'
 import { localization, customTranslations } from '@/i18n'
 import regenerateMedia from '@/helpers/regenerateMedia'
 import { Locale } from '@/types'
-import { getPageData } from './helpers/getPageData'
-import { getGeneralData } from './helpers/getGeneralData'
+// import { getPageData } from './helpers/getPageData'
+// import { getGeneralData } from './helpers/getGeneralData'
+
+import { fetchGeneral, fetchPage } from '@/helpers/fetchProviders/general'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -67,22 +69,14 @@ export default buildConfig({
   plugins: [],
   endpoints: [
     {
-      path: '/locales',
-      method: 'get',
-      handler: async (req) => {
-        return Response.json(localization)
-      },
-    },
-    {
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        const locale = (req.locale as Locale) ?? localization.defaultLocale
-        const general = await getGeneralData(req.payload, locale)
-        console.log('General data: ', general)
+        const response = await fetchGeneral(req)
+
         return Response.json({
           ok: true,
-          ...general,
+          ...response,
         })
       },
     },
@@ -91,14 +85,23 @@ export default buildConfig({
       method: 'get',
       handler: async (req) => {
         let path = req.query.path as string
+
         try {
-          const pageData = await getPageData(path, req)
-          console.log('Page data: ', pageData)
+          const response = await fetchPage(req, path)
+
           return Response.json({
             ok: true,
-            ...pageData,
+            ...response,
           })
+
+          // const pageData = await getPageData(path, req)
+          // console.log('Page data: ', pageData)
+          // return Response.json({
+          //   ok: true,
+          //   ...pageData,
+          // })
         } catch (e) {
+          console.error(`Error retrieving page for ${path}`, e)
           return Response.json(
             {
               ok: false,

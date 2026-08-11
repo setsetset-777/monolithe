@@ -2,7 +2,7 @@
 import Sidebar from '@/components/Sidebar.astro'
 import Footer from '@/components/Footer.astro'
 
-import type { FooterData, NavigationData, PageSlug } from '@monolithe/api/types'
+import type { General, PageSlug } from '@monolithe/api/types'
 
 const analytics = {
   enable: import.meta.env.ANALYTICS_ENABLE,
@@ -11,11 +11,11 @@ const analytics = {
 }
 
 type Props = {
-  footer: FooterData
-  navigation: NavigationData
+  footer: General.Footer
+  navigation: General.Navigation
   meta: {
     title: string
-  },
+  }
   slug: PageSlug
 }
 
@@ -27,100 +27,146 @@ const { logoCatch, contact, services } = footer
 
 const sidebarType = slug === 'pageHome' ? 'big' : 'small'
 
-const bodyModifiers = [
-  `sidebar-${slug === 'pageHome' ? 'big' : 'small'}`
-]
+const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
 ---
 
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monolithe – Gravure  • Art funéraire – { meta.title }</title>
-  <meta
-    name="description"
-    content="Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monolithe – Gravure • Art funéraire – {meta.title}</title>
+    <meta
+      name="description"
+      content="Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires"
+    />
 
     <!-- Default favicons (fallback) -->
-  <link rel="icon" type="image/x-icon" href="/favicon-light.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png">
+    <link rel="icon" type="image/x-icon" href="/favicon-light.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png" />
 
     <!-- Light mode favicons -->
-  <link rel="icon" type="image/x-icon" href="/favicon-light.ico" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-light-16x16.png" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png" media="(prefers-color-scheme: light)">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-light.png" media="(prefers-color-scheme: light)">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/favicon-light.ico"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-light-16x16.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-light-32x32.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon-light.png"
+      media="(prefers-color-scheme: light)"
+    />
 
     <!-- Dark mode favicons -->
-  <link rel="icon" type="image/x-icon" href="/favicon-dark.ico" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-dark-16x16.png" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-dark-32x32.png" media="(prefers-color-scheme: dark)">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-dark.png" media="(prefers-color-scheme: dark)">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/favicon-dark.ico"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-dark-16x16.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-dark-32x32.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon-dark.png"
+      media="(prefers-color-scheme: dark)"
+    />
 
-    { analytics.enable && <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id}></script> }
-</head>
+    {
+      analytics.enable && (
+        <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id} />
+      )
+    }
+  </head>
 
-<body data-theme="light" class:list={["body", ...bodyModifiers.map(a => `body--${a}`)]}>
-  <div class="container">
-    <div class="container__inner">
-      <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} />
+  <body data-theme="light" class:list={['body', ...bodyModifiers.map((a) => `body--${a}`)]}>
+    <div class="container">
+      <div class="container__inner">
+        <div class="content">
+          <main class="main">
+            <slot />
+          </main>
 
-      <div class="content">
-        <main class="main">
-          <slot />
-        </main>
+          <Footer logoCatch={logoCatch} contact={contact} services={services} />
 
-        <Footer logoCatch={logoCatch} contact={contact} services={services} />
+          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} />
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
 
 <style lang="scss">
-html,
-body {
-  background-color: var(--color-gray-100);
-  color: var(--color-gray-00);
-  font-family: var(--font-family-body);
-  height: 100%;
-  font-size: var(--font-size-s);
-  scroll-behavior: smooth;
-}
+  html,
+  body {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-00);
+    font-family: var(--font-family-body);
+    height: 100%;
+    font-size: var(--font-size-s);
+    scroll-behavior: smooth;
+  }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  position: relative;
-}
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    position: relative;
+  }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  align-items: center;
-  overflow-x: clip;
-  font-size: var(--font-size-m);
+  .container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    overflow-x: clip;
+    font-size: var(--font-size-m);
 
-  &__inner {
-    max-width: var(--width-container-max);
-    width: 100%;
+    &__inner {
+      max-width: var(--width-container-max);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+  }
+
+  .content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
   }
-}
 
-.content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.main {
-  flex-grow: 1;
-}
+  .main {
+    flex-grow: 1;
+  }
 </style>

@@ -1,7 +1,6 @@
 import { localization } from '@/i18n'
 import type {
   BasePayload,
-  GlobalSlug,
   CollectionSlug,
   GlobalAfterChangeHook,
   CollectionAfterChangeHook,
@@ -15,6 +14,8 @@ import type {
   Routes,
   LocalizedRoutes,
   Route,
+  RoutedGlobalSlug,
+  RoutedCollectionSlug,
 } from '@/types'
 
 const { locales, defaultLocale } = localization
@@ -26,7 +27,6 @@ export const routesConfig: RouteConfig = {
   pages: [
     {
       slug: 'pageHome',
-      path: '/',
     },
     {
       slug: 'pageProjects',
@@ -88,7 +88,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
     routes[locale as Locale] = {}
     for (const { slug, path, field = defaultSlugField, children } of routesConfig.pages) {
       const global = await payload.findGlobal({
-        slug: slug as GlobalSlug,
+        slug: slug as RoutedGlobalSlug,
         locale: locale as Locale,
       })
 
@@ -96,15 +96,17 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
 
       routes[locale as Locale]![slug] = {
         id: global.id,
-        path: path || (doc.url as string),
+        path: path || doc.url,
         slug: slug,
         urlSlug: doc[field] as string,
-        title: doc.title as string,
         type: 'global',
+        meta: {
+          title: doc.title,
+        },
       }
       if (children) {
         const collections = await payload.find({
-          collection: children.slug as CollectionSlug,
+          collection: children.slug as RoutedCollectionSlug,
           locale: locale as Locale,
         })
 
@@ -115,12 +117,14 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
           const urlSlug = doc[field] as string
           routes[locale as Locale]![collection.id] = {
             id: doc.id,
-            path: doc.url as string,
+            path: doc.url,
             slug: children.slug,
             urlSlug,
             parent: slug,
-            title: doc.title as string,
             type: 'collection',
+            meta: {
+              title: doc.title,
+            },
           }
         }
       }

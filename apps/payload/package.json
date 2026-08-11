@@ -5,6 +5,10 @@
   "license": "MIT",
   "type": "module",
   "exports": {
+    ".": {
+      "default": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
     "./types": {
       "types": "./src/types/index.ts"
     }
@@ -24,6 +28,7 @@
     "docker-dev": "pnpm dev"
   },
   "dependencies": {
+    "@monolithe/api": "workspace:^",
     "@payloadcms/db-mongodb": "3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",

@@ -10,7 +10,7 @@
       "default": "./src/index.ts"
     },
     "./types": {
-      "types": "./src/types.ts"
+      "types": "./src/types/index.ts"
     }
   },
   "scripts": {

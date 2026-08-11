@@ -1,0 +1,72 @@
+---
+import '../styles/index.scss'
+
+import { getPage, getGeneral } from '@/lib/page'
+import Layout from '@/layouts/Layout.astro'
+import Home from '../views/Home.astro'
+import Presentation from '../views/Presentation.astro'
+import Services from '../views/Services.astro'
+import Projects from '../views/Projects.astro'
+import Project from '../views/Project.astro'
+import Contact from '../views/Contact.astro'
+import type { PageSlug, General, Meta } from '@monolithe/api/types'
+
+const pages = {
+  pageHome: Home,
+  pagePresentation: Presentation,
+  pageServices: Services,
+  pageProjects: Projects,
+  projects: Project,
+  pageContact: Contact,
+}
+
+export async function getStaticPaths() {
+  const { routes, navigation, footer } = await getGeneral()
+
+  const paths = Object.values(routes).map((route) => ({
+    params: { path: route.path },
+    props: {
+      meta: route.meta,
+      navigation,
+      footer,
+      slug: route.slug,
+      path: route.path,
+    },
+  }))
+
+  return paths
+}
+
+type Props = {
+  meta: Meta
+  navigation: General.Navigation
+  footer: General.Footer
+  slug: PageSlug
+}
+
+const { meta, navigation, footer, slug, path } = Astro.props
+
+const View = pages[slug as PageSlug]
+
+const data = await getPage(path)
+
+if (!View) {
+  return Astro.redirect('/404')
+}
+---
+
+<Layout navigation={navigation} footer={footer} meta={{ title: meta.title }} slug={slug}>
+  <View {...data} />
+</Layout>
+
+<style lang="scss">
+  html,
+  body {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-00);
+    font-family: var(--font-family-body);
+    height: 100%;
+    font-size: var(--font-size-s);
+    scroll-behavior: smooth;
+  }
+</style>
