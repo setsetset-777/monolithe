@@ -1,3 +1,7 @@
+import type { Hero } from '../'
+
 export namespace Contact {
-  export interface Data {}
+  export interface Data {
+    hero: Hero
+  }
 }

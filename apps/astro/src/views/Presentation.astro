@@ -1,20 +1,20 @@
 ---
-import Hero from '@/components/Hero.astro'
+import HeroView from '@/components/Hero.astro'
 import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 
-import type { HeroData } from '@monolithe/payload/types'
+import type { Hero } from '@monolithe/api/types'
 
 type Props = {
-  hero: HeroData
-  presentation: string
+  hero: Hero
+  presentation?: string
 }
 
 const { hero, presentation } = Astro.props
 ---
 
 <div class="page">
-  <Hero {...hero} />
+  <HeroView {...hero} />
 
   <div class="content">
     <section class="presentation">

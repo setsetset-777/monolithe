@@ -18,7 +18,30 @@ import type { Project } from './project'
 import type { Contact } from './contact'
 
 export type PageData =
-  Home.Data | Presentation.Data | Services.Data | Projects.Data | Project.Data | Contact.Data
+  | {
+      data: Home.Data
+      slug: 'pageHome'
+    }
+  | {
+      data: Presentation.Data
+      slug: 'pagePresentation'
+    }
+  | {
+      data: Services.Data
+      slug: 'pageServices'
+    }
+  | {
+      data: Projects.Data
+      slug: 'pageProjects'
+    }
+  | {
+      data: Project.Data
+      slug: 'projects'
+    }
+  | {
+      data: Contact.Data
+      slug: 'pageContact'
+    }
 
 export type FetchData = Promise<Record<string, any>>
 

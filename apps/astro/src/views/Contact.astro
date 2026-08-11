@@ -1,17 +1,15 @@
 ---
-import Hero from '@/components/Hero.astro'
+import HeroView from '@/components/Hero.astro'
 
-import type { HeroData } from "@monolithe/payload/types"
+import type { Hero } from '@monolithe/api/types'
 
 type Props = {
-  hero: HeroData
-  presentation: string,
+  hero: Hero
 }
 
-const { hero, presentation } = Astro.props
+const { hero } = Astro.props
 ---
 
 <div class="page">
-  <Hero { ...hero } />
-
+  <HeroView {...hero} />
 </div>

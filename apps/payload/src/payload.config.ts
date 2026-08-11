@@ -1,7 +1,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig, CollectionSlug, GlobalSlug } from 'payload'
+import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -25,9 +25,6 @@ import { PageContact } from '@/globals/PageContact'
 
 import { localization, customTranslations } from '@/i18n'
 import regenerateMedia from '@/helpers/regenerateMedia'
-import { Locale } from '@/types'
-// import { getPageData } from './helpers/getPageData'
-// import { getGeneralData } from './helpers/getGeneralData'
 
 import { fetchGeneral, fetchPage } from '@/helpers/fetchProviders/general'
 
@@ -93,13 +90,6 @@ export default buildConfig({
             ok: true,
             ...response,
           })
-
-          // const pageData = await getPageData(path, req)
-          // console.log('Page data: ', pageData)
-          // return Response.json({
-          //   ok: true,
-          //   ...pageData,
-          // })
         } catch (e) {
           console.error(`Error retrieving page for ${path}`, e)
           return Response.json(

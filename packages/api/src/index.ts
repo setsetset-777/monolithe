@@ -24,17 +24,35 @@ const page = async (path: string, locale?: Payload.Locale): Promise<PageData> =>
 
   switch (slug) {
     case 'pageHome':
-      return transformHomeData(data as Payload.PageHome)
+      return {
+        data: transformHomeData(data as Payload.PageHome),
+        slug,
+      }
     case 'pagePresentation':
-      return transformPresentationData(data as Payload.PagePresentation, slug)
+      return {
+        data: transformPresentationData(data as Payload.PagePresentation, slug),
+        slug,
+      }
     case 'pageServices':
-      return transformServicesData(data as Payload.PageService)
+      return {
+        data: transformServicesData(data as Payload.PageService, slug),
+        slug,
+      }
     case 'pageProjects':
-      return transformProjectsData(data as Payload.PageProject)
+      return {
+        data: transformProjectsData(data as Payload.PageProject, slug),
+        slug,
+      }
     case 'projects':
-      return transformProjectData(data as Payload.Project)
+      return {
+        data: transformProjectData(data as Payload.Project, slug),
+        slug,
+      }
     case 'pageContact':
-      return transformContactData(data as Payload.PageContact)
+      return {
+        data: transformContactData(data as Payload.PageContact, slug),
+        slug,
+      }
   }
 }
 

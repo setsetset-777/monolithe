@@ -9,16 +9,7 @@ import Services from '../views/Services.astro'
 import Projects from '../views/Projects.astro'
 import Project from '../views/Project.astro'
 import Contact from '../views/Contact.astro'
-import type { PageSlug, General, Meta } from '@monolithe/api/types'
-
-const pages = {
-  pageHome: Home,
-  pagePresentation: Presentation,
-  pageServices: Services,
-  pageProjects: Projects,
-  projects: Project,
-  pageContact: Contact,
-}
+import type { General, Meta } from '@monolithe/api/types'
 
 export async function getStaticPaths() {
   const { routes, navigation, footer } = await getGeneral()
@@ -29,7 +20,6 @@ export async function getStaticPaths() {
       meta: route.meta,
       navigation,
       footer,
-      slug: route.slug,
       path: route.path,
     },
   }))
@@ -41,22 +31,25 @@ type Props = {
   meta: Meta
   navigation: General.Navigation
   footer: General.Footer
-  slug: PageSlug
+  path: string
 }
 
-const { meta, navigation, footer, slug, path } = Astro.props
+const { meta, navigation, footer, path } = Astro.props
 
-const View = pages[slug as PageSlug]
+const { slug, data } = await getPage(path)
 
-const data = await getPage(path)
-
-if (!View) {
+if (!slug) {
   return Astro.redirect('/404')
 }
 ---
 
 <Layout navigation={navigation} footer={footer} meta={{ title: meta.title }} slug={slug}>
-  <View {...data} />
+  {slug === 'pageHome' && <Home {...data} />}
+  {slug === 'pagePresentation' && <Presentation {...data} />}
+  {slug === 'pageServices' && <Services {...data} />}
+  {slug === 'pageProjects' && <Projects {...data} />}
+  {slug === 'projects' && <Project {...data} />}
+  {slug === 'pageContact' && <Contact {...data} />}
 </Layout>
 
 <style lang="scss">
