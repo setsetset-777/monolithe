@@ -705,12 +705,40 @@ export interface PagePresentation {
   urlSlug: string;
   url: string;
   heroImage: string | Media;
-  monolithePresentation?: string | null;
+  monolithe?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   sections?:
     | (
         | {
             title?: string | null;
-            text?: string | null;
+            text?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             image?: (string | null) | Media;
             id?: string | null;
             blockName?: string | null;
@@ -939,7 +967,7 @@ export interface PagePresentationSelect<T extends boolean = true> {
   urlSlug?: T;
   url?: T;
   heroImage?: T;
-  monolithePresentation?: T;
+  monolithe?: T;
   sections?:
     | T
     | {

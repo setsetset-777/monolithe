@@ -4,6 +4,7 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 const TextWithTitleBlock: Block = {
   slug: 'textWithTitleBlock',
@@ -28,14 +29,12 @@ const TextWithTitleBlock: Block = {
     },
     {
       name: 'text',
-      type: 'textarea',
+      type: 'richText',
       label: {
         en: 'Text',
         fr: 'Texte',
       },
-      admin: {
-        rows: 5,
-      },
+      editor: lexicalEditor(),
     },
     {
       name: 'image',
@@ -200,15 +199,13 @@ export const PagePresentation: GlobalConfig = {
     ...urlFields({ source: 'title', slug: 'pagePresentation' }),
     heroImageField(),
     {
-      name: 'monolithePresentation',
-      type: 'textarea',
+      name: 'monolithe',
+      type: 'richText',
       label: {
         en: 'Monolithe presentation',
         fr: 'Présentation de Monolithe',
       },
-      admin: {
-        rows: 5,
-      },
+      editor: lexicalEditor(),
     },
     {
       name: 'sections',

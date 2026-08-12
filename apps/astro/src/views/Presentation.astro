@@ -12,6 +12,8 @@ import type { Presentation } from '@monolithe/api/types'
 type Props = Presentation.Data
 
 const { hero, presentation, sections } = Astro.props
+
+console.log('presentation', presentation)
 ---
 
 <div class="page">
@@ -22,7 +24,7 @@ const { hero, presentation, sections } = Astro.props
       <div class="presentation__left">
         <Logo class:list={'presentation__logo'} />
       </div>
-      <p class="presentation__right">{presentation}</p>
+      <div class="presentation__right" set:html={presentation} />
     </section>
 
     {

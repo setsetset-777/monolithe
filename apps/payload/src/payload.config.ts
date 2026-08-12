@@ -82,8 +82,6 @@ export default buildConfig({
         const data = await fetchGeneral(req)
         const response = transformGeneralData(data)
 
-        console.log('general', response)
-
         return Response.json({
           ok: true,
           ...response,
@@ -138,6 +136,8 @@ export default buildConfig({
               }
               break
           }
+
+          console.log('page', response)
 
           return Response.json({
             ok: true,
