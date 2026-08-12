@@ -1,0 +1,66 @@
+---
+import Image from '@/components/Image.astro'
+import type { Presentation } from '@monolithe/api/types'
+
+type Props = Presentation.TextWithTitleSection
+
+const { title, text, image } = Astro.props
+---
+
+<section>
+  <div class="image">
+    <div class="image__inner">
+      {
+        image && (
+          <Image
+            src={image.url}
+            alt={image.alt}
+            srcset={{
+              '800w': image.sizes?.[2000]?.url!,
+              '1200w': image.sizes?.[3000]?.url!,
+            }}
+            modifiers={['fill']}
+          />
+        )
+      }
+    </div>
+  </div>
+  <div class="content">
+    <h3>{title}</h3>
+    <div class="text p-space">{text}</div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  section {
+    @include grid;
+    align-items: stretch;
+    padding: var(--space-80) 0;
+  }
+
+  .image {
+    grid-column: span 5;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-1);
+    position: relative;
+
+    &__inner {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .content {
+    grid-column: 6 / span 7;
+  }
+
+  h3 {
+    @include font-heading-2;
+    color: var(--color-font-gold);
+    margin-bottom: var(--space-48);
+  }
+</style>

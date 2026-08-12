@@ -18,6 +18,7 @@ export const transformPresentationData = (
         case 'textWithTitleBlock':
           const { text, image } = section
           return {
+            type: section.blockType,
             title: title!,
             text: text!,
             image: image as Payload.Media,
@@ -25,6 +26,7 @@ export const transformPresentationData = (
         case 'listBlock':
           const { values } = section
           return {
+            type: section.blockType,
             title: title!,
             values: (values ?? []).map(({ title }) => ({
               title: title!,
@@ -33,6 +35,7 @@ export const transformPresentationData = (
         case 'parutionsBlock':
           const { parutionList } = section
           return {
+            type: section.blockType,
             title: title!,
             list: (parutionList ?? []).map(({ parution }) => {
               const { title, publisher, type, date, link, thumbnail } = parution as Parution
@@ -49,6 +52,7 @@ export const transformPresentationData = (
         case 'testimonialsBlock':
           const { testimonialsList } = section
           return {
+            type: section.blockType,
             title: title!,
             list: (testimonialsList ?? []).map(({ testimonial }) => {
               const { name, description, company } = testimonial as Testimonial

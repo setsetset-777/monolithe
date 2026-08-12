@@ -5,14 +5,14 @@ import { Payload } from 'payload'
 const limit = 1000
 
 export default async function regenerateMedia(payload: Payload, staticDir: string = 'media') {
-  console.log('Initialise media regeneration...')
+  payload.logger.info('Initialise media regeneration...')
 
   const mediaPath = path.resolve(process.cwd(), staticDir)
 
   if (fs.existsSync(mediaPath)) {
-    console.log(`Folder ${mediaPath} found`)
+    payload.logger.info(`Folder ${mediaPath} found`)
   } else {
-    console.error(`Folder ${mediaPath} not found`)
+    payload.logger.error(`Folder ${mediaPath} not found`)
     return
   }
 
@@ -20,16 +20,16 @@ export default async function regenerateMedia(payload: Payload, staticDir: strin
     await cleanUpMedia(payload, mediaPath)
     await generateThumbs(payload, mediaPath)
   } catch (err) {
-    console.log('Erreur retrieveing Paylaod')
-    console.error(err)
+    payload.logger.info('Erreur retrieveing Paylaod')
+    payload.logger.error(err)
     return
   }
 
-  console.log('Media regeneration completed!')
+  payload.logger.info('Media regeneration completed!')
 }
 
 async function cleanUpMedia(payload: Payload, mediaPath: string) {
-  console.log('Clean up media')
+  payload.logger.info('Clean up media')
   try {
     const media = await payload.find({
       collection: 'media',
@@ -48,18 +48,18 @@ async function cleanUpMedia(payload: Payload, mediaPath: string) {
       const stat = await fs.promises.stat(fullPath)
 
       if (stat.isFile()) {
-        console.log(`Deleting ${file}`)
+        payload.logger.info(`Deleting ${file}`)
         await fs.promises.unlink(fullPath)
       }
     }
   } catch (err) {
-    console.log('Erreur cleaning up media')
+    payload.logger.info('Erreur cleaning up media')
     throw err
   }
 }
 
 async function generateThumbs(payload: Payload, mediaPath: string) {
-  console.log('Regenerate media')
+  payload.logger.info('Regenerate media')
   try {
     const media = await payload.find({
       collection: 'media',
@@ -68,7 +68,7 @@ async function generateThumbs(payload: Payload, mediaPath: string) {
     })
 
     if (!media.totalDocs) {
-      console.log('No media found')
+      payload.logger.info('No media found')
       process.exit(0)
     }
 
@@ -82,14 +82,14 @@ async function generateThumbs(payload: Payload, mediaPath: string) {
           filePath: `${mediaPath}/${mediaDoc.filename}`,
         })
 
-        console.log(`Media ${mediaDoc.id} (${mediaDoc.filename}) regenerated.`)
+        payload.logger.info(`Media ${mediaDoc.id} (${mediaDoc.filename}) regenerated.`)
       } catch (err) {
-        console.log(`Media ${mediaDoc.id} (${mediaDoc.filename}) failed to regenerate.`)
+        payload.logger.info(`Media ${mediaDoc.id} (${mediaDoc.filename}) failed to regenerate.`)
         throw err
       }
     }
   } catch (err) {
-    console.log('Erreur regenerating media')
+    payload.logger.info('Erreur regenerating media')
     throw err
   }
 }

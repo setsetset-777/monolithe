@@ -1,16 +1,17 @@
 ---
 import HeroView from '@/components/Hero.astro'
+import SectionTextWithTitle from '@/components/presentation/SectionTextWithTitle.astro'
+import SectionList from '@/components/presentation/SectionList.astro'
+import SectionParutions from '@/components/presentation/SectionParutions.astro'
+import SectionTestimonials from '@/components/presentation/SectionTestimonials.astro'
 import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 
-import type { Hero } from '@monolithe/api/types'
+import type { Presentation } from '@monolithe/api/types'
 
-type Props = {
-  hero: Hero
-  presentation?: string
-}
+type Props = Presentation.Data
 
-const { hero, presentation } = Astro.props
+const { hero, presentation, sections } = Astro.props
 ---
 
 <div class="page">
@@ -24,7 +25,33 @@ const { hero, presentation } = Astro.props
       <p class="presentation__right">{presentation}</p>
     </section>
 
-    <Separator />
+    {
+      sections.map((section, index) => {
+        let content
+        switch (section.type) {
+          case 'textWithTitleBlock':
+            content = <SectionTextWithTitle {...section} />
+            break
+          case 'listBlock':
+            content = <SectionList {...section} />
+            break
+          case 'parutionsBlock':
+            content = <SectionParutions {...section} />
+            break
+          case 'testimonialsBlock':
+            content = <SectionTestimonials {...section} />
+            break
+        }
+        if (content) {
+          return (
+            <>
+              {index < sections.length && <Separator />}
+              {content}
+            </>
+          )
+        }
+      })
+    }
   </div>
 </div>
 
