@@ -3,7 +3,58 @@ import type { Presentation } from '@monolithe/api/types'
 
 type Props = Presentation.ListSection
 
-const { title } = Astro.props
+const { title, values } = Astro.props
 ---
 
-<section>{title}</section>
+<section>
+  <div class="title">
+    <h3>{title}</h3>
+  </div>
+  <div class="list">
+    <ul>
+      {values.map(({ title }) => <li>{title}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/utilities/' as *;
+
+  section {
+    @include grid;
+    padding: var(--space-80) 0;
+  }
+
+  .title {
+    @include font-heading-2;
+    color: var(--color-font-gold);
+    grid-column: span 3;
+  }
+
+  .list {
+    grid-column: 4 / span 8;
+
+    ul {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: var(--space-16);
+    }
+
+    li {
+      @include font-heading-3;
+      display: flex;
+      gap: var(--space-16);
+      align-items: center;
+
+      &:before {
+        $size: pxToRem(6px);
+        content: '';
+        display: block;
+        width: $size;
+        height: $size;
+        background-color: var(--color-gold-30);
+        transform: rotate(45deg);
+      }
+    }
+  }
+</style>
