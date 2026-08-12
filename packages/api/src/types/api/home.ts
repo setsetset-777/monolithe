@@ -1,5 +1,4 @@
-import type { Media } from '@monolithe/payload/types'
-import type { ServicesList } from '../shared'
+import type { ServicesList, Media } from '../shared'
 
 export namespace Home {
   export interface Data {

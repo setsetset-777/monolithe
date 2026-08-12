@@ -1,4 +1,4 @@
-import type { InitConfig } from '../types'
+import type { General, InitConfig, PageData } from '../types/api'
 import type { Payload } from '../types/payload'
 import logger from '@monolithe/logger'
 
@@ -24,10 +24,7 @@ let config: InitConfig = {
  * @param locale
  * @returns
  */
-export async function fetchPage(
-  path: string,
-  locale?: Payload.Locale,
-): Promise<Payload.PageResponse> {
+export async function fetchPage(path: string, locale?: Payload.Locale): Promise<PageData> {
   return request(
     buildUrl({
       slug: 'page',
@@ -41,7 +38,7 @@ export async function fetchPage(
  * @param locale
  * @returns
  */
-export async function fetchGeneral(locale?: Payload.Locale): Promise<Payload.GeneralResponse> {
+export async function fetchGeneral(locale?: Payload.Locale): Promise<General.Data> {
   return request(
     buildUrl({
       slug: 'general',

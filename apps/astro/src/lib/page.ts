@@ -1,4 +1,4 @@
-import type { PageData, General } from '@monolithe/api/types'
+import type { General, PageData } from '@monolithe/api/types'
 import api from '@monolithe/api'
 
 export const getPage = async (url: string): Promise<PageData> => {

@@ -26,7 +26,17 @@ import { PageContact } from '@/globals/PageContact'
 import { localization, customTranslations } from '@/i18n'
 import regenerateMedia from '@/helpers/regenerateMedia'
 
-import { fetchGeneral, fetchPage } from '@/helpers/fetchProviders/general'
+import { fetchGeneral } from '@/api/fetch/general'
+import { fetchPage } from '@/api/fetch/page'
+import {
+  transformContactData,
+  transformGeneralData,
+  transformHomeData,
+  transformPresentationData,
+  transformProjectData,
+  transformProjectsData,
+  transformServicesData,
+} from '@/api/transform'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,7 +79,10 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        const response = await fetchGeneral(req)
+        const data = await fetchGeneral(req)
+        const response = transformGeneralData(data)
+
+        console.log('general', response)
 
         return Response.json({
           ok: true,
@@ -84,7 +97,47 @@ export default buildConfig({
         let path = req.query.path as string
 
         try {
-          const response = await fetchPage(req, path)
+          const { slug, data } = await fetchPage(req, path)
+          let response
+
+          switch (slug) {
+            case 'pageHome':
+              response = {
+                data: transformHomeData(data),
+                slug: 'pageHome',
+              }
+              break
+            case 'pagePresentation':
+              response = {
+                data: transformPresentationData(data, slug),
+                slug,
+              }
+              break
+            case 'pageServices':
+              response = {
+                data: transformServicesData(data, slug),
+                slug,
+              }
+              break
+            case 'pageProjects':
+              response = {
+                data: transformProjectsData(data, slug),
+                slug,
+              }
+              break
+            case 'projects':
+              response = {
+                data: transformProjectData(data, slug),
+                slug,
+              }
+              break
+            case 'pageContact':
+              response = {
+                data: transformContactData(data, slug),
+                slug,
+              }
+              break
+          }
 
           return Response.json({
             ok: true,

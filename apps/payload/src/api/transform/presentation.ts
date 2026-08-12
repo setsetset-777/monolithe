@@ -1,18 +1,18 @@
-import type { Presentation, Parution, Testimonial } from '../types'
-import type { Payload } from '../types/payload'
+import type * as API from '@monolithe/api/types'
+import type { PageSlug, PagePresentation } from '@/types'
 
 export const transformPresentationData = (
-  { title: heroTitle, heroImage, monolithePresentation, sections }: Payload.PagePresentation,
-  slug: Payload.PageSlug,
-): Presentation.Data => {
+  { title: heroTitle, heroImage, monolithePresentation, sections }: PagePresentation,
+  slug: PageSlug,
+): API.Presentation.Data => {
   return {
     hero: {
       title: heroTitle,
-      image: heroImage as Payload.Media,
+      image: heroImage as API.Media,
       slug: slug,
     },
     presentation: monolithePresentation!,
-    sections: (sections ?? []).map((section): Presentation.Section => {
+    sections: (sections ?? []).map((section): API.Presentation.Section => {
       const { title } = section
       switch (section.blockType) {
         case 'textWithTitleBlock':
@@ -21,7 +21,7 @@ export const transformPresentationData = (
             type: section.blockType,
             title: title!,
             text: text!,
-            image: image as Payload.Media,
+            image: image as API.Media,
           }
         case 'listBlock':
           const { values } = section
@@ -38,14 +38,14 @@ export const transformPresentationData = (
             type: section.blockType,
             title: title!,
             list: (parutionList ?? []).map(({ parution }) => {
-              const { title, publisher, type, date, link, thumbnail } = parution as Parution
+              const { title, publisher, type, date, link, thumbnail } = parution as API.Parution
               return {
                 title: title!,
                 publisher: publisher!,
                 type: type!,
                 date: date!,
                 link: link!,
-                thumbnail: thumbnail as Payload.Media,
+                thumbnail: thumbnail as API.Media,
               }
             }),
           }
@@ -55,7 +55,7 @@ export const transformPresentationData = (
             type: section.blockType,
             title: title!,
             list: (testimonialsList ?? []).map(({ testimonial }) => {
-              const { name, description, company } = testimonial as Testimonial
+              const { name, description, company } = testimonial as API.Testimonial
               return {
                 name: name!,
                 description: description!,

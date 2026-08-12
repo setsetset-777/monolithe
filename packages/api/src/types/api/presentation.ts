@@ -1,5 +1,4 @@
-import type { Media } from '@monolithe/payload/types'
-import type { Testimonial, Hero, Parution } from '../shared'
+import type { Testimonial, Hero, Parution, Media } from '../shared'
 
 export namespace Presentation {
   export interface TextWithTitleSection {

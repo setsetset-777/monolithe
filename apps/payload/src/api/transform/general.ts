@@ -1,27 +1,23 @@
-import type { General } from '../types'
-import type { Payload } from '../types/payload'
+import type * as API from '@monolithe/api/types'
+import type { General, PageService, LocalizedRoutes, PageSlug } from '@/types'
 
 type Params = {
-  general: Payload.General
-  services: Payload.PageService
-  routes: Payload.LocalizedRoutes
+  general: General
+  services: PageService
+  routes: LocalizedRoutes
 }
 
-export const transformGeneralData = async ({
-  general,
-  services,
-  routes,
-}: Params): Promise<General.Data> => {
+export const transformGeneralData = ({ general, services, routes }: Params): API.General.Data => {
   return {
     navigation: {
       home: {
-        url: routes['pageHome' as Payload.PageSlug].path,
+        url: routes['pageHome' as PageSlug].path,
         linkLabel: "Retour à l'accueil",
       },
       menu: (general.navigation?.items ?? []).map(({ title, url, slug }) => ({
         title,
         url,
-        slug: slug as Payload.PageSlug,
+        slug: slug as PageSlug,
       })),
     },
     footer: {

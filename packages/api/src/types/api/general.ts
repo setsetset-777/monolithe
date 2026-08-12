@@ -1,5 +1,4 @@
-import type { LocalizedRoutes, PageSlug } from '@monolithe/payload/types'
-import type { ServicesList } from '../shared'
+import type { ServicesList, PageSlug, LocalizedRoutes } from '../shared'
 
 export namespace General {
   export interface Footer {

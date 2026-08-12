@@ -1,14 +1,14 @@
-import type { Home } from '../types'
-import type { Payload } from '../types/payload'
+import type * as API from '@monolithe/api/types'
+import type { PageHome } from '@/types'
 
 export const transformHomeData = ({
   presentation,
   services,
   projects,
-}: Payload.PageHome): Home.Data => {
+}: PageHome): API.Home.Data => {
   return {
     presentation: {
-      heroImage: presentation?.heroImage as Payload.Media,
+      heroImage: presentation?.heroImage as API.Media,
       catch: presentation?.catch!,
       url: presentation?.link!,
       linkLabel: presentation?.linkLabel!,
@@ -26,7 +26,7 @@ export const transformHomeData = ({
       highlights: projects?.highlights?.map((item) => ({
         title: item.title!,
         url: item.link!,
-        image: item.image as Payload.Media,
+        image: item.image as API.Media,
       }))!,
       linkLabel: projects?.linkLabel!,
       url: projects?.link!,

@@ -1,4 +1,4 @@
-import type { Hero } from '../'
+import type { Hero } from '../shared'
 
 export namespace Services {
   export interface Data {

@@ -9,10 +9,12 @@ import Services from '../views/Services.astro'
 import Projects from '../views/Projects.astro'
 import Project from '../views/Project.astro'
 import Contact from '../views/Contact.astro'
-import type { General, Meta } from '@monolithe/api/types'
+import type { Meta, General } from '@monolithe/api/types'
 
 export async function getStaticPaths() {
-  const { routes, navigation, footer } = await getGeneral()
+  const data = await getGeneral()
+  console.log('data', data)
+  const { routes, navigation, footer } = data
 
   const paths = Object.values(routes).map((route) => ({
     params: { path: route.path },

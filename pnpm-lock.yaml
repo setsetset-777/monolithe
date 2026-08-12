@@ -27,9 +27,6 @@ importers:
 
   apps/payload:
     dependencies:
-      '@monolithe/api':
-        specifier: workspace:^
-        version: link:../../packages/api
       '@payloadcms/db-mongodb':
         specifier: 3.86.0
         version: 3.86.0(payload@3.86.0(graphql@16.14.2)(supports-color@8.1.1)(typescript@5.7.3))(supports-color@8.1.1)
@@ -70,6 +67,9 @@ importers:
         specifier: 0.34.2
         version: 0.34.2
     devDependencies:
+      '@monolithe/api':
+        specifier: workspace:^
+        version: link:../../packages/api
       '@playwright/test':
         specifier: 1.58.2
         version: 1.58.2

@@ -1,4 +1,4 @@
-import type { Hero } from '../'
+import type { Hero } from '../shared'
 
 export namespace Contact {
   export interface Data {

@@ -28,7 +28,6 @@
     "docker-dev": "pnpm dev"
   },
   "dependencies": {
-    "@monolithe/api": "workspace:^",
     "@payloadcms/db-mongodb": "3.86.0",
     "@payloadcms/next": "3.86.0",
     "@payloadcms/richtext-lexical": "3.86.0",
@@ -44,6 +43,7 @@
     "sharp": "0.34.2"
   },
   "devDependencies": {
+    "@monolithe/api": "workspace:^",
     "@playwright/test": "1.58.2",
     "@testing-library/react": "16.3.0",
     "@types/node": "22.19.9",
