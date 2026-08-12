@@ -140,7 +140,7 @@ export const PageServices: GlobalConfig = {
                   collection: 'services',
                   id: service,
                 })
-                return { title: label, url: `${siblingData.url}/${slugId}` }
+                return { title: label, url: `${siblingData.url}#${slugId}` }
               }),
             )
           },

@@ -137,8 +137,6 @@ export default buildConfig({
               break
           }
 
-          console.log('page', response)
-
           return Response.json({
             ok: true,
             ...response,
