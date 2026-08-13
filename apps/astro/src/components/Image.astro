@@ -23,7 +23,7 @@ const {
   modifiers,
 } = Astro.props
 
-const mediaUrl = import.meta.env.MEDIA_URL
+const mediaUrl = process.env.MEDIA_URL
 
 const formatSrc = (src: string) => `${mediaUrl}${src}`
 ---
