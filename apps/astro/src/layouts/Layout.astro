@@ -5,7 +5,7 @@ import Footer from '@/components/Footer.astro'
 import type { General, PageSlug } from '@monolithe/api/types'
 
 const analytics = {
-  enable: import.meta.env.ANALYTICS_ENABLE,
+  enable: import.meta.env.ANALYTICS_ENABLE === 'true',
   id: import.meta.env.ANALYTICS_ID,
   domain: import.meta.env.ANALYTICS_Domain,
 }
@@ -41,65 +41,13 @@ const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
       content="Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires"
     />
 
-    <!-- Default favicons (fallback) -->
-    <link rel="icon" type="image/x-icon" href="/favicon-light.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png" />
-
-    <!-- Light mode favicons -->
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="/favicon-light.ico"
-      media="(prefers-color-scheme: light)"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon-light-16x16.png"
-      media="(prefers-color-scheme: light)"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicon-light-32x32.png"
-      media="(prefers-color-scheme: light)"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/apple-touch-icon-light.png"
-      media="(prefers-color-scheme: light)"
-    />
-
-    <!-- Dark mode favicons -->
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="/favicon-dark.ico"
-      media="(prefers-color-scheme: dark)"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon-dark-16x16.png"
-      media="(prefers-color-scheme: dark)"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicon-dark-32x32.png"
-      media="(prefers-color-scheme: dark)"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/apple-touch-icon-dark.png"
-      media="(prefers-color-scheme: dark)"
-    />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    <meta name="theme-color" content="#1e1e1e" />
 
     {
       analytics.enable && (

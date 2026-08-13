@@ -152,6 +152,7 @@ export const resolveRoute = async (
   }
 
   const routes = await getRoutes(req.payload, locale)
+
   const route = Object.values(routes).find((value) => value?.path === path)
 
   if (!route) {

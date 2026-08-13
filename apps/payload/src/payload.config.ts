@@ -105,37 +105,37 @@ export default buildConfig({
           switch (slug) {
             case 'pageHome':
               response = {
-                data: transformHomeData(data),
+                ...transformHomeData(data),
                 slug: 'pageHome',
               }
               break
             case 'pagePresentation':
               response = {
-                data: transformPresentationData(data, slug),
+                ...transformPresentationData(data, slug),
                 slug,
               }
               break
             case 'pageServices':
               response = {
-                data: transformServicesData(data, slug),
+                ...transformServicesData(data, slug),
                 slug,
               }
               break
             case 'pageProjects':
               response = {
-                data: transformProjectsData(data, slug),
+                ...transformProjectsData(data, slug),
                 slug,
               }
               break
             case 'projects':
               response = {
-                data: transformProjectData(data, slug),
+                ...transformProjectData(data, slug),
                 slug,
               }
               break
             case 'pageContact':
               response = {
-                data: transformContactData(data, slug),
+                ...transformContactData(data, slug),
                 slug,
               }
               break

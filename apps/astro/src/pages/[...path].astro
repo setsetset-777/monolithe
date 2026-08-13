@@ -9,46 +9,16 @@ import Services from '../views/Services.astro'
 import Projects from '../views/Projects.astro'
 import Project from '../views/Project.astro'
 import Contact from '../views/Contact.astro'
-import type { Meta, General } from '@monolithe/api/types'
 
-export async function getStaticPaths() {
-  console.log(`getStaticPaths`)
+const { path } = Astro.params
 
-  const data = await getGeneral()
-
-  console.log(`data`, data)
-
-  const { routes, navigation, footer } = data
-
-  const paths = Object.values(routes).map((route) => ({
-    params: { path: route.path },
-    props: {
-      meta: route.meta,
-      navigation,
-      footer,
-      path: route.path,
-    },
-  }))
-
-  return paths
-}
-
-type Props = {
-  meta: Meta
-  navigation: General.Navigation
-  footer: General.Footer
-  path: string
-}
-
-const { meta, navigation, footer, path } = Astro.props
-
-const { slug, data } = await getPage(path)
-
-console.log(`Reaching ...path page with path: ${path}`)
+const { slug, data, meta } = await getPage(`/${path ?? ''}`)
 
 if (!slug) {
   return Astro.redirect('/404')
 }
+
+const { navigation, footer } = await getGeneral()
 ---
 
 <Layout navigation={navigation} footer={footer} meta={{ title: meta.title }} slug={slug}>
