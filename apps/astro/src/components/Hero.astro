@@ -39,7 +39,6 @@ const Plant = getPlant(slug).plant
 
   .hero {
     position: relative;
-    overflow: hidden;
   }
 
   .inner {
@@ -69,8 +68,11 @@ const Plant = getPlant(slug).plant
     position: absolute;
     height: 100%;
     top: 0;
-    filter: blur(3px);
     overflow: hidden;
+
+    & :global(img) {
+      filter: grayscale(100%) blur(var(--blur));
+    }
 
     &:after {
       content: '';

@@ -55,6 +55,8 @@ $colors: (
 
   --radius-1: #{utilities.pxToRem(1px)};
 
+  --blur: 3px;
+
   // COMPOSED
   --color-font-gold: var(--color-gold-30);
 
