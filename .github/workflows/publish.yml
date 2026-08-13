@@ -18,10 +18,10 @@ jobs:
     name: Publish server
     uses: setsetset-777/toolbox/.github/workflows/docker-publish.yml@main
     with:
-      image_name: ${{ github.repository }}-server
+      image_name: ${{ github.repository }}-front
       registry: ghcr.io
       context: .
-      dockerfile: apps/server/Dockerfile
+      dockerfile: apps/astro/Dockerfile
 
   publish-payload:
     name: Publish payload

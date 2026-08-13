@@ -33,7 +33,7 @@ RUN npm i -g pnpm@10
 RUN --mount=type=secret,id=GITHUB_TOKEN \
   pnpm config set //npm.pkg.github.com/:_authToken $(cat /run/secrets/GITHUB_TOKEN) && \
   pnpm install --offline --frozen-lockfile
-RUN pnpm --filter ./apps/payload build;
+RUN pnpm --filter @monolithe/payload build;
 
 # Production image, copy all the files and run next
 FROM base AS runner
