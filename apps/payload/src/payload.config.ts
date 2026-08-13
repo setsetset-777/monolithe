@@ -79,6 +79,8 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
+        req.payload.logger.info(`Hiiting endpoint /general with ${JSON.stringify(req.query)}`)
+        req.payload.logger.debug(req.query)
         const data = await fetchGeneral(req)
         const response = transformGeneralData(data)
 
@@ -92,6 +94,8 @@ export default buildConfig({
       path: '/page',
       method: 'get',
       handler: async (req) => {
+        req.payload.logger.info(`Hiiting endpoint /page with ${JSON.stringify(req.query)}`)
+        req.payload.logger.debug(req.query)
         let path = req.query.path as string
 
         try {

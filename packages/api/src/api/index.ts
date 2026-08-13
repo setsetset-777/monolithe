@@ -25,6 +25,7 @@ let config: InitConfig = {
  * @returns
  */
 export async function fetchPage(path: string, locale?: Payload.Locale): Promise<PageData> {
+  logger.info(`Calling fetchPage with path ${path}`)
   return request(
     buildUrl({
       slug: 'page',
@@ -126,6 +127,8 @@ async function login(): Promise<void> {
  * @returns
  */
 async function request<T>(url: string): Promise<T> {
+  logger.info(`Request payload with ${url}`)
+
   if (!token) {
     await login()
   }
@@ -175,6 +178,8 @@ function buildUrl({
   if (params) {
     Object.entries(params).forEach(([k, v]) => typeof v === 'string' && url.searchParams.set(k, v))
   }
+
+  logger.info(`buildUrl`, config.apiUrl, slug, params, url.toString())
 
   return url.toString()
 }

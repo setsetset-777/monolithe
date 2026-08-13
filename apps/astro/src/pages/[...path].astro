@@ -12,7 +12,11 @@ import Contact from '../views/Contact.astro'
 import type { Meta, General } from '@monolithe/api/types'
 
 export async function getStaticPaths() {
+  console.log(`getStaticPaths`)
+
   const data = await getGeneral()
+
+  console.log(`data`, data)
 
   const { routes, navigation, footer } = data
 
@@ -39,6 +43,8 @@ type Props = {
 const { meta, navigation, footer, path } = Astro.props
 
 const { slug, data } = await getPage(path)
+
+console.log(`Reaching ...path page with path: ${path}`)
 
 if (!slug) {
   return Astro.redirect('/404')
