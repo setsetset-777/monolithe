@@ -60,11 +60,13 @@ const { hero, presentation, sections } = Astro.props
 
   .content {
     @include content-padding;
+    padding-top: var(--space-48);
+    padding-bottom: var(--space-48);
   }
 
   section {
     @include grid;
-    padding: var(--space-128) 0;
+    padding: var(--space-80) 0;
   }
 
   .presentation {
