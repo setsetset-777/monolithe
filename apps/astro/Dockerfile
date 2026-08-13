@@ -24,7 +24,9 @@ FROM base AS front
 WORKDIR /front
 
 # Copy front source
-COPY --from=build /out/front .
+COPY --from=build /app/apps/astro/dist ./dist
 
-EXPOSE 8001
-CMD ["pnpm", "start"]
+ENV HOST=0.0.0.0
+ENV PORT=4321
+EXPOSE 4321
+CMD ["node", "./dist/server/entry.mjs"]
