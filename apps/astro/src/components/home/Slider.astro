@@ -7,7 +7,7 @@ export type Props = {
 
 const { projects } = Astro.props
 
-const mediaUrl = import.meta.env.MEDIA_URL
+const mediaUrl = process.env.MEDIA_URL
 ---
 
 <div class="slider" data-slider>

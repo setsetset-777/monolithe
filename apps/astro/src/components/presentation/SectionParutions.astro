@@ -7,7 +7,7 @@ type Props = Presentation.ParutionsSection
 
 const { title, list } = Astro.props
 
-const mediaUrl = import.meta.env.MEDIA_URL
+const mediaUrl = process.env.MEDIA_URL
 ---
 
 <section>

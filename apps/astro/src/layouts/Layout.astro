@@ -5,9 +5,9 @@ import Footer from '@/components/Footer.astro'
 import type { General, PageSlug } from '@monolithe/api/types'
 
 const analytics = {
-  enable: import.meta.env.ANALYTICS_ENABLE === 'true',
-  id: import.meta.env.ANALYTICS_ID,
-  domain: import.meta.env.ANALYTICS_Domain,
+  enable: process.env.ANALYTICS_ENABLE === 'true',
+  id: process.env.ANALYTICS_ID,
+  domain: process.env.ANALYTICS_Domain,
 }
 
 type Props = {
