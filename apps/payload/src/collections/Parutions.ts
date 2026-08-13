@@ -55,14 +55,7 @@ export const Parutions: CollectionConfig = {
     },
     {
       name: 'date',
-      type: 'date',
-      admin: {
-        date: {
-          pickerAppearance: 'monthOnly',
-          displayFormat: 'MMMM yyyy',
-        },
-      },
-      required: true,
+      type: 'text',
     },
     {
       name: 'link',
@@ -72,7 +65,10 @@ export const Parutions: CollectionConfig = {
         fr: 'Lien',
       },
       admin: {
-        condition: (_, siblingData) => ['web', 'video'].includes(siblingData?.type),
+        description: {
+          en: 'If not set, parution link will redirect to the raw thumbnail.',
+          fr: "Si vide, le lien de la parution redirigera vers l'image d'aperçu.",
+        },
       },
     },
     {

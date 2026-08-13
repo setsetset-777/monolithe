@@ -1,9 +1,158 @@
 ---
+import Image from '../Image.astro'
+import Anchor from '../Anchor.astro'
 import type { Presentation } from '@monolithe/api/types'
 
 type Props = Presentation.ParutionsSection
 
-const { title } = Astro.props
+const { title, list } = Astro.props
+
+const mediaUrl = import.meta.env.MEDIA_URL
 ---
 
-<section>{title}</section>
+<section>
+  <h3 class="title">{title}</h3>
+  <div class="parutions">
+    <div class="parutions__inner">
+      {
+        list.map(({ title, thumbnail, date, publisher, link }) => {
+          const url = link ?? `${mediaUrl}/${thumbnail?.url}`
+          return (
+            <a class="parution" href={url} data-parution target="_blank">
+              <div class="parution__thumb">
+                {thumbnail && (
+                  <div class="parution__image">
+                    <Image
+                      src={thumbnail.url}
+                      alt={thumbnail.alt}
+                      srcset={{
+                        '200w': thumbnail.sizes?.[200]?.url!,
+                        '400w': thumbnail.sizes?.[500]?.url!,
+                      }}
+                      modifiers={['fill']}
+                    />
+                  </div>
+                )}
+              </div>
+              <div class="parution__content">
+                <h4 class="parution__title">{title}</h4>
+                <div class="parution__info">
+                  <span class="parution__publisher">{publisher}</span>
+                  <time class="parution__date">{date}</time>
+                </div>
+                <div class="parution__link">
+                  <Anchor type="external" as="div">
+                    Découvir
+                  </Anchor>
+                </div>
+              </div>
+            </a>
+          )
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const parutionItems = document.querySelectorAll('[data-parution')
+  parutionItems.forEach((item) => {
+    const anchor = item.querySelector('.anchor')
+    item.addEventListener('mouseover', () => {
+      anchor?.classList.add('hover')
+    })
+    item.addEventListener('mouseout', () => {
+      anchor?.classList.remove('hover')
+    })
+  })
+</script>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding: var(--space-80) 0;
+  }
+
+  .title {
+    @include font-heading-2;
+    color: var(--color-font-gold);
+  }
+
+  .parutions {
+    &__inner {
+      gap: var(--space-48);
+      @include grid;
+    }
+  }
+
+  .parution {
+    $parution: &;
+    text-decoration: none;
+    cursor: pointer;
+    grid-column: span 8;
+    @include grid($columns: 8, $gap: var(--space-48));
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: calc(-1 * var(--space-16));
+      right: calc(-1 * var(--space-16));
+      bottom: calc(-1 * var(--space-16));
+      left: calc(-1 * var(--space-16));
+      background-color: var(--color-gray-80);
+      border-radius: var(--radius-1);
+      @include transition(opacity);
+      opacity: 0;
+    }
+
+    &:hover:before {
+      opacity: 1;
+    }
+
+    &__thumb {
+      grid-column: span 2;
+    }
+
+    &__image {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+
+      & :global(img) {
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    &__content {
+      grid-column: 3 / span 6;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+      position: relative;
+    }
+
+    &__title {
+      @include font-heading-3;
+      @include transition(color);
+
+      #{$parution}:hover & {
+        color: var(--color-font-gold);
+      }
+    }
+
+    &__info {
+      display: flex;
+      gap: var(--space-8);
+    }
+
+    &__date {
+      color: var(--color-gray-20);
+    }
+  }
+</style>

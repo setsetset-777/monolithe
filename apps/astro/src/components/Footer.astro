@@ -4,7 +4,7 @@ import Action from '@/components/Action.astro'
 import Logo from '@/assets/svgs/logo.svg'
 import Logo777 from '@/assets/svgs/777.svg'
 
-import type { ServicesListData } from '@monolithe/payload/types'
+import type { ServicesList } from '@monolithe/api/types'
 
 interface Props {
   logoCatch: string
@@ -13,24 +13,19 @@ interface Props {
     label: string
     url: string
   }
-  services: ServicesListData
+  services: ServicesList
 }
 
-const {
-  logoCatch,
-  contact,
-  services,
-} = Astro.props
-
+const { logoCatch, contact, services } = Astro.props
 ---
-<footer class:list={["footer"]}>
+
+<footer class:list={['footer']}>
   <div class="container">
     <div class="column">
-
       <div class="header logo">
-        <Logo class:list={"logo__svg"}/>
-        <h4 class=" logo__catch">
-          { logoCatch }
+        <Logo class:list={'logo__svg'} />
+        <h4 class="logo__catch">
+          {logoCatch}
         </h4>
       </div>
 
@@ -38,29 +33,27 @@ const {
 
       <div class="contact">
         <p class="contact__text">
-          { contact.text }
+          {contact.text}
         </p>
-        <Action className="contact__action" href={ contact.url }>
-          { contact.label }
+        <Action className="contact__action" href={contact.url}>
+          {contact.label}
         </Action>
       </div>
-
     </div>
 
     <div class="column">
-
       <div class="services">
         <h4 class="services__title">
-          { services.title }
+          {services.title}
         </h4>
         <ul class="services__list">
-          { services.items.map(({ title, url }) => (
-            <li class="services__item">
-              <a href={ url }>
-                { title }
-              </a>
-            </li>
-          )) }
+          {
+            services.items.map(({ title, url }) => (
+              <li class="services__item">
+                <a href={url}>{title}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
 
@@ -71,117 +64,115 @@ const {
         </a>
       </p>
     </div>
-
   </div>
 </footer>
 
 <style lang="scss">
-@use '../styles/utilities' as *;
+  @use '../styles/utilities' as *;
 
-.footer {
-  padding: var(--padding-footer-y) var(--padding-content-x) var(--padding-footer-y)
-    var(--padding-content-x-start);
-  position: relative;
-  color: var(--color-gray-10);
-  font-size: var(--font-size-s);
+  .footer {
+    padding: var(--padding-footer-y) var(--padding-content-x) var(--padding-footer-y)
+      var(--padding-content-x-start);
+    position: relative;
+    color: var(--color-gray-10);
+    font-size: var(--font-size-s);
 
-  &:before {
-    content: '';
-    display: block;
-    background-color: var(--color-gray-50);
-    position: absolute;
-    top: 0;
-    @include bleed;
-    bottom: 0;
-    height: 100%;
-  }
-}
-
-.container {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-64);
-  align-items: end;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-48);
-
-  &:first-child {
-    width: var(--width-home-column-left);
+    &:before {
+      content: '';
+      display: block;
+      background-color: var(--color-gray-50);
+      position: absolute;
+      top: 0;
+      @include bleed;
+      bottom: 0;
+      height: 100%;
+    }
   }
 
-  &:last-child {
-    gap: var(--space-48);
-  }
-}
-
-.logo {
-  color: var(--color-gold-30);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-
-  &__svg {
-    width: pxToRem(90px);
-  }
-}
-
-.contact {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}
-
-.services {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-
-  &__title {
-    font-weight: bold;
-    font-size: var(--font-size-m);
+  .container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-64);
+    align-items: end;
   }
 
-  &__list {
+  .column {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-48);
+
+    &:first-child {
+      width: var(--width-home-column-left);
+    }
+
+    &:last-child {
+      gap: var(--space-48);
+    }
   }
 
-  &__item {
+  .logo {
+    color: var(--color-gold-30);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+
+    &__svg {
+      width: pxToRem(90px);
+    }
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  .services {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    &__title {
+      font-weight: bold;
+      font-size: var(--font-size-m);
+    }
+
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    &__item {
+      a {
+        @include transition(color);
+
+        &:hover {
+          color: var(--color-gold-30);
+        }
+      }
+    }
+  }
+
+  .setsetset {
+    display: flex;
+    gap: var(--space-8);
+    align-items: baseline;
+    font-size: var(--font-size-xs);
+
     a {
+      position: relative;
+      top: pxToRem(3px);
       @include transition(color);
+
+      svg {
+        height: 1em;
+      }
 
       &:hover {
         color: var(--color-gold-30);
       }
     }
   }
-}
-
-.setsetset {
-  display: flex;
-  gap: var(--space-8);
-  align-items: baseline;
-  font-size: var(--font-size-xs);
-
-  a {
-    position: relative;
-    top: pxToRem(3px);
-    @include transition(color);
-
-    svg {
-      height: 1em;
-    }
-
-    &:hover {
-      color: var(--color-gold-30);
-    }
-  }
-}
-
 </style>

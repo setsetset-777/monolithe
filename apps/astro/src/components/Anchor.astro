@@ -1,40 +1,81 @@
 ---
-type Props = {
-  href: string;
-  className?: string;
+import Arrow from '../assets/svgs/arrow.svg'
+
+interface Props {
+  href?: string
+  className?: string
+  type?: 'default' | 'external' | 'back'
+  as?: string
 }
 
-const { href, className } = Astro.props
+const { href, className, type = 'default', as = 'a' } = Astro.props
+
+const target = type === 'external' ? '_blank' : '_self'
+
+const Container = as
 ---
 
-<a href={ href } class:list={[ className ]}>
-  <span>
+<Container
+  href={href}
+  class:list={['anchor', className, type && `anchor--${type}`]}
+  target={target}
+>
+  <span class="arrow">
+    <Arrow />
+  </span>
+  <span class="label">
     <slot />
   </span>
-</a>
+</Container>
 
 <style lang="scss">
-@use '../styles/utilities/' as *;
-a {
-  text-decoration: none;
+  @use '../styles/utilities/' as *;
+  .anchor {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
 
-  span {
+    &:hover,
+    &.hover {
+      .label {
+        color: var(--color-gray-00);
+      }
+    }
+
+    &--external {
+      .arrow :global(svg) {
+        transform: rotate(-45deg);
+      }
+
+      &:hover,
+      &.hover {
+        .arrow :global(svg) {
+          transform: rotate(-45deg) translate(var(--space-2));
+        }
+      }
+    }
+
+    &--back {
+      .arrow :global(svg) {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .label {
     @include transition(color);
     text-decoration: underline;
     color: var(--color-gray-10);
   }
 
-  &:before {
-    content: '→';
-    color: var(--color-gold-30);
-    margin-right: var(--space-8);
+  .arrow {
+    display: flex;
     text-decoration: none;
-  }
+    color: var(--color-font-gold);
 
-  &:hover {
-    span {
-      color: var(--color-gray-00);
+    & :global(svg) {
+      @include transition(transform);
     }
   }
-}
 </style>

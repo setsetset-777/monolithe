@@ -13,7 +13,7 @@ import type { Meta, General } from '@monolithe/api/types'
 
 export async function getStaticPaths() {
   const data = await getGeneral()
-  console.log('data', data)
+
   const { routes, navigation, footer } = data
 
   const paths = Object.values(routes).map((route) => ({

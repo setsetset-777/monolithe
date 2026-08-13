@@ -293,7 +293,10 @@ export interface Parution {
   title: string;
   publisher: string;
   type: 'paper' | 'web' | 'video';
-  date: string;
+  date?: string | null;
+  /**
+   * If not set, parution link will redirect to the raw thumbnail.
+   */
   link?: string | null;
   thumbnail?: (string | null) | Media;
   updatedAt: string;
