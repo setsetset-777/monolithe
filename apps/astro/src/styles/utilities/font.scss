@@ -21,3 +21,9 @@
   font-size: var(--font-size-l);
   color: inherit;
 }
+
+@mixin font-heading-4 {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-m);
+  color: inherit;
+}

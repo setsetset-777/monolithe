@@ -3,7 +3,64 @@ import type { Presentation } from '@monolithe/api/types'
 
 type Props = Presentation.TestimonialsSection
 
-const { title } = Astro.props
+const { title, list } = Astro.props
 ---
 
-<section>{title}</section>
+<section>
+  <h3 class="title">{title}</h3>
+  <div class="list">
+    {
+      list.map(({ description, name, company }) => (
+        <div class="testimonial">
+          <p class="testimonial__description">{description}</p>
+          <div class="testimonial__info">
+            <span class="testimonial__name">{name}</span>
+            <span class="testimonial__company">{company}</span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  section {
+    padding: var(--space-80) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
+  .title {
+    @include font-heading-2;
+    color: var(--color-font-gold);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-64);
+    row-gap: var(--space-64);
+  }
+
+  .testimonial {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    &__description {
+      @include font-heading-3;
+    }
+
+    &__info {
+      display: flex;
+      gap: var(--space-8);
+    }
+
+    &__company {
+      color: var(--color-gray-10);
+    }
+  }
+</style>
