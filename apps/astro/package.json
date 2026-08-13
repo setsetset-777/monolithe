@@ -12,6 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.1",
     "@monolithe/api": "workspace:*",
     "astro": "^7.1.6",
     "sass": "^1.102.0"
