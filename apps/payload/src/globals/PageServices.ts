@@ -4,6 +4,7 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 const commonBlockFields: Field[] = [
   {
@@ -18,6 +19,46 @@ const commonBlockFields: Field[] = [
     label: {
       fr: 'Intitulé du lien',
     },
+    admin: {
+      description: {
+        fr: 'Le lien pointe vers les projets en lien avec le service sélectionné. Laissez vide pour ne pas afficher le lien.',
+        en: 'THe link point towards projects related to the chosen service. Leave empy to not display the link.',
+      },
+    },
+  },
+  {
+    name: 'title',
+    type: 'text',
+    virtual: true,
+    hidden: true,
+    required: true,
+  },
+  {
+    name: 'description',
+    type: 'richText',
+    editor: lexicalEditor(),
+    required: true,
+  },
+  {
+    name: 'url',
+    type: 'text',
+    virtual: true,
+    hidden: true,
+    required: true,
+  },
+  {
+    name: 'slug',
+    type: 'text',
+    virtual: true,
+    hidden: true,
+    required: true,
+  },
+  {
+    name: 'projectsUrl',
+    type: 'text',
+    virtual: true,
+    hidden: true,
+    required: true,
   },
 ]
 
@@ -36,13 +77,6 @@ const SingleLevelBlock: Block = {
   fields: [
     ...commonBlockFields,
     {
-      name: 'description',
-      type: 'textarea',
-      admin: {
-        rows: 5,
-      },
-    },
-    {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
@@ -51,7 +85,7 @@ const SingleLevelBlock: Block = {
 }
 
 const MutliLevelBlock: Block = {
-  slug: 'oneLevelBblock',
+  slug: 'multiLevelBlock',
   labels: {
     singular: {
       en: 'Multi level block',
@@ -84,10 +118,13 @@ const MutliLevelBlock: Block = {
           label: {
             fr: 'Titre',
           },
+          required: true,
         },
         {
           name: 'description',
-          type: 'textarea',
+          type: 'richText',
+          editor: lexicalEditor(),
+          required: true,
         },
         {
           name: 'image',
@@ -114,39 +151,6 @@ export const PageServices: GlobalConfig = {
       type: 'blocks',
       blocks: [SingleLevelBlock, MutliLevelBlock],
     },
-    {
-      name: 'list',
-      type: 'array',
-      virtual: true,
-      admin: {
-        hidden: true,
-      },
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-        },
-        {
-          name: 'url',
-          type: 'text',
-        },
-      ],
-      hooks: {
-        afterRead: [
-          async ({ siblingData, req }) => {
-            return await Promise.all(
-              siblingData.sections.map(async ({ service }: any) => {
-                const { label, slugId } = await req.payload.findByID({
-                  collection: 'services',
-                  id: service,
-                })
-                return { title: label, url: `${siblingData.url}#${slugId}` }
-              }),
-            )
-          },
-        ],
-      },
-    },
   ],
   versions: {
     drafts: true,
@@ -156,5 +160,39 @@ export const PageServices: GlobalConfig = {
   },
   hooks: {
     afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterRead: [
+      async ({ doc, req }) => {
+        if (!doc.sections) {
+          return doc
+        }
+        const pageProject = await req.payload.findGlobal({
+          slug: 'pageProjects',
+          locale: req.locale,
+        })
+        for (let i = 0; i < doc.sections.length; i++) {
+          const section = doc.sections[i]
+          const { label, slugId } =
+            typeof section.service === 'string'
+              ? await req.payload.findByID({
+                  collection: 'services',
+                  id: section.service,
+                })
+              : section.service
+          const projectsParams = new URLSearchParams({
+            services: slugId,
+          })
+
+          doc.sections[i] = {
+            ...section,
+            title: label,
+            url: `${doc.url}#${slugId}`,
+            slug: slugId,
+            projectsUrl: `${pageProject.url}?${projectsParams}`,
+          }
+        }
+
+        return doc
+      },
+    ],
   },
 }

@@ -2,7 +2,7 @@ import type { Payload } from './payload'
 
 // TODO Check Paylaod dependency
 export type PageSlug = Payload.PageSlug
-export type Media = Payload.Media
+export type Media = Payload.Media | null
 export type LocalizedRoutes = Payload.LocalizedRoutes
 
 export interface ServicesList {

@@ -29,7 +29,7 @@ export const transformGeneralData = ({ general, services, routes }: Params): API
       },
       services: {
         title: services.title!,
-        items: services.list?.map((service) => ({
+        items: services.sections?.map((service) => ({
           title: service.title!,
           url: service.url!,
         }))!,

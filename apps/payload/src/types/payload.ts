@@ -803,8 +803,29 @@ export interface PageService {
     | (
         | {
             service: string | Service;
+            /**
+             * THe link point towards projects related to the chosen service. Leave empy to not display the link.
+             */
             linkLabel?: string | null;
-            description?: string | null;
+            title: string;
+            description: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            url: string;
+            slug: string;
+            projectsUrl: string;
             image?: (string | null) | Media;
             id?: string | null;
             blockName?: string | null;
@@ -812,27 +833,56 @@ export interface PageService {
           }
         | {
             service: string | Service;
+            /**
+             * THe link point towards projects related to the chosen service. Leave empy to not display the link.
+             */
             linkLabel?: string | null;
+            title: string;
+            description: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            url: string;
+            slug: string;
+            projectsUrl: string;
             subsections?:
               | {
-                  title?: string | null;
-                  description?: string | null;
+                  title: string;
+                  description: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  };
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
             id?: string | null;
             blockName?: string | null;
-            blockType: 'oneLevelBblock';
+            blockType: 'multiLevelBlock';
           }
       )[]
-    | null;
-  list?:
-    | {
-        title?: string | null;
-        url?: string | null;
-        id?: string | null;
-      }[]
     | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -1045,16 +1095,25 @@ export interface PageServicesSelect<T extends boolean = true> {
           | {
               service?: T;
               linkLabel?: T;
+              title?: T;
               description?: T;
+              url?: T;
+              slug?: T;
+              projectsUrl?: T;
               image?: T;
               id?: T;
               blockName?: T;
             };
-        oneLevelBblock?:
+        multiLevelBlock?:
           | T
           | {
               service?: T;
               linkLabel?: T;
+              title?: T;
+              description?: T;
+              url?: T;
+              slug?: T;
+              projectsUrl?: T;
               subsections?:
                 | T
                 | {
@@ -1066,13 +1125,6 @@ export interface PageServicesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
-      };
-  list?:
-    | T
-    | {
-        title?: T;
-        url?: T;
-        id?: T;
       };
   _status?: T;
   updatedAt?: T;

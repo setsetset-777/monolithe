@@ -10,7 +10,7 @@ type Props = {
   loading?: HTMLImageElement['loading']
   sizes?: HTMLImageElement['sizes']
   class?: string
-  modifiers: Modifier[]
+  modifiers?: Modifier[]
 }
 
 const {
@@ -37,7 +37,7 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
         .join(',')}
       sizes={sizes}
       alt={alt}
-      class:list={['image', className, ...modifiers]}
+      class:list={['image', className, ...(modifiers || [])]}
       loading={loading}
     />
   )

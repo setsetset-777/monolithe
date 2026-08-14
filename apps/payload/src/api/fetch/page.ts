@@ -43,6 +43,7 @@ export const fetchPage = async (req: PayloadRequest, path: string): Promise<Page
         data: await req.payload.findGlobal({
           slug,
           locale,
+          depth: 2,
         }),
       }
 

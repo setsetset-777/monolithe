@@ -1,15 +1,170 @@
 ---
-import HeroView from '@/components/Hero.astro'
+import Hero from '@/components/Hero.astro'
+import Separator from '@/components/Separator.astro'
+import Image from '@/components/Image.astro'
+import Anchor from '@/components/Anchor.astro'
 
-import type { Hero } from '@monolithe/api/types'
+import type { Services } from '@monolithe/api/types'
 
-type Props = {
-  hero: Hero
-}
+type Props = Services.Data
 
-const { hero } = Astro.props
+const { hero, sections } = Astro.props
 ---
 
 <div class="page">
-  <HeroView {...hero} />
+  <Hero {...hero} />
+  <div class="sections">
+    {
+      sections.map((section, index) => {
+        const { title, type, slug, text, projectsUrl, linkLabel } = section
+        let SectionView
+        switch (type) {
+          case 'singleLevel':
+            const { image } = section
+            SectionView = (
+              <section class="section section--single" id={slug}>
+                <div class="section__content">
+                  <h3 class="section__title">{title}</h3>
+                  <div class="section__text" set:html={text} />
+                  <Anchor href={projectsUrl}>{linkLabel}</Anchor>
+                </div>
+                <div class="section__image">
+                  <div>
+                    {image && (
+                      <Image
+                        src={image.url}
+                        alt={image.alt}
+                        srcset={{
+                          '400w': image.sizes?.[500]?.url!,
+                          '800w': image.sizes?.[1000]?.url!,
+                        }}
+                        modifiers={['fill']}
+                      />
+                    )}
+                  </div>
+                </div>
+              </section>
+            )
+            break
+          case 'multiLevel':
+            const { subsections } = section
+            SectionView = (
+              <section class="section section--multi" id={slug}>
+                <div class="section__content">
+                  <h3 class="section__title">{title}</h3>
+                  <div class="section__text" set:html={text} />
+                </div>
+                <div class="section__subsections">
+                  {subsections.map(({ title, image, text }) => (
+                    <div class="subsection">
+                      <h4 class="subsection__title">{title}</h4>
+                      {image && (
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          srcset={{
+                            '400w': image.sizes?.[500]?.url!,
+                            '800w': image.sizes?.[1000]?.url!,
+                          }}
+                        />
+                      )}
+                      <div class="subsection__text" set:html={text} />
+                    </div>
+                  ))}
+                </div>
+                <Anchor href={projectsUrl}>{linkLabel}</Anchor>
+              </section>
+            )
+            break
+        }
+        return (
+          <>
+            {SectionView}
+            {index < sections.length - 1 && <Separator />}
+          </>
+        )
+      })
+    }
+  </div>
 </div>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+  .sections {
+    @include content-padding;
+    padding-top: var(--space-48);
+    padding-bottom: var(--space-48);
+  }
+
+  .section {
+    $section: &;
+    padding: var(--space-80) 0;
+
+    &__title {
+      @include font-heading-2;
+      color: var(--color-font-gold);
+    }
+
+    &__subsections {
+      grid-column: span 12;
+      @include grid;
+    }
+
+    &--single {
+      @include grid;
+
+      & #{$section} {
+        &__content {
+          grid-column: span 7;
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-24);
+        }
+
+        &__image {
+          grid-column: span 5;
+          height: 100%;
+          overflow: hidden;
+          border-radius: var(--radius-1);
+          position: relative;
+
+          > div {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    &--multi {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+
+      & #{$section} {
+        &__content {
+          @include grid;
+          row-gap: var(--space-24);
+        }
+
+        &__title,
+        &__text {
+          grid-column: span 7;
+        }
+      }
+    }
+  }
+
+  .subsection {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    &__title {
+      @include font-heading-3;
+      color: var(--color-font-gold);
+    }
+  }
+</style>

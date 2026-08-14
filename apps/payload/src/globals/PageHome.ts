@@ -227,7 +227,10 @@ export const PageHome: GlobalConfig = {
           locale: req.locale,
         })
 
-        doc.services.items = services.list
+        doc.services.items = (services.sections || []).map(({ title, url }) => ({
+          title,
+          url,
+        }))
 
         doc.presentation.link = presentation.url
         doc.services.link = services.url
