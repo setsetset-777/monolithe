@@ -23,6 +23,9 @@ export const customTranslations = {
     validation: {
       uniqueUrlSlug: 'The URL segment already exists.',
     },
+    pageHome: {
+      adminProjectLinkLabel: 'Go to projects',
+    },
   },
   fr: {
     general: {
@@ -32,6 +35,9 @@ export const customTranslations = {
     },
     validation: {
       uniqueUrlSlug: "Le segment d'URL existe déjà",
+    },
+    pageHome: {
+      adminProjectLinkLabel: 'Aller aux réalisations',
     },
   },
 }

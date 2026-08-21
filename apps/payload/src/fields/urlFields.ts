@@ -13,9 +13,10 @@ import { getRoutes, routesConfig } from '@/helpers/routes'
 import type { Locale, Route, RouteConfigPage } from '@/types'
 
 type UrlFieldsProps = {
-  source: string
-  slug: CollectionSlug | GlobalSlug
+  slug?: CollectionSlug | GlobalSlug
+  source?: string
   label?: LabelFunction | StaticLabel
+  value?: string
 }
 
 const defaultLabel = {
@@ -41,7 +42,9 @@ export const urlFields = ({
   slug: pageSlug,
   source,
   label = defaultLabel,
+  value,
 }: UrlFieldsProps): TextField[] => {
+  const hasValue = typeof value === 'string'
   return [
     {
       name: 'urlSlug',
@@ -50,7 +53,14 @@ export const urlFields = ({
       localized: true,
       hasMany: false,
       required: true,
+      hidden: hasValue,
+      admin: {
+        readOnly: hasValue,
+      },
       validate: (async (value, { id, req: { payload, t: defaultT, locale } }) => {
+        if (hasValue || !source || !pageSlug) {
+          return
+        }
         // Check if url slug is unique among the document siblings
         let routeWithUrlSlug: Route | undefined
         const routes = await getRoutes(payload, locale as Locale)
@@ -76,6 +86,9 @@ export const urlFields = ({
       hooks: {
         beforeValidate: [
           async ({ siblingData, value, previousValue, previousSiblingDoc }) => {
+            if (hasValue || !source || !pageSlug) {
+              return
+            }
             // Populate url slug field if necessary
             let nextValue = value
             const isSlugEmpty = value === '' || typeof value === 'undefined'
@@ -99,9 +112,16 @@ export const urlFields = ({
       localized: true,
       hidden: true,
       required: true,
+      defaultValue: value,
       hooks: {
         afterRead: [
           async ({ siblingData, req }) => {
+            if (hasValue || !source || !pageSlug) {
+              return `/${value}`
+            }
+            if (!source || !pageSlug) {
+              return
+            }
             const parentPage = getParentPage(pageSlug)
             if (!parentPage) {
               return `/${siblingData.urlSlug}`

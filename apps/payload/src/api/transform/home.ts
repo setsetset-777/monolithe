@@ -31,7 +31,7 @@ export const transformHomeData = ({
         }))!,
       },
       projects: {
-        highlights: projects?.highlights?.map((item) => ({
+        highlights: projects?.featured?.map((item) => ({
           title: item.title!,
           url: item.link!,
           image: item.image as API.Media,

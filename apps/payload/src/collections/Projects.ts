@@ -1,6 +1,7 @@
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { CollectionAfterChangeHook } from 'payload'
 import type { CollectionConfig, Block } from 'payload'
 
@@ -8,9 +9,13 @@ export const slug = 'projects'
 
 export const Projects: CollectionConfig = {
   slug,
+  versions: {
+    drafts: true,
+  },
+  orderable: true,
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title'],
+    defaultColumns: ['title', 'mainImage', '_status', 'featured'],
   },
   labels: {
     singular: {
@@ -24,8 +29,26 @@ export const Projects: CollectionConfig = {
     titleField(),
     ...urlFields({ source: 'title', slug }),
     {
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
+      label: {
+        fr: 'Mis en avant',
+        en: 'Featured',
+      },
+      admin: {
+        description: {
+          fr: "Cocher pour afficher le projet sur la page d'accueil",
+          en: 'check to display project on home page',
+        },
+        components: {
+          Cell: '@/components/CollectionListCheck',
+        },
+      },
+    },
+    {
       name: 'description',
-      type: 'textarea',
+      type: 'richText',
       label: {
         en: 'Description',
         fr: 'Description',
@@ -72,52 +95,39 @@ export const Projects: CollectionConfig = {
       },
       labels: {
         plural: {
-          en: 'Images rows',
-          fr: "Lignes d'images",
+          en: 'Images',
+          fr: 'Images',
         },
         singular: {
-          en: 'Images row',
-          fr: "Ligne d'images",
+          en: 'Image',
+          fr: 'Image',
         },
       },
       fields: [
         {
-          name: 'gallery-row',
-          type: 'array',
+          name: 'images',
+          type: 'upload',
           label: {
-            en: 'Images',
-            fr: 'Images',
+            en: 'Image',
+            fr: 'Image',
           },
-          labels: {
-            singular: { fr: 'Image', en: 'Image' },
-            plural: { fr: 'Image', en: 'Image' },
+          relationTo: 'media',
+        },
+        {
+          name: 'description',
+          type: 'textarea',
+          label: {
+            en: 'Description',
+            fr: 'Description',
           },
-          maxRows: 3,
-          admin: {
-            description: {
-              en: 'Images on this row will display next to each others on screens wide enough',
-              fr: "Les images définies sur cette ligne seront affichées l'une à côté de l'autre sur les écrans assez larges pour le permettre.",
-            },
+        },
+        {
+          name: 'fullwidth',
+          type: 'checkbox',
+          label: {
+            en: 'Force image display to full width',
+            fr: "Forcer l'image en pleine largeur",
           },
-          fields: [
-            {
-              name: 'images',
-              type: 'upload',
-              label: {
-                en: 'Image',
-                fr: 'Image',
-              },
-              relationTo: 'media',
-            },
-            {
-              name: 'description',
-              type: 'textarea',
-              label: {
-                en: 'Description',
-                fr: 'Description',
-              },
-            },
-          ],
         },
       ],
     },

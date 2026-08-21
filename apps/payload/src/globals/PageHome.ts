@@ -1,8 +1,8 @@
 import { GlobalAfterChangeHook, GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
-import { urlFields } from '@/fields/urlFields'
 import { titleField } from '@/fields/titleField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { urlFields } from '@/fields/urlFields'
 
 export const PageHome: GlobalConfig = {
   slug: 'pageHome',
@@ -12,26 +12,9 @@ export const PageHome: GlobalConfig = {
   },
   fields: [
     titleField(),
-    {
-      name: 'url',
-      type: 'text',
-      defaultValue: '/',
-      required: true,
-      hidden: true,
-      admin: {
-        readOnly: true,
-      },
-    },
-    {
-      name: 'urlSlug',
-      type: 'text',
-      defaultValue: '',
-      hidden: true,
-      required: true,
-      admin: {
-        readOnly: true,
-      },
-    },
+    ...urlFields({
+      value: '',
+    }),
     {
       name: 'presentation',
       type: 'group',
@@ -156,38 +139,17 @@ export const PageHome: GlobalConfig = {
           },
         },
         {
-          name: 'highlightedProjects',
-          type: 'array',
-          label: {
-            fr: 'Projets mis en avant',
-          },
-          labels: {
-            singular: { fr: 'Projet' },
-            plural: { fr: 'Projets' },
-          },
-          fields: [
-            {
-              name: 'project',
-              type: 'relationship',
-              relationTo: 'projects',
-            },
-            {
-              name: 'image',
-              type: 'upload',
-              relationTo: 'media',
-              admin: {
-                description: {
-                  en: 'By default the displayed image will be the main one from the project. It is possible to upload an alternative one.',
-                  fr: "Par défaut, l'image affichée est l'image principale du projet. Il est possible de sélectionner une image alternative.",
-                },
-              },
-            },
-          ],
-        },
-        {
-          name: 'highlights',
+          name: 'featured',
           type: 'array',
           virtual: true,
+          label: {
+            fr: 'Réalisations mises en avant',
+            en: 'Featured projects',
+          },
+          labels: {
+            singular: { fr: 'Réalisation', en: 'Project' },
+            plural: { fr: 'Réalisations', en: 'Projects' },
+          },
           fields: [
             {
               name: 'title',
@@ -196,6 +158,7 @@ export const PageHome: GlobalConfig = {
             {
               name: 'link',
               type: 'text',
+              hidden: true,
             },
             {
               name: 'image',
@@ -203,6 +166,21 @@ export const PageHome: GlobalConfig = {
               relationTo: 'media',
             },
           ],
+          admin: {
+            description: {
+              fr: 'Ajoutez une réalisation mis en avant en cochant la case "Mis en avant" sur la page de la réalisation.',
+              en: 'Add a project to the featured project by checking the "Featured" checkbox on the project page.',
+            },
+          },
+        },
+        {
+          name: 'goToProjects',
+          type: 'ui',
+          admin: {
+            components: {
+              Field: '@/components/GoToProjects',
+            },
+          },
         },
       ],
     },
@@ -222,41 +200,35 @@ export const PageHome: GlobalConfig = {
           slug: 'pageServices',
           locale: req.locale,
         })
-        const projects = await req.payload.findGlobal({
+        const pageProjects = await req.payload.findGlobal({
           slug: 'pageProjects',
           locale: req.locale,
         })
-
         doc.services.items = (services.sections || []).map(({ title, url }) => ({
           title,
           url,
         }))
-
         doc.presentation.link = presentation.url
         doc.services.link = services.url
-        doc.projects.link = projects.url
+        doc.projects.link = pageProjects.url
 
-        const highlights = []
-
-        for (let i = 0; i < doc.projects.highlightedProjects.length; i++) {
-          const item = doc.projects.highlightedProjects[i]
-          const page = await req.payload.findByID({
+        const highlights = (
+          await req.payload.find({
             collection: 'projects',
-            id: typeof item.project === 'object' ? item.project.id : item.project,
             locale: req.locale,
+            draft: false,
+            pagination: false,
+            where: {
+              featured: { equals: true },
+            },
           })
+        ).docs.map(({ mainImage, title, url }) => ({
+          image: mainImage,
+          title: title,
+          link: url,
+        }))
 
-          if (!page) continue
-
-          highlights.push({
-            image: item.image,
-            title: page.title,
-            link: page.url,
-          })
-        }
-
-        doc.projects.highlights = highlights
-
+        doc.projects.featured = highlights
         return doc
       },
     ],

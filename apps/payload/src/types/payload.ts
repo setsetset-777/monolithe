@@ -256,10 +256,29 @@ export interface Service {
  */
 export interface Project {
   id: string;
+  _order?: string | null;
   title: string;
   urlSlug: string;
   url: string;
-  description?: string | null;
+  /**
+   * check to display project on home page
+   */
+  featured?: boolean | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   service?: (string | null) | Service;
   date?: number | null;
   /**
@@ -268,21 +287,15 @@ export interface Project {
   mainImage?: (string | null) | Media;
   gallery?:
     | {
-        /**
-         * Images on this row will display next to each others on screens wide enough
-         */
-        'gallery-row'?:
-          | {
-              images?: (string | null) | Media;
-              description?: string | null;
-              id?: string | null;
-            }[]
-          | null;
+        images?: (string | null) | Media;
+        description?: string | null;
+        fullwidth?: boolean | null;
         id?: string | null;
       }[]
     | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -531,9 +544,11 @@ export interface ServicesSelect<T extends boolean = true> {
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   urlSlug?: T;
   url?: T;
+  featured?: T;
   description?: T;
   service?: T;
   date?: T;
@@ -541,17 +556,14 @@ export interface ProjectsSelect<T extends boolean = true> {
   gallery?:
     | T
     | {
-        'gallery-row'?:
-          | T
-          | {
-              images?: T;
-              description?: T;
-              id?: T;
-            };
+        images?: T;
+        description?: T;
+        fullwidth?: T;
         id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -651,8 +663,8 @@ export interface General {
 export interface PageHome {
   id: string;
   title: string;
-  url: string;
   urlSlug: string;
+  url: string;
   presentation?: {
     catch?: string | null;
     linkLabel?: string | null;
@@ -676,17 +688,10 @@ export interface PageHome {
     linkLabel?: string | null;
     link?: string | null;
     projectLinkLabel?: string | null;
-    highlightedProjects?:
-      | {
-          project?: (string | null) | Project;
-          /**
-           * By default the displayed image will be the main one from the project. It is possible to upload an alternative one.
-           */
-          image?: (string | null) | Media;
-          id?: string | null;
-        }[]
-      | null;
-    highlights?:
+    /**
+     * Add a project to the featured project by checking the "Featured" checkbox on the project page.
+     */
+    featured?:
       | {
           title?: string | null;
           link?: string | null;
@@ -900,6 +905,14 @@ export interface PageProject {
   heroImage: string | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
+  services?:
+    | {
+        label?: string | null;
+        slug?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -960,8 +973,8 @@ export interface GeneralSelect<T extends boolean = true> {
  */
 export interface PageHomeSelect<T extends boolean = true> {
   title?: T;
-  url?: T;
   urlSlug?: T;
+  url?: T;
   presentation?:
     | T
     | {
@@ -991,14 +1004,7 @@ export interface PageHomeSelect<T extends boolean = true> {
         linkLabel?: T;
         link?: T;
         projectLinkLabel?: T;
-        highlightedProjects?:
-          | T
-          | {
-              project?: T;
-              image?: T;
-              id?: T;
-            };
-        highlights?:
+        featured?:
           | T
           | {
               title?: T;
@@ -1142,6 +1148,14 @@ export interface PageProjectsSelect<T extends boolean = true> {
   heroImage?: T;
   backLinkLabel?: T;
   projects?: T;
+  services?:
+    | T
+    | {
+        label?: T;
+        slug?: T;
+        url?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
