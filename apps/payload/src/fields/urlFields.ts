@@ -42,9 +42,10 @@ export const urlFields = ({
   slug: pageSlug,
   source,
   label = defaultLabel,
-  value,
+  value: defaultValue,
 }: UrlFieldsProps): TextField[] => {
-  const hasValue = typeof value === 'string'
+  const hasDefaultValue = typeof defaultValue === 'string'
+
   return [
     {
       name: 'urlSlug',
@@ -53,12 +54,12 @@ export const urlFields = ({
       localized: true,
       hasMany: false,
       required: true,
-      hidden: hasValue,
+      hidden: hasDefaultValue,
       admin: {
-        readOnly: hasValue,
+        readOnly: hasDefaultValue,
       },
       validate: (async (value, { id, req: { payload, t: defaultT, locale } }) => {
-        if (hasValue || !source || !pageSlug) {
+        if (hasDefaultValue || !source || !pageSlug) {
           return
         }
         // Check if url slug is unique among the document siblings
@@ -86,7 +87,10 @@ export const urlFields = ({
       hooks: {
         beforeValidate: [
           async ({ siblingData, value, previousValue, previousSiblingDoc }) => {
-            if (hasValue || !source || !pageSlug) {
+            if (hasDefaultValue) {
+              return defaultValue
+            }
+            if (!source || !pageSlug) {
               return
             }
             // Populate url slug field if necessary
@@ -101,38 +105,6 @@ export const urlFields = ({
             return nextValue
           },
           trimWhitespace,
-        ],
-      },
-    },
-
-    {
-      name: 'url',
-      type: 'text',
-      virtual: true,
-      localized: true,
-      hidden: true,
-      required: true,
-      defaultValue: value,
-      hooks: {
-        afterRead: [
-          async ({ siblingData, req }) => {
-            if (hasValue || !source || !pageSlug) {
-              return `/${value}`
-            }
-            if (!source || !pageSlug) {
-              return
-            }
-            const parentPage = getParentPage(pageSlug)
-            if (!parentPage) {
-              return `/${siblingData.urlSlug}`
-            } else {
-              const parent = (await req.payload.findGlobal({
-                slug: parentPage.slug as GlobalSlug,
-              })) as unknown as Record<string, unknown>
-
-              return `/${parent.urlSlug}/${siblingData.urlSlug}`
-            }
-          },
         ],
       },
     },

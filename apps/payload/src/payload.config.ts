@@ -28,18 +28,11 @@ import regenerateMedia from '@/helpers/regenerateMedia'
 
 import { fetchGeneral } from '@/api/fetch/general'
 import { fetchPage } from '@/api/fetch/page'
-import {
-  transformContactData,
-  transformGeneralData,
-  transformHomeData,
-  transformPresentationData,
-  transformProjectData,
-  transformProjectsData,
-  transformServicesData,
-} from '@/api/transform'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const isDev = process.env.NODE_ENV === 'development'
 
 export default buildConfig({
   admin: {
@@ -47,12 +40,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    autoLogin:
-      process.env.NODE_ENV === 'development'
-        ? {
-            email: process.env.ADMIN_EMAIL,
-          }
-        : false,
+    autoLogin: isDev
+      ? {
+          email: process.env.ADMIN_EMAIL,
+        }
+      : false,
   },
   i18n: {
     supportedLanguages: { en, fr },
@@ -79,14 +71,13 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        req.payload.logger.info(`Hiiting endpoint /general with ${JSON.stringify(req.query)}`)
-        req.payload.logger.debug(req.query)
+        req.payload.logger.info(req.query, 'Hiiting endpoint /general')
         const data = await fetchGeneral(req)
-        const response = transformGeneralData(data)
+        req.payload.logger.info(data, `Fetched data for general`)
 
         return Response.json({
           ok: true,
-          ...response,
+          ...data,
         })
       },
     },
@@ -94,56 +85,15 @@ export default buildConfig({
       path: '/page',
       method: 'get',
       handler: async (req) => {
-        req.payload.logger.info(`Hiiting endpoint /page with ${JSON.stringify(req.query)}`)
-        req.payload.logger.debug(req.query)
+        req.payload.logger.info(req.query, 'Hiiting endpoint /page')
         let path = req.query.path as string
+        const data = await fetchPage(req, path)
+        req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
 
         try {
-          const { slug, data } = await fetchPage(req, path)
-          let response
-
-          switch (slug) {
-            case 'pageHome':
-              response = {
-                ...transformHomeData(data),
-                slug: 'pageHome',
-              }
-              break
-            case 'pagePresentation':
-              response = {
-                ...transformPresentationData(data, slug),
-                slug,
-              }
-              break
-            case 'pageServices':
-              response = {
-                ...transformServicesData(data, slug),
-                slug,
-              }
-              break
-            case 'pageProjects':
-              response = {
-                ...transformProjectsData(data, slug),
-                slug,
-              }
-              break
-            case 'projects':
-              response = {
-                ...transformProjectData(data, slug),
-                slug,
-              }
-              break
-            case 'pageContact':
-              response = {
-                ...transformContactData(data, slug),
-                slug,
-              }
-              break
-          }
-
           return Response.json({
             ok: true,
-            ...response,
+            ...data,
           })
         } catch (e) {
           console.error(`Error retrieving page for ${path}`, e)

@@ -1,68 +1,95 @@
 import { resolveRoute } from '../../helpers/routes'
 import type { PayloadRequest } from 'payload'
-import type { PageFetch } from '@/types'
+import type * as API from '@monolithe/api/types'
+import {
+  formatContactData,
+  formatHomeData,
+  formatPresentationData,
+  formatProjectData,
+  formatProjectsData,
+  formatServicesData,
+} from '../format'
+import { Locale } from '@/types'
 
-export const fetchPage = async (req: PayloadRequest, path: string): Promise<PageFetch> => {
+export const fetchPage = async (
+  req: PayloadRequest,
+  path: string,
+): Promise<API.PageData | null> => {
   const {
     locale,
     route: { slug, id },
-  } = await resolveRoute(path, req)
+  } = await resolveRoute({ path, payload: req.payload })
+  let res
 
   switch (slug) {
     case 'projects':
+      res = await req.payload.findByID({
+        collection: slug,
+        locale,
+        id,
+      })
       return {
-        slug: 'projects',
-        data: await req.payload.findByID({
-          collection: slug,
-          locale,
-          id,
-        }),
+        slug,
+        ...formatProjectData(res, slug),
       }
 
     case 'pageHome':
+      res = await req.payload.findGlobal({
+        slug,
+        locale,
+      })
       return {
-        slug: 'pageHome',
-        data: await req.payload.findGlobal({
-          slug,
-          locale,
-        }),
+        slug,
+        ...(await formatHomeData({
+          res,
+          payload: req.payload,
+          locale: req.locale as Locale,
+        })),
       }
 
     case 'pagePresentation':
+      res = await req.payload.findGlobal({
+        slug,
+        locale,
+      })
       return {
-        slug: 'pagePresentation',
-        data: await req.payload.findGlobal({
-          slug,
-          locale,
-        }),
+        slug,
+        ...formatPresentationData({ res }),
       }
 
     case 'pageServices':
+      res = await req.payload.findGlobal({
+        slug,
+        locale,
+      })
       return {
-        slug: 'pageServices',
-        data: await req.payload.findGlobal({
-          slug,
-          locale,
-          depth: 2,
-        }),
+        slug,
+        ...(await formatServicesData({
+          res,
+          payload: req.payload,
+          locale: req.locale as Locale,
+        })),
       }
 
     case 'pageProjects':
+      res = await req.payload.findGlobal({
+        slug,
+        locale,
+      })
       return {
-        slug: 'pageProjects',
-        data: await req.payload.findGlobal({
-          slug,
-          locale,
-        }),
+        slug,
+        ...formatProjectsData(res, slug),
       }
 
     case 'pageContact':
+      res = await req.payload.findGlobal({
+        slug,
+        locale,
+      })
       return {
-        slug: 'pageContact',
-        data: await req.payload.findGlobal({
-          slug,
-          locale,
-        }),
+        slug,
+        ...formatContactData(res, slug),
       }
   }
+  return null
 }

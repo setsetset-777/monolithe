@@ -5,11 +5,11 @@ export namespace Home {
     presentation: {
       heroImage: Media
       catch: string
-      url: string
-      linkLabel: string
+      url?: string
+      linkLabel?: string
     }
     services: ServicesList & {
-      linkLabel: string
+      linkLabel?: string
     }
     projects: {
       highlights: Array<{
@@ -17,8 +17,8 @@ export namespace Home {
         image: Media
         url: string
       }>
-      linkLabel: string
-      url: string
+      linkLabel?: string
+      url?: string
     }
   }
 }

@@ -1,11 +1,14 @@
 import type * as API from '@monolithe/api/types'
-import type { PageSlug, PagePresentation } from '@/types'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
+import type { PagePresentation } from '@/types'
 
-export const transformPresentationData = (
-  { title: pageTitle, heroImage, monolithe, sections }: PagePresentation,
-  slug: PageSlug,
-): {
+interface Props {
+  res: PagePresentation
+}
+
+export const formatPresentationData = ({
+  res: { title: pageTitle, heroImage, monolithe, sections },
+}: Props): {
   meta: API.Meta
   data: API.Presentation.Data
 } => {
@@ -17,7 +20,7 @@ export const transformPresentationData = (
       hero: {
         title: pageTitle,
         image: heroImage as API.Media,
-        slug: slug,
+        slug: 'pagePresentation',
       },
       presentation: convertLexicalToHTML({ data: monolithe! }),
       sections: (sections ?? []).map((section): API.Presentation.Section => {

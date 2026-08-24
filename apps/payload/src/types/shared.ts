@@ -11,7 +11,13 @@ import {
 
 export type PageSlug = Extract<
   GlobalSlug | CollectionSlug,
-  'pageHome' | 'pagePresentation' | 'pageProjects' | 'projects' | 'pageContact' | 'pageServices'
+  | 'pageHome'
+  | 'pagePresentation'
+  | 'pageProjects'
+  | 'projects'
+  | 'pageContact'
+  | 'pageServices'
+  | 'services'
 >
 
 export type PageFetch =

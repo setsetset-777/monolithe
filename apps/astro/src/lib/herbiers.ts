@@ -11,7 +11,7 @@ import HerbierCentre4 from '@/assets/svgs/plants/herbier-centre-4.svg'
 import HerbierCentre5 from '@/assets/svgs/plants/herbier-centre-5.svg'
 
 import type { SvgComponent } from 'astro/types'
-import type { PageSlug } from '@monolithe/payload/types'
+import type { PageSlug } from '@monolithe/api/types'
 
 const pagesPlantsOrder = [
   'pageHome',

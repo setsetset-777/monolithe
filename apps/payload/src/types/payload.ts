@@ -245,10 +245,59 @@ export interface MediaTag {
  */
 export interface Service {
   id: string;
-  label?: string | null;
-  slugId?: string | null;
+  _order?: string | null;
+  title: string;
+  urlSlug: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * THe link point towards projects related to the chosen service. Leave empy to not display the link.
+   */
+  linkLabel?: string | null;
+  type: 'singleLevel' | 'multiLevel';
+  singleLevelBlock?: {
+    image?: (string | null) | Media;
+  };
+  multiLevelBlock?: {
+    subsections?:
+      | {
+          title: string;
+          description: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          };
+          image?: (string | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -259,7 +308,6 @@ export interface Project {
   _order?: string | null;
   title: string;
   urlSlug: string;
-  url: string;
   /**
    * check to display project on home page
    */
@@ -534,10 +582,32 @@ export interface MediaTagsSelect<T extends boolean = true> {
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
-  label?: T;
-  slugId?: T;
+  _order?: T;
+  title?: T;
+  urlSlug?: T;
+  description?: T;
+  linkLabel?: T;
+  type?: T;
+  singleLevelBlock?:
+    | T
+    | {
+        image?: T;
+      };
+  multiLevelBlock?:
+    | T
+    | {
+        subsections?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -547,7 +617,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
   urlSlug?: T;
-  url?: T;
   featured?: T;
   description?: T;
   service?: T;
@@ -664,41 +733,19 @@ export interface PageHome {
   id: string;
   title: string;
   urlSlug: string;
-  url: string;
-  presentation?: {
+  presentation: {
     catch?: string | null;
     linkLabel?: string | null;
     heroImage?: (string | null) | Media;
-    link?: string | null;
   };
-  services?: {
+  services: {
     title?: string | null;
     linkLabel?: string | null;
-    items?:
-      | {
-          title?: string | null;
-          url?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    link?: string | null;
   };
-  projects?: {
+  projects: {
     title?: string | null;
     linkLabel?: string | null;
-    link?: string | null;
     projectLinkLabel?: string | null;
-    /**
-     * Add a project to the featured project by checking the "Featured" checkbox on the project page.
-     */
-    featured?:
-      | {
-          title?: string | null;
-          link?: string | null;
-          image?: (string | null) | Media;
-          id?: string | null;
-        }[]
-      | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -711,7 +758,6 @@ export interface PagePresentation {
   id: string;
   title: string;
   urlSlug: string;
-  url: string;
   heroImage: string | Media;
   monolithe?: {
     root: {
@@ -802,93 +848,7 @@ export interface PageService {
   id: string;
   title: string;
   urlSlug: string;
-  url: string;
   heroImage: string | Media;
-  sections?:
-    | (
-        | {
-            service: string | Service;
-            /**
-             * THe link point towards projects related to the chosen service. Leave empy to not display the link.
-             */
-            linkLabel?: string | null;
-            title: string;
-            description: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            url: string;
-            slug: string;
-            projectsUrl: string;
-            image?: (string | null) | Media;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'singleLevelBlock';
-          }
-        | {
-            service: string | Service;
-            /**
-             * THe link point towards projects related to the chosen service. Leave empy to not display the link.
-             */
-            linkLabel?: string | null;
-            title: string;
-            description: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            url: string;
-            slug: string;
-            projectsUrl: string;
-            subsections?:
-              | {
-                  title: string;
-                  description: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  };
-                  image?: (string | null) | Media;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'multiLevelBlock';
-          }
-      )[]
-    | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -901,7 +861,6 @@ export interface PageProject {
   id: string;
   title: string;
   urlSlug: string;
-  url: string;
   heroImage: string | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
@@ -924,7 +883,6 @@ export interface PageContact {
   id: string;
   title: string;
   urlSlug: string;
-  url: string;
   heroImage: string | Media;
   place?: string | null;
   email?: string | null;
@@ -974,44 +932,25 @@ export interface GeneralSelect<T extends boolean = true> {
 export interface PageHomeSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
-  url?: T;
   presentation?:
     | T
     | {
         catch?: T;
         linkLabel?: T;
         heroImage?: T;
-        link?: T;
       };
   services?:
     | T
     | {
         title?: T;
         linkLabel?: T;
-        items?:
-          | T
-          | {
-              title?: T;
-              url?: T;
-              id?: T;
-            };
-        link?: T;
       };
   projects?:
     | T
     | {
         title?: T;
         linkLabel?: T;
-        link?: T;
         projectLinkLabel?: T;
-        featured?:
-          | T
-          | {
-              title?: T;
-              link?: T;
-              image?: T;
-              id?: T;
-            };
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1024,7 +963,6 @@ export interface PageHomeSelect<T extends boolean = true> {
 export interface PagePresentationSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
-  url?: T;
   heroImage?: T;
   monolithe?: T;
   sections?:
@@ -1091,47 +1029,7 @@ export interface PagePresentationSelect<T extends boolean = true> {
 export interface PageServicesSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
-  url?: T;
   heroImage?: T;
-  sections?:
-    | T
-    | {
-        singleLevelBlock?:
-          | T
-          | {
-              service?: T;
-              linkLabel?: T;
-              title?: T;
-              description?: T;
-              url?: T;
-              slug?: T;
-              projectsUrl?: T;
-              image?: T;
-              id?: T;
-              blockName?: T;
-            };
-        multiLevelBlock?:
-          | T
-          | {
-              service?: T;
-              linkLabel?: T;
-              title?: T;
-              description?: T;
-              url?: T;
-              slug?: T;
-              projectsUrl?: T;
-              subsections?:
-                | T
-                | {
-                    title?: T;
-                    description?: T;
-                    image?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1144,7 +1042,6 @@ export interface PageServicesSelect<T extends boolean = true> {
 export interface PageProjectsSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
-  url?: T;
   heroImage?: T;
   backLinkLabel?: T;
   projects?: T;
@@ -1167,7 +1064,6 @@ export interface PageProjectsSelect<T extends boolean = true> {
 export interface PageContactSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
-  url?: T;
   heroImage?: T;
   place?: T;
   email?: T;

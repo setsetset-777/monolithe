@@ -1,7 +1,7 @@
 import type * as API from '@monolithe/api/types'
 import type { Project, PageSlug } from '@/types'
 
-export const transformProjectData = (
+export const formatProjectData = (
   { title }: Project,
   slug: PageSlug,
 ): {

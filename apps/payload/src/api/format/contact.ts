@@ -1,20 +1,20 @@
 import type * as API from '@monolithe/api/types'
-import type { PageProject, PageSlug } from '@/types'
+import type { PageContact, PageSlug } from '@/types'
 
-export const transformProjectsData = (
-  { title: pageTitle, heroImage }: PageProject,
+export const formatContactData = (
+  { title, heroImage }: PageContact,
   slug: PageSlug,
 ): {
   meta: API.Meta
-  data: API.Projects.Data
+  data: API.Contact.Data
 } => {
   return {
     meta: {
-      title: pageTitle,
+      title,
     },
     data: {
       hero: {
-        title: pageTitle,
+        title,
         image: heroImage as API.Media,
         slug: slug,
       },

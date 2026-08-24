@@ -11,6 +11,7 @@ export type RouteConfigPage = {
   path?: string
   field?: keyof RoutedPages
   children?: RouteConfigPage
+  isHash?: boolean
 }
 
 export interface RouteConfig {
@@ -20,7 +21,7 @@ export interface RouteConfig {
 export type RoutedGlobalSlug =
   'pageHome' | 'pagePresentation' | 'pageProjects' | 'pageServices' | 'pageContact'
 
-export type RoutedCollectionSlug = 'projects'
+export type RoutedCollectionSlug = 'projects' | 'services'
 
 export type RoutedPageSlug = RoutedGlobalSlug | RoutedCollectionSlug
 

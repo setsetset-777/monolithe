@@ -1,11 +1,5 @@
 import { localization } from '@/i18n'
-import type {
-  BasePayload,
-  CollectionSlug,
-  GlobalAfterChangeHook,
-  CollectionAfterChangeHook,
-  PayloadRequest,
-} from 'payload'
+import type { BasePayload, GlobalAfterChangeHook, CollectionAfterChangeHook } from 'payload'
 import type {
   Manifest,
   RouteConfig,
@@ -39,6 +33,10 @@ export const routesConfig: RouteConfig = {
     },
     {
       slug: 'pageServices',
+      children: {
+        slug: 'services',
+        isHash: true,
+      },
     },
     {
       slug: 'pageContact',
@@ -74,7 +72,10 @@ export const invalidateRoutesManifestHook:
   invalidateRoutesManifest()
 }
 
-export const getRoutes = async (payload: BasePayload, locale: Locale): Promise<LocalizedRoutes> => {
+export const getRoutes = async (
+  payload: BasePayload,
+  locale?: Locale,
+): Promise<LocalizedRoutes> => {
   locale = locale || (defaultLocale as Locale)
   const manifest = await getManifest(payload)
   const routes: LocalizedRoutes = manifest.routes[locale]!
@@ -93,18 +94,20 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
       })
 
       const doc: RoutedPages = global
+      const urlSlug = doc[field] || ''
 
       routes[locale as Locale]![slug] = {
         id: global.id,
-        path: path || doc.url,
+        path: `/${path || urlSlug}`,
         slug: slug,
-        urlSlug: doc[field] as string,
+        urlSlug,
         type: 'global',
         meta: {
           title: doc.title,
         },
       }
       if (children) {
+        const parent = doc
         const collections = await payload.find({
           collection: children.slug as RoutedCollectionSlug,
           locale: locale as Locale,
@@ -115,9 +118,10 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
           const doc: RoutedPages = collection
 
           const urlSlug = doc[field] as string
+          const separator = children.isHash ? '#' : '/'
           routes[locale as Locale]![collection.id] = {
             id: doc.id,
-            path: doc.url,
+            path: `/${parent.urlSlug}${separator}${doc.urlSlug}`,
             slug: children.slug,
             urlSlug,
             parent: slug,
@@ -130,30 +134,35 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
       }
     }
   }
+
+  payload.logger.info(routes, 'Built routes')
+
   return routes
 }
 
-export const resolveRoute = async (
-  path: string,
-  req: PayloadRequest,
-): Promise<{
+export const resolveRoute = async ({
+  path,
+  payload,
+  locale,
+}: {
+  path: string
+  payload: BasePayload
+  locale?: Locale
+}): Promise<{
   locale: Locale
   route: Route
-  routes: LocalizedRoutes
 }> => {
   const paths = path.replace(/^\/+/, '').split('/')
-  let locale = localization.locales.includes(paths[0])
-    ? (paths[0] as Locale)
-    : (req.locale as Locale)
+  locale = localization.locales.includes(paths[0]) ? (paths[0] as Locale) : (locale as Locale)
 
   if (locale) {
     // Remove locale
     path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
   }
 
-  const routes = await getRoutes(req.payload, locale)
+  const routes = await getRoutes(payload, locale)
 
-  const route = Object.values(routes).find((value) => value?.path === path)
+  const route = Object.values(routes).find((value) => value.path === path)
 
   if (!route) {
     throw new Error('No route found')
@@ -161,7 +170,6 @@ export const resolveRoute = async (
 
   return {
     locale,
-    routes,
     route,
   }
 }

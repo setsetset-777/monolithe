@@ -3,7 +3,7 @@ import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 
 import { getHerbier } from '@/lib/herbiers'
-import type { PageSlug } from '@monolithe/payload/types'
+import type { PageSlug } from '@monolithe/api/types'
 
 type Props = {
   home: {
@@ -19,46 +19,49 @@ type Props = {
   slug: PageSlug
 }
 
-const {
-  home,
-  menu,
-  type = 'big',
-  slug
-} = Astro.props
+const { home, menu, type = 'big', slug } = Astro.props
 
-const herbier = getHerbier('left');
-
+const herbier = getHerbier('left')
 ---
-<div class:list={["sidebar", `sidebar--${type}`]}>
+
+<div class:list={['sidebar', `sidebar--${type}`]}>
   <div class="container">
     <div class="content">
-      <a href={ home.url } aria-label={ home.linkLabel }>
-        <Logo class:list={"logo"}/>
+      <a href={home.url} aria-label={home.linkLabel}>
+        <Logo class:list={'logo'} />
       </a>
       <Separator />
       <nav class="menu">
         <ul class="menu__list">
-          { menu.map(({title, url, slug: itemSlug}) => (
-            <li class="menu__item">
-              <a class:list={[ "menu__link", slug === itemSlug && 'active' ]} href={ url } data-menu-item data-slug={ itemSlug }>
-                { title }
-              </a>
-            </li>
-          ))}
+          {
+            menu.map(({ title, url, slug: itemSlug }) => (
+              <li class="menu__item">
+                <a
+                  class:list={['menu__link', slug === itemSlug && 'active']}
+                  href={url}
+                  data-menu-item
+                  data-slug={itemSlug}
+                >
+                  {title}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
       <Separator />
     </div>
     <div class="plants" data-plants>
-      { herbier.map(({ slug, plant }) => {
-        const Plant = plant
-        return (
-          <div class="plants__item" data-slug={slug}>
-            <Plant class:list={"plants__svg"}/>
-          </div>
-        )
-        }
-      ) }
+      {
+        herbier.map(({ slug, plant }) => {
+          const Plant = plant
+          return (
+            <div class="plants__item" data-slug={slug}>
+              <Plant class:list={'plants__svg'} />
+            </div>
+          )
+        })
+      }
     </div>
   </div>
 </div>
@@ -70,133 +73,132 @@ const herbier = getHerbier('left');
 </script>
 
 <style lang="scss">
-@use '../styles/utilities' as *;
+  @use '../styles/utilities' as *;
 
-.sidebar {
-  --container-width: var(--width-sidebar-big);
-  --logo-width: #{pxToRem(180px)};
-  --link-font-size: var(--font-size-xxl);
-  --menu-gap: 0;
+  .sidebar {
+    --container-width: var(--width-sidebar-big);
+    --logo-width: #{pxToRem(180px)};
+    --link-font-size: var(--font-size-xxl);
+    --menu-gap: 0;
 
-  &--small {
-    --container-width: var(--width-sidebar-small);
-    --logo-width: #{pxToRem(90px)};
-    --link-font-size: var(--font-size-xl);
-    --menu-gap: var(--space-8);
-  }
+    &--small {
+      --container-width: var(--width-sidebar-small);
+      --logo-width: #{pxToRem(90px)};
+      --link-font-size: var(--font-size-xl);
+      --menu-gap: var(--space-8);
+    }
 
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  position: fixed;
-  z-index: 1;
-  color: var(--color-gray-100);
-
-  &:after {
-    content: '';
-    display: block;
-    width: var(--width-sidebar-skew);
-    background: var(--color-gold-40);
-    clip-path: polygon(0 0, 100% 0, calc(100% - 80px) 100%, 0 100%);
-    flex-shrink: 0;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 100%;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    position: fixed;
     z-index: 1;
+    color: var(--color-gray-100);
+
+    &:after {
+      content: '';
+      display: block;
+      width: var(--width-sidebar-skew);
+      background: var(--color-gold-40);
+      clip-path: polygon(0 0, 100% 0, calc(100% - 80px) 100%, 0 100%);
+      flex-shrink: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      z-index: 1;
+    }
   }
-}
 
-.container {
-  background: var(--color-gold-40);
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: pxToRem(120px) 0 var(--space-80) var(--space-80);
-  justify-content: space-between;
-  width: var(--container-width);
-  box-sizing: border-box;
-
-  &:before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 100%;
-    bottom: 0;
-    width: 100vw;
+  .container {
     background: var(--color-gold-40);
-  }
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: #{var(--space-48)};
-}
-
-.logo {
-  width: var(--logo-width);
-}
-
-.menu {
-  font-family: var(--font-family-heading);
-
-  &__list {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--menu-gap);
+    padding: pxToRem(120px) 0 var(--space-80) var(--space-80);
+    justify-content: space-between;
+    width: var(--container-width);
+    box-sizing: border-box;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 100%;
+      bottom: 0;
+      width: 100vw;
+      background: var(--color-gold-40);
+    }
   }
 
-  &__link {
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: #{var(--space-48)};
+  }
+
+  .logo {
+    width: var(--logo-width);
+  }
+
+  .menu {
     font-family: var(--font-family-heading);
-    font-size: var(--link-font-size);
-    text-decoration: none;
-    @include transition(color);
 
-    &:hover,
-    &.active {
-      color: var(--color-gray-00);
-    }
-  }
-}
-
-.plants {
-  $root: &;
-  $size: 120px;
-
-  $slugs: (pagePresentation, pageServices, pageProjects, pageContact);
-
-  position: relative;
-  max-height: $size;
-  flex-grow: 1;
-  margin-top: var(--space-24);
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-
-  &__item {
-    @include transition(opacity, medium);
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-
-    #{$root}[data-active] & {
-      opacity: 0;
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--menu-gap);
     }
 
-    @each $slug in $slugs {
-      #{$root}[data-active='#{$slug}'] &[data-slug='#{$slug}'] {
-        opacity: 1;
+    &__link {
+      font-family: var(--font-family-heading);
+      font-size: var(--link-font-size);
+      text-decoration: none;
+      @include transition(color);
+
+      &:hover,
+      &.active {
+        color: var(--color-gray-00);
       }
     }
   }
 
-  &__svg {
-    height: 100%;
-  }
-}
+  .plants {
+    $root: &;
+    $size: 120px;
 
+    $slugs: (pagePresentation, pageServices, pageProjects, pageContact);
+
+    position: relative;
+    max-height: $size;
+    flex-grow: 1;
+    margin-top: var(--space-24);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    &__item {
+      @include transition(opacity, medium);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+
+      #{$root}[data-active] & {
+        opacity: 0;
+      }
+
+      @each $slug in $slugs {
+        #{$root}[data-active='#{$slug}'] &[data-slug='#{$slug}'] {
+          opacity: 1;
+        }
+      }
+    }
+
+    &__svg {
+      height: 100%;
+    }
+  }
 </style>
