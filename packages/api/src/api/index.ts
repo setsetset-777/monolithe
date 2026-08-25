@@ -1,6 +1,7 @@
-import type { General, InitConfig, PageData } from '../types/api'
-import type { Payload } from '../types/payload'
 import logger from '@monolithe/logger'
+import { ProjectsSearchParams } from '../schemas/projects-search-params'
+import type { General, InitConfig, PageData, Projects } from '../types/api'
+import type { Payload } from '../types/payload'
 
 let token: string | null = null
 let loginPromise: Promise<void> | null = null
@@ -43,6 +44,38 @@ export async function fetchGeneral(locale?: Payload.Locale): Promise<General.Dat
     buildUrl({
       slug: 'general',
       params: { locale },
+    }),
+  )
+}
+
+/**
+ * Fetch projects list
+ * @param locale
+ * @returns
+ */
+export async function fetchProjects(
+  params: {
+    services?: string
+    page?: string
+    limit?: string
+  },
+  locale?: Payload.Locale,
+): Promise<Projects.List> {
+  const safeParams = ProjectsSearchParams.safeParse(params)
+
+  if (!safeParams.success) {
+    throw new Error('Invalid query parameters')
+  }
+
+  return request(
+    buildUrl({
+      slug: 'projects-list',
+      params: {
+        locale,
+        ...{
+          ...params,
+        },
+      },
     }),
   )
 }
@@ -163,17 +196,13 @@ async function request<T>(url: string): Promise<T> {
  * @param { slug, params }
  * @returns string
  */
-function buildUrl({
-  slug,
-  params,
-}: {
-  slug: string
-  params?: Record<string, string | undefined>
-}): string {
+function buildUrl({ slug, params }: { slug: string; params?: Record<string, any> }): string {
   const url = new URL(`${config.apiUrl}/${slug}`)
 
   if (params) {
-    Object.entries(params).forEach(([k, v]) => typeof v === 'string' && url.searchParams.set(k, v))
+    Object.entries(params).forEach(([k, v]) => {
+      typeof v === 'string' && url.searchParams.set(k, v)
+    })
   }
 
   return url.toString()

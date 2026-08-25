@@ -1,0 +1,17 @@
+---
+import type { Projects } from '@monolithe/api/types'
+
+interface Props {
+  projects: Projects.Data['projects']
+}
+
+const { projects } = Astro.props
+---
+
+<Fragment>
+  {
+    projects.docs.map(({ title }) => {
+      return <article>{title}</article>
+    })
+  }
+</Fragment>

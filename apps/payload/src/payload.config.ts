@@ -29,6 +29,10 @@ import regenerateMedia from '@/helpers/regenerateMedia'
 import { fetchGeneral } from '@/api/fetch/general'
 import { fetchPage } from '@/api/fetch/page'
 
+import { Locale } from '@/types'
+import safeProjectsParams from '@/helpers/safeProjectsParams'
+import { fetchProjects } from '@/api/fetch/projects'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -88,16 +92,79 @@ export default buildConfig({
         req.payload.logger.info(req.query, 'Hiiting endpoint /page')
         const [path, search] = (req.query.path as string).split('?')
         let params = new URLSearchParams(search)
-        const data = await fetchPage(req, path, params)
-        req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
+        let safeParams
 
         try {
+          safeParams = await safeProjectsParams(params, req.payload, req.locale as Locale)
+        } catch (e) {
+          return Response.json(
+            {
+              ok: false,
+              message: e instanceof Error ? e.message : String(e),
+            },
+            {
+              status: 400,
+            },
+          )
+        }
+
+        try {
+          const data = await fetchPage(req, path, safeParams)
+          req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
           return Response.json({
             ok: true,
             ...data,
           })
         } catch (e) {
           console.error(`Error retrieving page for ${path}`, e)
+          return Response.json(
+            {
+              ok: false,
+              message: e instanceof Error ? e.message : String(e),
+            },
+            {
+              status: 500,
+            },
+          )
+        }
+      },
+    },
+    {
+      path: '/projects-list',
+      method: 'get',
+      handler: async (req) => {
+        req.payload.logger.info(req.query, 'Hiiting endpoint /projects')
+
+        let params = new URLSearchParams(req.search)
+        let safeParams
+
+        try {
+          safeParams = await safeProjectsParams(params, req.payload, req.locale as Locale)
+        } catch (e) {
+          return Response.json(
+            {
+              ok: false,
+              message: e instanceof Error ? e.message : String(e),
+            },
+            {
+              status: 400,
+            },
+          )
+        }
+
+        try {
+          const data = await fetchProjects({
+            payload: req.payload,
+            locale: req.locale as Locale,
+            params: safeParams,
+          })
+
+          return Response.json({
+            ok: true,
+            ...data,
+          })
+        } catch (e) {
+          console.error(`Error retrieving projects`, e)
           return Response.json(
             {
               ok: false,

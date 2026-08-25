@@ -1,4 +1,4 @@
-import type { Hero, Media } from '../shared'
+import type { Hero, Media, PaginatedDocs } from '../shared'
 
 export namespace Projects {
   export interface Service {
@@ -17,6 +17,14 @@ export namespace Projects {
   export interface Data {
     hero: Hero
     services: Service[]
-    projects: Project[]
+    projects: List
   }
+
+  export interface SearchParams {
+    services?: string[]
+    limit?: number
+    page?: number
+  }
+
+  export type List = PaginatedDocs<Project>
 }

@@ -11,6 +11,10 @@
     },
     "./types": {
       "types": "./src/types/index.ts"
+    },
+    "./schemas": {
+      "default": "./src/schemas/index.ts",
+      "types": "./src/schemas/index.ts"
     }
   },
   "scripts": {
@@ -21,7 +25,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.26.2",
   "dependencies": {
-    "@monolithe/logger": "workspace:*"
+    "@monolithe/logger": "workspace:*",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@monolithe/payload": "workspace:*"

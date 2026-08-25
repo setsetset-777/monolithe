@@ -10,11 +10,11 @@ import type {
 interface Props<T extends CollectionSlug> {
   slug: T
   payload: BasePayload
-  locale: Locale
+  locale?: Locale
   where?: Where
   pagination?: {
-    page: number
-    limit: number
+    page?: number
+    limit?: number
   }
 }
 

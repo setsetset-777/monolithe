@@ -1,6 +1,7 @@
 ---
 import Sidebar from '@/components/Sidebar.astro'
 import Footer from '@/components/Footer.astro'
+import { ClientRouter } from 'astro:transitions'
 
 import type { General, PageSlug } from '@monolithe/api/types'
 
@@ -54,6 +55,8 @@ const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
         <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id} />
       )
     }
+
+    <ClientRouter />
   </head>
 
   <body data-theme="light" class:list={['body', ...bodyModifiers.map((a) => `body--${a}`)]}>

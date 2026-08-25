@@ -38,3 +38,7 @@ export interface Parution {
 export interface Meta {
   title: string
 }
+
+export interface PaginatedDocs<Item> {
+  docs: Item[]
+}
