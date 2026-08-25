@@ -4,13 +4,13 @@ export namespace Projects {
   export interface Service {
     label: string
     slug: string
-    url: string
+    // url: string
   }
 
   export interface Project {
     image: Media
     title: string
-    date: string
+    date?: string
     url: string
   }
 

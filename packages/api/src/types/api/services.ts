@@ -28,6 +28,6 @@ export namespace Services {
 
   export interface Data {
     hero: Hero
-    sections: Array<SingleLevelSection | MultiLevelSection | undefined>
+    sections: Array<SingleLevelSection | MultiLevelSection>
   }
 }

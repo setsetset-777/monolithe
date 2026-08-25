@@ -4,27 +4,10 @@ import Anchor from '@/components/Anchor.astro'
 import Image from '@/components/Image.astro'
 import Slider, { type Props as SliderProps } from '@/components/home/Slider.astro'
 import ChevronDown from '@/assets/svgs/chevron-down.svg'
-import type { Media } from '@monolithe/api/types'
+import type { Media, Home } from '@monolithe/api/types'
 import { getHerbier } from '@/lib/herbiers'
 
-type Props = {
-  presentation: {
-    heroImage: Media
-    catch: string
-    url: string
-    linkLabel: string
-  }
-  services: {
-    title: string
-    url: string
-    linkLabel: string
-    items: Array<{
-      title: string
-      url: string
-    }>
-  }
-  projects: SliderProps['projects']
-}
+type Props = Home.Data
 
 const { presentation, services, projects } = Astro.props
 

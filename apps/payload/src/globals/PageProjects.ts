@@ -29,47 +29,12 @@ export const PageProjects: GlobalConfig = {
       relationTo: 'projects',
       hasMany: true,
     },
-    // TODO: Move to transfomer
-    // TODO: Replace with UI field
-    {
-      name: 'services',
-      type: 'array',
-      virtual: true,
-      fields: [
-        {
-          name: 'label',
-          type: 'text',
-        },
-        {
-          name: 'slug',
-          type: 'text',
-        },
-        {
-          name: 'url',
-          type: 'text',
-        },
-      ],
-    },
+    // TODO: Add UI field for services,
   ],
   admin: {
     group: localizedLabels.groups.pages,
   },
   hooks: {
     afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
-    afterRead: [
-      // async ({ doc, req }) => {
-      //   const services = await req.payload.find({
-      //     collection: 'services',
-      //     locale: req.locale,
-      //   })
-      //   doc.services = services.docs.map(({ label, slugId }) => {
-      //     return {
-      //       label,
-      //       url: `${doc.url}?${new URLSearchParams({ services: slugId! })}`,
-      //       slug: slugId,
-      //     }
-      //   })
-      // },
-    ],
   },
 }

@@ -327,8 +327,8 @@ export interface Project {
     };
     [k: string]: unknown;
   } | null;
-  service?: (string | null) | Service;
-  date?: number | null;
+  services?: (string | Service)[] | null;
+  date?: string | null;
   /**
    * The image used to represent the project, eg. on the project list or the project hero.
    */
@@ -619,7 +619,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   urlSlug?: T;
   featured?: T;
   description?: T;
-  service?: T;
+  services?: T;
   date?: T;
   mainImage?: T;
   gallery?:
@@ -864,14 +864,6 @@ export interface PageProject {
   heroImage: string | Media;
   backLinkLabel?: string | null;
   projects?: (string | Project)[] | null;
-  services?:
-    | {
-        label?: string | null;
-        slug?: string | null;
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1045,14 +1037,6 @@ export interface PageProjectsSelect<T extends boolean = true> {
   heroImage?: T;
   backLinkLabel?: T;
   projects?: T;
-  services?:
-    | T
-    | {
-        label?: T;
-        slug?: T;
-        url?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

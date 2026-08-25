@@ -12,7 +12,7 @@ import Contact from '../views/Contact.astro'
 
 const { path } = Astro.params
 
-const { slug, data, meta } = await getPage(`/${path ?? ''}`)
+const { slug, data, meta } = await getPage(`/${path ?? ''}?${Astro.url.searchParams.toString()}`)
 
 if (!slug) {
   return Astro.redirect('/404')

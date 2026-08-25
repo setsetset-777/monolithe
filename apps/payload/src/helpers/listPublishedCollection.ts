@@ -12,18 +12,25 @@ interface Props<T extends CollectionSlug> {
   payload: BasePayload
   locale: Locale
   where?: Where
+  pagination?: {
+    page: number
+    limit: number
+  }
 }
 
-export default function listPublishedCollection<T extends CollectionSlug>({
+export default async function listPublishedCollection<T extends CollectionSlug>({
   slug,
   payload,
   locale,
   where,
+  pagination,
 }: Props<T>): Promise<PaginatedDocs<DataFromCollectionSlug<T>>> {
   return payload.find({
     collection: slug,
     draft: false,
-    pagination: false,
+    pagination: !!pagination,
+    page: pagination?.page,
+    limit: pagination?.limit,
     locale,
     where: {
       _status: {

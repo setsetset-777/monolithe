@@ -33,10 +33,13 @@ export const Services: CollectionConfig = {
       name: 'urlSlug',
       type: 'text',
       required: true,
-      virtual: true,
-      hidden: true,
+      index: true,
+      // hidden: true,
+      admin: {
+        readOnly: true,
+      },
       hooks: {
-        afterRead: [async ({ siblingData }) => encodeSlug(siblingData.title)],
+        beforeChange: [async ({ siblingData }) => encodeSlug(siblingData.title)],
       },
     },
     {

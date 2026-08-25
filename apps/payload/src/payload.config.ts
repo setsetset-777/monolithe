@@ -86,8 +86,9 @@ export default buildConfig({
       method: 'get',
       handler: async (req) => {
         req.payload.logger.info(req.query, 'Hiiting endpoint /page')
-        let path = req.query.path as string
-        const data = await fetchPage(req, path)
+        const [path, search] = (req.query.path as string).split('?')
+        let params = new URLSearchParams(search)
+        const data = await fetchPage(req, path, params)
         req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
 
         try {

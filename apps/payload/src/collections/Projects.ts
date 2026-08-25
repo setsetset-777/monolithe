@@ -55,21 +55,18 @@ export const Projects: CollectionConfig = {
       },
     },
     {
-      name: 'service',
+      name: 'services',
       type: 'relationship',
       relationTo: 'services',
       label: {
         en: 'Service',
         fr: 'Service',
       },
+      hasMany: true,
     },
     {
       name: 'date',
-      type: 'number',
-      label: {
-        en: 'Year',
-        fr: 'Année',
-      },
+      type: 'text',
     },
     {
       name: 'mainImage',

@@ -1,15 +1,78 @@
 ---
 import HeroView from '@/components/Hero.astro'
 
-import type { Hero } from '@monolithe/api/types'
+import type { Projects } from '@monolithe/api/types'
 
-type Props = {
-  hero: Hero
-}
+type Props = Projects.Data
 
-const { hero } = Astro.props
+const { hero, services, projects } = Astro.props
 ---
 
 <div class="page">
   <HeroView {...hero} />
+  <fieldset class="services" data-services>
+    <ul>
+      {
+        services.map(({ label, slug }) => (
+          <li>
+            <input type="checkbox" id={slug} name="projects-service" value={slug} />
+            <label for={slug}>{label}</label>
+          </li>
+        ))
+      }
+    </ul>
+  </fieldset>
+  <div class="projects">
+    {
+      projects.map(({ title }) => {
+        return <article>{title}</article>
+      })
+    }
+  </div>
 </div>
+
+<script>
+  const seperator = ','
+
+  const initServicesChecked = () => {
+    const url = new URL(window.location.href)
+    const services = url.searchParams.get('services')?.toString().split(seperator)
+
+    services?.forEach((service) => {
+      const input = document.querySelector(`input[name="projects-service"][value="${service}"]`)
+      if (!(input instanceof HTMLInputElement)) return
+      input.checked = true
+    })
+  }
+
+  const initServicesChange = () => {
+    document.querySelector('.services')?.addEventListener('change', (e) => {
+      if (!(e.currentTarget instanceof HTMLElement)) return
+      const activeServices = Array.from(
+        e.currentTarget.querySelectorAll('input[name="projects-service"]:checked'),
+      ).map((item) => {
+        if (!(item instanceof HTMLInputElement)) return
+        return item.value
+      })
+      const url = new URL(window.location.href)
+      if (activeServices.length > 0) {
+        url.searchParams.set('services', activeServices.join(seperator))
+      } else {
+        url.searchParams.delete('services')
+      }
+
+      window.location.href = url.toString()
+    })
+  }
+
+  initServicesChecked()
+  initServicesChange()
+</script>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .page {
+    @include content-padding;
+  }
+</style>

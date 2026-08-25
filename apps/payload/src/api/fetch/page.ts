@@ -14,6 +14,7 @@ import { Locale } from '@/types'
 export const fetchPage = async (
   req: PayloadRequest,
   path: string,
+  params: URLSearchParams,
 ): Promise<API.PageData | null> => {
   const {
     locale,
@@ -76,9 +77,23 @@ export const fetchPage = async (
         slug,
         locale,
       })
+      const limit = params.get('limit')
+      const page = params.get('page')
+      const services = params.get('services')
+
+      const projectsParams = {
+        services: services?.split(','),
+        limit: typeof limit === 'string' ? parseInt(limit, 10) : undefined,
+        page: typeof page === 'string' ? parseInt(page, 10) : undefined,
+      }
       return {
         slug,
-        ...formatProjectsData(res, slug),
+        ...(await formatProjectsData({
+          res,
+          payload: req.payload,
+          locale: req.locale as Locale,
+          params: projectsParams,
+        })),
       }
 
     case 'pageContact':
