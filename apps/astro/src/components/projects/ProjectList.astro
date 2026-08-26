@@ -6,12 +6,18 @@ interface Props {
 }
 
 const { projects } = Astro.props
+
+const isEmpty = projects.docs.length <= 0
 ---
 
 <Fragment>
   {
-    projects.docs.map(({ title }) => {
-      return <article>{title}</article>
-    })
+    isEmpty ? (
+      <div class="empty">Aucun projets trouvés</div>
+    ) : (
+      projects.docs.map(({ title }) => {
+        return <article>{title}</article>
+      })
+    )
   }
 </Fragment>
