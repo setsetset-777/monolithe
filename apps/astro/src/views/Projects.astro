@@ -2,6 +2,7 @@
 import HeroView from '@/components/Hero.astro'
 import ProjectList from '@/components/projects/ProjectList.astro'
 import ProjectListLoader from '@/components/projects/ProjectListLoader.astro'
+import Separator from '@/components/Separator.astro'
 
 import type { Projects } from '@monolithe/api/types'
 
@@ -12,24 +13,27 @@ const { hero, services, projects } = Astro.props
 
 <div class="page">
   <HeroView {...hero} />
-  <fieldset class="services" data-services>
-    <ul>
-      {
-        services.map(({ label, slug }) => (
-          <li>
-            <input type="checkbox" id={slug} name="projects-service" value={slug} />
-            <label for={slug}>{label}</label>
-          </li>
-        ))
-      }
-    </ul>
-  </fieldset>
-  <div class="projects" id="projects" aria-live="polite">
-    <div class="loader" aria-hidden data-projects-loader-loader>
-      <ProjectListLoader />
-    </div>
-    <div class="projects__container list" data-projects-loader-list>
-      <ProjectList projects={projects} />
+  <div class="content">
+    <fieldset class="services" data-services>
+      <ul>
+        {
+          services.map(({ label, slug }) => (
+            <li>
+              <input type="checkbox" id={slug} name="projects-service" value={slug} />
+              <label for={slug}>{label}</label>
+            </li>
+          ))
+        }
+      </ul>
+    </fieldset>
+    <Separator />
+    <div class="projects" id="projects" aria-live="polite">
+      <div class="loader" aria-hidden>
+        <ProjectListLoader />
+      </div>
+      <div class="projects__container list" data-projects-loader-list>
+        <ProjectList projects={projects} />
+      </div>
     </div>
   </div>
 </div>
@@ -77,8 +81,57 @@ const { hero, services, projects } = Astro.props
 <style lang="scss">
   @use '../styles/utilities' as *;
 
-  .page {
+  .content {
     @include content-padding;
+    padding-top: var(--space-48);
+    padding-bottom: var(--space-48);
+  }
+
+  .services {
+    padding: var(--space-64) 0;
+
+    ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--space-24);
+    }
+
+    label {
+      @include font-heading-4;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-8);
+      align-items: baseline;
+      color: var(--color-gray-10);
+      @include transition(color);
+
+      &:hover {
+        color: var(--color-gray-00);
+      }
+
+      &:before {
+        content: '';
+        display: block;
+        width: pxToRem(8px);
+        height: pxToRem(8px);
+        border: var(--color-gold-30) solid 1px;
+        border-radius: var(--radius-2);
+        @include transition(background-color);
+      }
+    }
+
+    input[type='checkbox'] {
+      display: none;
+      &:checked + label {
+        color: var(--color-gray-00);
+
+        &:before {
+          background-color: var(--color-gold-30);
+        }
+      }
+    }
   }
 
   .loader {

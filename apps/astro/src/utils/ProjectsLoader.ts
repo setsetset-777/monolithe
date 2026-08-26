@@ -1,7 +1,6 @@
 export default class ProjectsLoader {
   element: HTMLElement
   listElement: HTMLElement | null
-  loaderElement: HTMLElement | null
   activeServices: string[] = []
   page: number | null = null
   limit: number | null = null
@@ -20,7 +19,6 @@ export default class ProjectsLoader {
     this.element = el
 
     this.listElement = this.element.querySelector('[data-projects-loader-list]')
-    this.loaderElement = this.element.querySelector('[data-projects-loader-loader]')
     this.searchParams = new URLSearchParams()
   }
 
