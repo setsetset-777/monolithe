@@ -21,7 +21,7 @@ export namespace Projects {
   }
 
   export interface SearchParams {
-    services?: string[]
+    service?: string[]
     limit?: number
     page?: number
   }

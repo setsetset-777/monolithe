@@ -1,6 +1,7 @@
 ---
 import HeroView from '@/components/Hero.astro'
 import ProjectList from '@/components/projects/ProjectList.astro'
+import ProjectListLoader from '@/components/projects/ProjectListLoader.astro'
 
 import type { Projects } from '@monolithe/api/types'
 
@@ -23,19 +24,45 @@ const { hero, services, projects } = Astro.props
       }
     </ul>
   </fieldset>
-  <div class="projects" id="projects">
-    <ProjectList projects={projects} />
+  <div class="projects" id="projects" aria-live="polite">
+    <div class="loader" aria-hidden data-projects-loader-loader>
+      <ProjectListLoader />
+    </div>
+    <div class="projects__container" data-projects-loader-list>
+      <ProjectList projects={projects} />
+    </div>
   </div>
 </div>
 
 <script>
-  import { navigate } from 'astro:transitions/client'
+  import ProjectLoader from '../utils/ProjectsLoader'
 
-  const seperator = ','
+  function onPageLoad() {
+    initServicesChecked()
+    initLoader()
+  }
 
-  const initServicesChecked = () => {
+  function initLoader() {
+    const loader = new ProjectLoader({
+      elementSelector: '#projects',
+    })
+
+    document.querySelector('.services')?.addEventListener('change', async (e) => {
+      if (!(e.currentTarget instanceof HTMLElement)) return
+
+      const services = Array.from(
+        e.currentTarget.querySelectorAll<HTMLInputElement>(
+          'input[name="projects-service"]:checked',
+        ),
+      ).map((item) => item.value)
+
+      await loader.fetch(services)
+    })
+  }
+
+  function initServicesChecked() {
     const url = new URL(window.location.href)
-    const services = url.searchParams.get('services')?.toString().split(seperator)
+    const services = url.searchParams.getAll('service')
 
     Array.from(
       document.querySelectorAll<HTMLInputElement>('input[name="projects-service"]'),
@@ -44,54 +71,7 @@ const { hero, services, projects } = Astro.props
     })
   }
 
-  const initServicesChange = () => {
-    document.querySelector('.services')?.addEventListener('change', async (e) => {
-      if (!(e.currentTarget instanceof HTMLElement)) return
-
-      const sectionsContainer = document.querySelector('#projects')
-
-      if (!sectionsContainer) return
-
-      const activeServices = Array.from(
-        e.currentTarget.querySelectorAll<HTMLInputElement>(
-          'input[name="projects-service"]:checked',
-        ),
-      ).map((item) => item.value)
-      const params = new URLSearchParams()
-      if (activeServices.length > 0) {
-        params.set('services', activeServices.join(seperator))
-      } else {
-        params.delete('services')
-      }
-
-      const response = await fetch(`/q/projects?${params.toString()}`)
-
-      if (!response.ok) {
-        throw new Error('Failed to load projects')
-      }
-
-      sectionsContainer.innerHTML = await response.text()
-
-      const url = new URL(window.location.href)
-      if (activeServices.length > 0) {
-        url.searchParams.set('services', activeServices.join(seperator))
-      } else {
-        url.searchParams.delete('services')
-      }
-
-      window.history.pushState(
-        {
-          url: url.toString(),
-        },
-        '',
-        url.toString(),
-      )
-    })
-  }
-  document.addEventListener('astro:page-load', () => {
-    initServicesChecked()
-    initServicesChange()
-  })
+  document.addEventListener('astro:page-load', onPageLoad)
 </script>
 
 <style lang="scss">

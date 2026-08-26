@@ -5,13 +5,17 @@ import type { Locale } from '@/types'
 import type { BasePayload } from 'payload'
 
 export default async function safeProjectsParams(
-  params: URLSearchParams,
+  params: {
+    service?: string[]
+    page?: string
+    limit?: string
+  },
   payload: BasePayload,
   locale?: Locale,
 ): Promise<Projects.SearchParams> {
   try {
     // Parse all parameters
-    const safeParams = ProjectsSearchParams.parse(Object.fromEntries(params))
+    const safeParams = ProjectsSearchParams.parse(params)
 
     // Confirm all services passed exists
     const services = await listPublishedCollection({
@@ -20,9 +24,7 @@ export default async function safeProjectsParams(
       locale,
     })
 
-    ServicesList(services.docs.map(({ urlSlug }) => urlSlug)).parse(
-      params.get('services') ?? undefined,
-    )
+    ServicesList(services.docs.map(({ urlSlug }) => urlSlug)).parse(params.service ?? undefined)
 
     return safeParams
   } catch (e) {

@@ -55,7 +55,7 @@ export async function fetchGeneral(locale?: Payload.Locale): Promise<General.Dat
  */
 export async function fetchProjects(
   params: {
-    services?: string
+    service?: string[]
     page?: string
     limit?: string
   },
@@ -200,8 +200,12 @@ function buildUrl({ slug, params }: { slug: string; params?: Record<string, any>
   const url = new URL(`${config.apiUrl}/${slug}`)
 
   if (params) {
-    Object.entries(params).forEach(([k, v]) => {
-      typeof v === 'string' && url.searchParams.set(k, v)
+    Object.entries(params).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        url.searchParams.set(key, value)
+      } else if (Array.isArray(value)) {
+        value.forEach((item) => url.searchParams.append(key, item))
+      }
     })
   }
 

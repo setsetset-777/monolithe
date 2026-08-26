@@ -15,7 +15,7 @@ export const fetchProjects = async ({
   locale: Locale
   params: API.Projects.SearchParams
 }): Promise<API.Projects.List> => {
-  const { services: selectedServicesSlugs, page, limit } = params
+  const { service: selectedServicesSlugs, page, limit } = params
 
   const [routes, services] = await Promise.all([
     getRoutes(payload, locale),

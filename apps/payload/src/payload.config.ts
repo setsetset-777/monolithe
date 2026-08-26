@@ -95,7 +95,15 @@ export default buildConfig({
         let safeParams
 
         try {
-          safeParams = await safeProjectsParams(params, req.payload, req.locale as Locale)
+          safeParams = await safeProjectsParams(
+            {
+              service: params.getAll('service'),
+              page: params.get('page') ?? undefined,
+              limit: params.get('limit') ?? undefined,
+            },
+            req.payload,
+            req.locale as Locale,
+          )
         } catch (e) {
           return Response.json(
             {
@@ -139,7 +147,15 @@ export default buildConfig({
         let safeParams
 
         try {
-          safeParams = await safeProjectsParams(params, req.payload, req.locale as Locale)
+          safeParams = await safeProjectsParams(
+            {
+              service: params.getAll('service'),
+              page: params.get('page') ?? undefined,
+              limit: params.get('limit') ?? undefined,
+            },
+            req.payload,
+            req.locale as Locale,
+          )
         } catch (e) {
           return Response.json(
             {

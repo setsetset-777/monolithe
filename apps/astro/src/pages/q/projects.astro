@@ -4,11 +4,11 @@ import ProjectList from '@/components/projects/ProjectList.astro'
 
 const params = new URLSearchParams(Astro.url.search)
 
-const services = params.get('services') ?? undefined
+const services = params.getAll('service') ?? undefined
 const page = params.get('page') ?? undefined
 const limit = params.get('limit') ?? undefined
 
-const projects = await api.projects({ services, page, limit })
+const projects = await api.projects({ service: services, page, limit })
 
 export const partial = true
 ---
