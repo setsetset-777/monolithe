@@ -1,16 +1,17 @@
 export default class ProjectsLoader {
-  element: Element
-  listElement: Element | null
-  loaderElement: Element | null
+  element: HTMLElement
+  listElement: HTMLElement | null
+  loaderElement: HTMLElement | null
   activeServices: string[] = []
   page: number | null = null
   limit: number | null = null
   searchParams: URLSearchParams
   html: string | null = null
   controller: AbortController | null = null
+  timeout: NodeJS.Timeout | null = null
 
   constructor({ elementSelector }: { elementSelector: string }) {
-    const el = document.querySelector(elementSelector)
+    const el = document.querySelector<HTMLElement>(elementSelector)
 
     if (!el) {
       throw new Error('ProjectsLoader: Element not found')
@@ -23,13 +24,7 @@ export default class ProjectsLoader {
     this.searchParams = new URLSearchParams()
   }
 
-  async fetch(services?: string[]) {
-    if (services) {
-      this.activeServices = services
-    }
-    this.controller?.abort()
-    this.controller = new AbortController()
-
+  prepareParams() {
     const params = new URLSearchParams()
 
     if (typeof this.page === 'number') {
@@ -44,8 +39,32 @@ export default class ProjectsLoader {
     this.activeServices.forEach((item) => params.append('service', item))
 
     this.searchParams = params
+  }
+
+  load() {
+    this.element.setAttribute('aria-busy', 'true')
+    this.element.dataset.state = 'loading'
+  }
+
+  unload() {
+    this.element.setAttribute('aria-busy', 'true')
+    this.element.dataset.state = 'loaded'
+  }
+
+  async fetch(services?: string[]) {
+    if (services) {
+      this.activeServices = services
+    }
+    this.controller?.abort()
+    this.controller = new AbortController()
+
+    this.prepareParams()
 
     let response: Response
+
+    this.timeout = setTimeout(() => {
+      this.load()
+    }, 150)
 
     try {
       response = await fetch(`/q/projects?${this.searchParams?.toString()}`, {
@@ -64,6 +83,9 @@ export default class ProjectsLoader {
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') return null
       throw err
+    } finally {
+      clearTimeout(this.timeout)
+      this.unload()
     }
   }
 

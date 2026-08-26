@@ -28,7 +28,7 @@ const { hero, services, projects } = Astro.props
     <div class="loader" aria-hidden data-projects-loader-loader>
       <ProjectListLoader />
     </div>
-    <div class="projects__container" data-projects-loader-list>
+    <div class="projects__container list" data-projects-loader-list>
       <ProjectList projects={projects} />
     </div>
   </div>
@@ -79,5 +79,25 @@ const { hero, services, projects } = Astro.props
 
   .page {
     @include content-padding;
+  }
+
+  .loader {
+    display: none;
+  }
+
+  .list {
+    display: block;
+  }
+
+  #projects {
+    &[data-state='loading'] {
+      .loader {
+        display: block;
+      }
+
+      .list {
+        display: none;
+      }
+    }
   }
 </style>
