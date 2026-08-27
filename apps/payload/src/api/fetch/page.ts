@@ -100,7 +100,7 @@ export const fetchPage = async (
       })
       return {
         slug,
-        ...formatContactData(res, slug),
+        ...(await formatContactData({ res, payload: req.payload, locale })),
       }
   }
   return null
