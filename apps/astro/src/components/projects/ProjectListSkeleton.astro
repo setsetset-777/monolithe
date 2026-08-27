@@ -1,0 +1,47 @@
+---
+interface Props {}
+---
+
+<div class="project-list-skeleton">
+  <div class="image"></div>
+  <div class="info">&nbsp;</div>
+</div>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  .project-list-skeleton {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-1);
+    overflow: hidden;
+  }
+
+  .image {
+    padding-top: 100%;
+    position: relative;
+    width: 100%;
+    background: linear-gradient(-45deg, var(--color-gray-20), var(--color-gray-80) 60%);
+    background-position: center center;
+    background-size: 400% 400%;
+    animation: gradient-shift 1.5s ease-in-out infinite;
+  }
+
+  .info {
+    @include font-heading-3;
+    padding: var(--space-16);
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+</style>

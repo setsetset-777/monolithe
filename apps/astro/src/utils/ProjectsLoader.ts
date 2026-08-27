@@ -1,13 +1,18 @@
+type State = 'idle' | 'loading' | 'empty'
+
 export default class ProjectsLoader {
   element: HTMLElement
   listElement: HTMLElement | null
   activeServices: string[] = []
-  page: number | null = null
-  limit: number | null = null
+  page: number = 1
+  limit: number = 12
   searchParams: URLSearchParams
   html: string | null = null
   controller: AbortController | null = null
   timeout: NodeJS.Timeout | null = null
+  itemSelector = '[data-project-list-item]'
+  listSelector = '[data-projects-loader-list]'
+  moreSelector = '[data-projects-loader-more]'
 
   constructor({ elementSelector }: { elementSelector: string }) {
     const el = document.querySelector<HTMLElement>(elementSelector)
@@ -18,8 +23,18 @@ export default class ProjectsLoader {
 
     this.element = el
 
-    this.listElement = this.element.querySelector('[data-projects-loader-list]')
+    this.listElement = this.element.querySelector(this.listSelector)
     this.searchParams = new URLSearchParams()
+  }
+
+  init() {
+    document.addEventListener('click', (e) => {
+      if (!(e.target instanceof HTMLElement)) return
+      if (e.target.closest(this.moreSelector)) {
+        this.page += 1
+        this.fetch({ append: true })
+      }
+    })
   }
 
   prepareParams() {
@@ -41,17 +56,45 @@ export default class ProjectsLoader {
 
   load() {
     this.element.setAttribute('aria-busy', 'true')
-    this.element.dataset.state = 'loading'
+    this.state = 'loading'
   }
 
   unload() {
-    this.element.setAttribute('aria-busy', 'true')
-    this.element.dataset.state = 'loaded'
+    this.element.setAttribute('aria-busy', 'false')
+    this.state = 'idle'
   }
 
-  async fetch(services?: string[]) {
+  resetPage() {
+    this.page = 1
+  }
+
+  appendContent(html: string) {
+    if (!this.listElement) return
+
+    const lastItem = this.listElement.querySelector(`${this.itemSelector}:last-of-type`)
+    if (lastItem) {
+      lastItem.insertAdjacentHTML('afterend', html)
+    } else {
+      this.listElement.insertAdjacentHTML('afterbegin', html)
+    }
+  }
+
+  replaceContent(html: string) {
+    if (!this.listElement) return
+
+    Array.from(this.listElement.querySelectorAll(`${this.itemSelector}`)).forEach((element) =>
+      element.remove(),
+    )
+
+    this.listElement.insertAdjacentHTML('afterbegin', html)
+  }
+
+  async fetch({ services, append = false }: { services?: string[]; append?: boolean } = {}) {
+    if (!this.listElement) return
+
     if (services) {
       this.activeServices = services
+      this.resetPage()
     }
     this.controller?.abort()
     this.controller = new AbortController()
@@ -69,16 +112,35 @@ export default class ProjectsLoader {
         signal: this.controller.signal,
       })
 
+      // await new Promise((resolve) => setTimeout(resolve, 1000))
+
       if (!response.ok) {
         throw new Error('ProjectsLoader: Failed to load projects')
       }
 
-      if (this.listElement) {
-        this.listElement.innerHTML = await response.text()
+      const html = await response.text()
+      const totalDocs = Number(response.headers.get('Total-Docs') ?? 0)
+      const totalPages = Number(response.headers.get('Total-Pages') ?? 0)
+      this.more = response.headers.get('Has-More') === 'true'
+
+      if (totalDocs <= 0) {
+        this.state = 'empty'
+      } else {
+        if (append) {
+          this.appendContent(html)
+        } else {
+          this.replaceContent(html)
+        }
+        this.state = 'idle'
+      }
+
+      if (this.page > totalPages) {
+        this.page = totalPages
       }
 
       this.onChange()
     } catch (err) {
+      this.state = 'idle'
       if (err instanceof DOMException && err.name === 'AbortError') return null
       throw err
     } finally {
@@ -87,9 +149,25 @@ export default class ProjectsLoader {
     }
   }
 
-  onChange() {
+  pushHistory() {
     const url = new URL(window.location.href)
     url.search = this.searchParams.toString()
     window.history.pushState({ url: url.toString() }, '', url.toString())
+  }
+
+  onChange() {
+    // this.pushHistory()
+  }
+
+  private set state(state: State) {
+    this.element.dataset.state = state
+  }
+
+  set more(more: boolean) {
+    if (more) {
+      this.element.dataset.more = 'true'
+    } else {
+      delete this.element.dataset.more
+    }
   }
 }

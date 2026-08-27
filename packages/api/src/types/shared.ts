@@ -39,6 +39,8 @@ export interface Meta {
   title: string
 }
 
-export interface PaginatedDocs<Item> {
+// Base on Payloads pagination response
+// https://payloadcms.com/docs/queries/pagination#response
+export interface PaginatedDocs<Item> extends Omit<Payload.PaginatedDocs, 'docs'> {
   docs: Item[]
 }

@@ -1,23 +1,18 @@
 ---
+import ProjectListItem from './ProjectListItem.astro'
 import type { Projects } from '@monolithe/api/types'
 
 interface Props {
-  projects: Projects.Data['projects']
+  projects: Projects.List['docs']
 }
 
 const { projects } = Astro.props
-
-const isEmpty = projects.docs.length <= 0
 ---
 
 <Fragment>
   {
-    isEmpty ? (
-      <div class="empty">Aucun projets trouvés</div>
-    ) : (
-      projects.docs.map(({ title }) => {
-        return <article>{title}</article>
-      })
-    )
+    projects.map((project) => {
+      return <ProjectListItem {...project} />
+    })
   }
 </Fragment>

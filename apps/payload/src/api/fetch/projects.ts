@@ -51,6 +51,7 @@ export const fetchProjects = async ({
   })
 
   return {
+    ...projects,
     docs: projects.docs.map(({ id, mainImage, title, date }) => ({
       image: mainImage as API.Media,
       title,

@@ -1,7 +1,8 @@
 ---
 import HeroView from '@/components/Hero.astro'
 import ProjectList from '@/components/projects/ProjectList.astro'
-import ProjectListLoader from '@/components/projects/ProjectListLoader.astro'
+import ProjectListSkeleton from '@/components/projects/ProjectListSkeleton.astro'
+import ProjectListMore from '@/components/projects/ProjectListMore.astro'
 import Separator from '@/components/Separator.astro'
 
 import type { Projects } from '@monolithe/api/types'
@@ -27,13 +28,25 @@ const { hero, services, projects } = Astro.props
       </ul>
     </fieldset>
     <Separator />
-    <div class="projects" id="projects" aria-live="polite">
-      <div class="loader" aria-hidden>
-        <ProjectListLoader />
-      </div>
+    <div
+      class="projects"
+      id="projects"
+      aria-live="polite"
+      data-more={projects.hasNextPage ? 'true' : undefined}
+      data-state={projects.totalDocs > 0 ? 'idle' : 'empty'}
+    >
       <div class="projects__container list" data-projects-loader-list>
-        <ProjectList projects={projects} />
+        <ProjectList projects={projects.docs} />
+        {
+          Array.from({ length: 2 }).map(() => (
+            <div class="loader">
+              <ProjectListSkeleton />
+            </div>
+          ))
+        }
       </div>
+      <div class="empty">Aucun projets trouvés</div>
+      <div class="more"><ProjectListMore /></div>
     </div>
   </div>
 </div>
@@ -51,6 +64,8 @@ const { hero, services, projects } = Astro.props
       elementSelector: '#projects',
     })
 
+    loader.init()
+
     document.querySelector('.services')?.addEventListener('change', async (e) => {
       if (!(e.currentTarget instanceof HTMLElement)) return
 
@@ -60,7 +75,7 @@ const { hero, services, projects } = Astro.props
         ),
       ).map((item) => item.value)
 
-      await loader.fetch(services)
+      await loader.fetch({ services })
     })
   }
 
@@ -88,7 +103,7 @@ const { hero, services, projects } = Astro.props
   }
 
   .services {
-    padding: var(--space-64) 0;
+    padding: var(--space-48) 0;
 
     ul {
       display: flex;
@@ -134,21 +149,43 @@ const { hero, services, projects } = Astro.props
     }
   }
 
-  .loader {
-    display: none;
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-32);
+    row-gap: var(--space-64);
+    padding: var(--space-64) 0;
   }
 
-  .list {
-    display: block;
+  .empty {
+  }
+
+  .more {
+    @include transition(opacity);
   }
 
   #projects {
     &[data-state='loading'] {
-      .loader {
-        display: block;
+      .more {
+        pointer-events: none;
+        opacity: 0.5;
       }
+    }
 
-      .list {
+    &:not([data-state='empty']) {
+      .empty {
+        display: none;
+      }
+    }
+
+    &:not([data-state='loading']) {
+      .loader {
+        display: none;
+      }
+    }
+
+    &:not([data-more]) {
+      .more {
         display: none;
       }
     }

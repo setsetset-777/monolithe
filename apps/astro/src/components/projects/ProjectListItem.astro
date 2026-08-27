@@ -1,0 +1,99 @@
+---
+import Image from '@/components/Image.astro'
+import type { Projects } from '@monolithe/api/types'
+
+type Props = Projects.Project
+
+const { url, image, title, date } = Astro.props
+---
+
+<a href={url} class="project-list-item" data-project-list-item>
+  <div class="image">
+    {
+      image && (
+        <Image
+          src={image.url}
+          alt={image.alt}
+          srcset={{
+            '400w': image.sizes?.[500]?.url!,
+            '800w': image.sizes?.[1000]?.url!,
+          }}
+          modifiers={['fill']}
+        />
+      )
+    }
+  </div>
+  <div class="info">
+    <span class="title">{title}</span>
+    {
+      date && (
+        <Fragment>
+          ,&nbsp;<span class="date">{date}</span>
+        </Fragment>
+      )
+    }
+  </div>
+</a>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  .project-list-item {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-gray-50);
+    text-decoration: none;
+    border-radius: var(--radius-1);
+    overflow: hidden;
+    @include transition(box-shadow);
+
+    &:hover {
+      box-shadow: pxToRem(1px) pxToRem(1px) var(--color-gold-30);
+
+      .image {
+        filter: none;
+      }
+
+      .title {
+        color: var(--color-gray-00);
+      }
+    }
+  }
+
+  .image {
+    padding-top: 100%;
+    position: relative;
+    width: 100%;
+    filter: grayscale(100%);
+    @include transition(filter);
+
+    :global(img) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 pxToRem(12px) var(--color-gray-100);
+    }
+  }
+
+  .info {
+    @include font-heading-3;
+    padding: var(--space-16);
+    color: var(--color-gray-10);
+  }
+
+  .title {
+    @include transition(color);
+  }
+</style>

@@ -8,9 +8,20 @@ const services = params.getAll('service') ?? undefined
 const page = params.get('page') ?? undefined
 const limit = params.get('limit') ?? undefined
 
-const projects = await api.projects({ service: services, page, limit })
+const {
+  docs,
+  hasNextPage,
+  totalDocs,
+  totalPages,
+  page: currentPage,
+} = await api.projects({ service: services, page, limit })
+
+Astro.response.headers.set('Has-More', String(hasNextPage))
+Astro.response.headers.set('Total-Docs', String(totalDocs))
+Astro.response.headers.set('Total-Pages', String(totalPages))
+Astro.response.headers.set('Current-Page', String(currentPage))
 
 export const partial = true
 ---
 
-<ProjectList projects={projects} />
+<ProjectList projects={docs} />
