@@ -1,21 +1,17 @@
 ---
 import Image from '@/components/Image.astro'
-import type { Hero } from '@monolithe/api/types'
-import { getPlant } from '@/lib/herbiers'
-import Separator from '@/components/Separator.astro'
+import type { Media } from '@monolithe/api/types'
 
-type Props = Hero
+interface Props {
+  image: Media
+}
 
-const { title, image, slug } = Astro.props
-
-const Plant = getPlant(slug).plant
+const { image } = Astro.props
 ---
 
 <section class="hero">
   <div class="inner">
-    <div class="plant"><Plant /></div>
-    <h1>{title}</h1>
-    <Separator />
+    <slot />
   </div>
   <div class="image">
     {
@@ -50,17 +46,6 @@ const Plant = getPlant(slug).plant
     display: flex;
     flex-direction: column;
     gap: var(--space-48);
-  }
-
-  .plant {
-    color: var(--color-gold-40);
-    width: pxToRem(240px);
-  }
-
-  h1 {
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-xxl);
-    color: var(--color-gray-00);
   }
 
   .image {

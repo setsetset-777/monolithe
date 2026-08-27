@@ -102,13 +102,23 @@ export const Projects: CollectionConfig = {
       },
       fields: [
         {
-          name: 'images',
+          name: 'image',
           type: 'upload',
           label: {
             en: 'Image',
             fr: 'Image',
           },
           relationTo: 'media',
+          hasMany: false,
+          required: true,
+        },
+        {
+          name: 'fullwidth',
+          type: 'checkbox',
+          label: {
+            en: 'Force image display to full width',
+            fr: "Forcer l'image en pleine largeur",
+          },
         },
         {
           name: 'description',
@@ -117,13 +127,8 @@ export const Projects: CollectionConfig = {
             en: 'Description',
             fr: 'Description',
           },
-        },
-        {
-          name: 'fullwidth',
-          type: 'checkbox',
-          label: {
-            en: 'Force image display to full width',
-            fr: "Forcer l'image en pleine largeur",
+          admin: {
+            condition: (data, siblingData) => siblingData.fullwidth === true,
           },
         },
       ],

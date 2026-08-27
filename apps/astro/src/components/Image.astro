@@ -11,6 +11,7 @@ type Props = {
   sizes?: HTMLImageElement['sizes']
   class?: string
   modifiers?: Modifier[]
+  style?: string
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   sizes = '100w',
   class: className,
   modifiers,
+  style,
 } = Astro.props
 
 const mediaUrl = process.env.MEDIA_URL
@@ -39,6 +41,7 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
       alt={alt}
       class:list={['image', className, ...(modifiers || [])]}
       loading={loading}
+      style={style}
     />
   )
 }

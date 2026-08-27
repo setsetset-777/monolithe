@@ -1,7 +1,55 @@
 ---
-type Props = {}
+import HeroView from '@/components/Hero.astro'
+import Anchor from '@/components/Anchor.astro'
+import Gallery from '@/components/project/Gallery.astro'
+import Separator from '@/components/Separator.astro'
+import type { Project } from '@monolithe/api/types'
+type Props = Project.Data
 
-const {} = Astro.props
+const { hero, gallery } = Astro.props
 ---
 
-<h1>Project</h1>
+<div class="page">
+  <HeroView image={hero.image}>
+    <Anchor href={hero.backLink} type="back">
+      {hero.backLinkLabel}
+    </Anchor>
+    <h1 class="hero__title">{hero.title}</h1>
+    <Separator />
+    {hero.text && <div class="hero__text" set:html={hero.text} />}
+  </HeroView>
+  <div class="content">
+    <Gallery images={gallery} />
+    <div class="footer">
+      <Separator />
+      <Anchor href={hero.backLink} type="back">
+        {hero.backLinkLabel}
+      </Anchor>
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .hero {
+    &__title {
+      @include font-heading-1;
+    }
+  }
+
+  .content {
+    @include content-padding;
+    padding-top: var(--space-48);
+    padding-bottom: var(--space-48);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-64);
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+</style>

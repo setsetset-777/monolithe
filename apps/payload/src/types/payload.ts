@@ -335,9 +335,9 @@ export interface Project {
   mainImage?: (string | null) | Media;
   gallery?:
     | {
-        images?: (string | null) | Media;
-        description?: string | null;
+        image: string | Media;
         fullwidth?: boolean | null;
+        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -625,9 +625,9 @@ export interface ProjectsSelect<T extends boolean = true> {
   gallery?:
     | T
     | {
-        images?: T;
-        description?: T;
+        image?: T;
         fullwidth?: T;
+        description?: T;
         id?: T;
       };
   updatedAt?: T;

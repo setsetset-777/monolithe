@@ -1,0 +1,33 @@
+---
+import HeroView from './Hero.astro'
+import { getPlant } from '@/lib/herbiers'
+import Separator from '@/components/Separator.astro'
+import type { Hero } from '@monolithe/api/types'
+
+type Props = Hero
+
+const { title, image, slug } = Astro.props
+
+const Plant = getPlant(slug).plant
+---
+
+<HeroView image={image}>
+  <div class="plant"><Plant /></div>
+  <h1>{title}</h1>
+  <Separator />
+</HeroView>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .plant {
+    color: var(--color-gold-40);
+    width: pxToRem(240px);
+  }
+
+  h1 {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xxl);
+    color: var(--color-gray-00);
+  }
+</style>

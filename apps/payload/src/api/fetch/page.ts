@@ -32,7 +32,11 @@ export const fetchPage = async (
       return {
         slug,
         parentSlug: 'pageProjects',
-        ...formatProjectData(res),
+        ...(await formatProjectData({
+          res,
+          payload: req.payload,
+          locale,
+        })),
       }
 
     case 'pageHome':
@@ -45,7 +49,7 @@ export const fetchPage = async (
         ...(await formatHomeData({
           res,
           payload: req.payload,
-          locale: req.locale as Locale,
+          locale,
         })),
       }
 
@@ -69,7 +73,7 @@ export const fetchPage = async (
         ...(await formatServicesData({
           res,
           payload: req.payload,
-          locale: req.locale as Locale,
+          locale,
         })),
       }
 
@@ -84,7 +88,7 @@ export const fetchPage = async (
         ...(await formatProjectsData({
           res,
           payload: req.payload,
-          locale: req.locale as Locale,
+          locale,
           params,
         })),
       }
