@@ -18,9 +18,10 @@ type Props = {
     title: string
   }
   slug: PageSlug
+  parentSlug?: PageSlug
 }
 
-const { footer, navigation, meta, slug } = Astro.props
+const { footer, navigation, meta, slug, parentSlug } = Astro.props
 
 const { home, menu } = navigation
 
@@ -69,7 +70,7 @@ const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
 
           <Footer logoCatch={logoCatch} contact={contact} services={services} />
 
-          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} />
+          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} parentSlug={parentSlug} />
         </div>
       </div>
     </div>

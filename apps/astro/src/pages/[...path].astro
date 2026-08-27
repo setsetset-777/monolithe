@@ -12,7 +12,9 @@ import Contact from '../views/Contact.astro'
 
 const { path } = Astro.params
 
-const { slug, data, meta } = await getPage(`/${path ?? ''}?${Astro.url.searchParams.toString()}`)
+const { slug, data, meta, parentSlug } = await getPage(
+  `/${path ?? ''}?${Astro.url.searchParams.toString()}`,
+)
 
 if (!slug) {
   return Astro.redirect('/404')
@@ -21,7 +23,13 @@ if (!slug) {
 const { navigation, footer } = await getGeneral()
 ---
 
-<Layout navigation={navigation} footer={footer} meta={{ title: meta.title }} slug={slug}>
+<Layout
+  navigation={navigation}
+  footer={footer}
+  meta={{ title: meta.title }}
+  slug={slug}
+  parentSlug={parentSlug}
+>
   {slug === 'pageHome' && <Home {...data} />}
   {slug === 'pagePresentation' && <Presentation {...data} />}
   {slug === 'pageServices' && <Services {...data} />}

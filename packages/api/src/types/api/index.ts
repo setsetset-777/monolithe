@@ -24,26 +24,32 @@ export type PageData = {
   | {
       data: Home.Data
       slug: 'pageHome'
+      parentSlug?: undefined
     }
   | {
       data: Presentation.Data
       slug: 'pagePresentation'
+      parentSlug?: undefined
     }
   | {
       data: Services.Data
       slug: 'pageServices'
+      parentSlug?: undefined
     }
   | {
       data: Projects.Data
       slug: 'pageProjects'
+      parentSlug?: undefined
     }
   | {
       data: Project.Data
       slug: 'projects'
+      parentSlug: 'pageProjects'
     }
   | {
       data: Contact.Data
       slug: 'pageContact'
+      parentSlug?: undefined
     }
 )
 

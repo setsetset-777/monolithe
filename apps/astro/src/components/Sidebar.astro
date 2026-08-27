@@ -17,9 +17,10 @@ type Props = {
   }[]
   type?: 'big' | 'small'
   slug: PageSlug
+  parentSlug?: PageSlug
 }
 
-const { home, menu, type = 'big', slug } = Astro.props
+const { home, menu, type = 'big', slug, parentSlug } = Astro.props
 
 const herbier = getHerbier('left')
 ---
@@ -37,7 +38,10 @@ const herbier = getHerbier('left')
             menu.map(({ title, url, slug: itemSlug }) => (
               <li class="menu__item">
                 <a
-                  class:list={['menu__link', slug === itemSlug && 'active']}
+                  class:list={[
+                    'menu__link',
+                    (slug === itemSlug || parentSlug === itemSlug) && 'active',
+                  ]}
                   href={url}
                   data-menu-item
                   data-slug={itemSlug}

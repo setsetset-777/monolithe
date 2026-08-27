@@ -31,7 +31,8 @@ export const fetchPage = async (
       })
       return {
         slug,
-        ...formatProjectData(res, slug),
+        parentSlug: 'pageProjects',
+        ...formatProjectData(res),
       }
 
     case 'pageHome':
