@@ -1,3 +1,5 @@
+import apiConfig from '@monolithe/api/config'
+
 type State = 'idle' | 'loading' | 'empty'
 
 export default class ProjectsLoader {
@@ -5,7 +7,7 @@ export default class ProjectsLoader {
   listElement: HTMLElement | null
   activeServices: string[] = []
   page: number = 1
-  limit: number = 12
+  limit: number = apiConfig.projectsLimit
   searchParams: URLSearchParams
   html: string | null = null
   controller: AbortController | null = null

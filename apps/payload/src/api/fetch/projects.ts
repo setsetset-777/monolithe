@@ -1,10 +1,9 @@
 import { BasePayload, PayloadRequest } from 'payload'
 import type * as API from '@monolithe/api/types'
+import apiConfig from '@monolithe/api/config'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
 import { Locale } from '@/types'
 import { getRoutes } from '@/helpers/routes'
-
-const PROJECTS_PAGINATION_LIMIT = 12
 
 export const fetchProjects = async ({
   payload,
@@ -38,7 +37,7 @@ export const fetchProjects = async ({
     locale,
     pagination: {
       page: page ?? 1,
-      limit: limit ?? PROJECTS_PAGINATION_LIMIT,
+      limit: limit ?? apiConfig.projectsLimit,
     },
     where: {
       services:
