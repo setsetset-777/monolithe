@@ -25,7 +25,7 @@ const { home, menu, type = 'big', slug, parentSlug } = Astro.props
 const herbier = getHerbier('left')
 ---
 
-<div class:list={['sidebar', `sidebar--${type}`]}>
+<aside class:list={['sidebar', `sidebar--${type}`]}>
   <div class="container">
     <div class="content">
       <a href={home.url} aria-label={home.linkLabel}>
@@ -68,7 +68,7 @@ const herbier = getHerbier('left')
       }
     </div>
   </div>
-</div>
+</aside>
 
 <script>
   import { init as initMenu } from '@/lib/menu'
