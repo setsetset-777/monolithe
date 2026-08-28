@@ -25,7 +25,12 @@ const { home, menu, type = 'big', slug, parentSlug } = Astro.props
 const herbier = getHerbier('left')
 ---
 
-<aside class:list={['sidebar', `sidebar--${type}`]}>
+<aside
+  class:list={['sidebar', `sidebar--${type}`]}
+  data-sidebar={type}
+  transition:animate="none"
+  transition:persist="sidebar"
+>
   <div class="container">
     <div class="content">
       <a href={home.url} aria-label={home.linkLabel}>
@@ -33,7 +38,7 @@ const herbier = getHerbier('left')
       </a>
       <Separator />
       <nav class="menu">
-        <ul class="menu__list">
+        <ul class="menu__list" data-menu>
           {
             menu.map(({ title, url, slug: itemSlug }) => (
               <li class="menu__item">
@@ -73,6 +78,33 @@ const herbier = getHerbier('left')
 <script>
   import { init as initMenu } from '@/lib/menu'
 
+  const initSidebarState = () => {
+    const body = document.querySelector('body')
+    const slug = body?.dataset.slug
+    const sidebar = body?.querySelector<HTMLElement>('[data-sidebar]')
+    if (!slug || !sidebar) return
+    // setTimeout(() => {
+    sidebar.dataset.sidebar = slug === 'pageHome' ? 'big' : 'small'
+    // }, 0)
+  }
+
+  const initMenuState = () => {
+    const body = document.querySelector('body')
+    const menuSlug = body?.dataset.menuSlug
+    if (!menuSlug) return
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-menu-item]').forEach((item) => {
+      item.dataset.slug === menuSlug
+        ? item.classList.add('active')
+        : item.classList.remove('active')
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initSidebarState()
+    initMenuState()
+  })
+
   initMenu('[data-plants]', '[data-menu-item]')
 </script>
 
@@ -85,12 +117,14 @@ const herbier = getHerbier('left')
     --link-font-size: var(--font-size-xxl);
     --menu-gap: 0;
 
-    &--small {
+    &[data-sidebar='small'] {
       --container-width: var(--width-sidebar-small);
       --logo-width: #{pxToRem(90px)};
       --link-font-size: var(--font-size-xl);
       --menu-gap: var(--space-8);
     }
+
+    view-transition-name: none;
 
     height: 100%;
     display: flex;
@@ -124,6 +158,7 @@ const herbier = getHerbier('left')
     justify-content: space-between;
     width: var(--container-width);
     box-sizing: border-box;
+    @include transition(width);
 
     &:before {
       content: '';
@@ -145,6 +180,7 @@ const herbier = getHerbier('left')
 
   .logo {
     width: var(--logo-width);
+    @include transition(width);
   }
 
   .menu {
@@ -154,13 +190,14 @@ const herbier = getHerbier('left')
       display: flex;
       flex-direction: column;
       gap: var(--menu-gap);
+      @include transition(gap);
     }
 
     &__link {
       font-family: var(--font-family-heading);
       font-size: var(--link-font-size);
       text-decoration: none;
-      @include transition(color);
+      @include transition('color, font-size');
 
       &:hover,
       &.active {
