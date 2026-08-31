@@ -81,14 +81,17 @@ $colors: (
   --home-plants-size: pxToRem(240px);
   --section-padding-y: var(--space-48);
   --project-list-item-span: 12;
+  --hero-title-font-size-max: var(--font-size-l);
 }
 
 .body {
   --padding-content-x-start: var(--padding-content-x);
+  --hero-tite-font-size: clamp(var(--font-size-xl), 6dvh, var(--hero-title-font-size-max));
 
   @include from(mobile) {
     --padding-content-x: var(--space-48);
     --project-list-item-span: 6;
+    --hero-title-font-size-max: var(--font-size-xxl);
   }
 
   @include from(big-mobile) {
