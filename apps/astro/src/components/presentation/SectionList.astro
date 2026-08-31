@@ -12,7 +12,13 @@ const { title, values } = Astro.props
   </div>
   <div class="list">
     <ul>
-      {values.map(({ title }) => <li>{title}</li>)}
+      {
+        values.map(({ title }) => (
+          <li>
+            <span>{title}</span>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </section>
@@ -21,7 +27,9 @@ const { title, values } = Astro.props
   @use '../../styles/utilities/' as *;
 
   section {
-    @include grid;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
     padding: var(--section-padding-x) 0;
   }
 
@@ -32,13 +40,14 @@ const { title, values } = Astro.props
   }
 
   .list {
-    grid-column: 4 / span 8;
+    --column-gap: var(--grid-gap);
 
     ul {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: var(--space-64);
+      display: flex;
+      flex-direction: row;
       row-gap: var(--space-16);
+      flex-wrap: wrap;
+      column-gap: var(--column-gap);
     }
 
     li {
@@ -46,6 +55,16 @@ const { title, values } = Astro.props
       display: flex;
       gap: var(--space-16);
       align-items: center;
+      width: 100%;
+      flex-basis: 100%;
+
+      span {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
 
       &:before {
         $size: pxToRem(6px);
@@ -55,7 +74,26 @@ const { title, values } = Astro.props
         height: $size;
         background-color: var(--color-gold-30);
         transform: rotate(45deg);
+        flex-shrink: 0;
       }
+    }
+  }
+
+  @include from(mobile) {
+    .list {
+      li {
+        flex-basis: calc(50% - var(--column-gap) / 2);
+      }
+    }
+  }
+
+  @include from(desktop) {
+    section {
+      @include grid;
+    }
+
+    .list {
+      grid-column: 4 / span 8;
     }
   }
 </style>

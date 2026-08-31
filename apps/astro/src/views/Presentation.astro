@@ -68,6 +68,7 @@ const { hero, presentation, sections } = Astro.props
     display: flex;
     flex-direction: column;
     padding: var(--section-padding-x) 0;
+    gap: var(--space-48);
   }
 
   .presentation {
@@ -80,7 +81,7 @@ const { hero, presentation, sections } = Astro.props
     }
   }
 
-  @include from(desktop) {
+  @include from(mobile) {
     section {
       @include grid;
     }

@@ -85,7 +85,8 @@ const mediaUrl = process.env.MEDIA_URL
   .parutions {
     &__inner {
       gap: var(--space-48);
-      @include grid;
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -93,9 +94,10 @@ const mediaUrl = process.env.MEDIA_URL
     $parution: &;
     text-decoration: none;
     cursor: pointer;
-    grid-column: span 8;
-    @include grid($columns: 8, $gap: var(--space-48));
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
 
     &:before {
       content: '';
@@ -115,7 +117,7 @@ const mediaUrl = process.env.MEDIA_URL
     }
 
     &__thumb {
-      grid-column: span 2;
+      max-width: pxToRem(180px);
     }
 
     &__image {
@@ -130,7 +132,6 @@ const mediaUrl = process.env.MEDIA_URL
     }
 
     &__content {
-      grid-column: 3 / span 6;
       display: flex;
       flex-direction: column;
       gap: var(--space-8);
@@ -148,11 +149,51 @@ const mediaUrl = process.env.MEDIA_URL
 
     &__info {
       display: flex;
+      flex-direction: column;
       gap: var(--space-8);
+    }
+
+    &__publisher {
+      display: inline-bock;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &__date {
       color: var(--color-gray-20);
+      @include ellipsis;
+    }
+  }
+
+  @include from(mobile) {
+    .parutions {
+      &__inner {
+        gap: var(--space-48);
+        @include grid;
+      }
+    }
+
+    .parution {
+      grid-column: span 8;
+      @include grid($columns: 8, $gap: var(--space-48));
+
+      &__thumb {
+        grid-column: span 2;
+      }
+
+      &__content {
+        grid-column: 3 / span 6;
+      }
+    }
+  }
+
+  @include from(mobile) {
+    .parution {
+      &__info {
+        flex-direction: row;
+        gap: var(--space-8);
+      }
     }
   }
 </style>
