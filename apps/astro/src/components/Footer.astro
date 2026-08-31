@@ -92,9 +92,9 @@ const { logoCatch, contact, services } = Astro.props
   .container {
     position: relative;
     display: flex;
-    flex-direction: row;
     gap: var(--space-64);
-    align-items: end;
+    flex-direction: column;
+    align-items: start;
   }
 
   .column {
@@ -178,10 +178,10 @@ const { logoCatch, contact, services } = Astro.props
     }
   }
 
-  @media (max-width: $media-width-s) {
+  @include from(mobile) {
     .container {
-      flex-direction: column;
-      align-items: start;
+      flex-direction: row;
+      align-items: end;
     }
   }
 </style>

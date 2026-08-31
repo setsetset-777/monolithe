@@ -12,22 +12,40 @@ const Plant = getPlant(slug).plant
 ---
 
 <HeroView image={image}>
-  <div class="plant"><Plant /></div>
-  <h1>{title}</h1>
-  <Separator />
+  <div class="content">
+    <div class="plant"><Plant /></div>
+    <h1>{title}</h1>
+    <Separator />
+  </div>
 </HeroView>
 
 <style lang="scss">
   @use '../styles/utilities' as *;
 
+  .content {
+    --font-size: var(--font-size-xl);
+    --plant-size: #{pxToRem(180px)};
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+  }
+
   .plant {
     color: var(--color-gold-40);
-    width: pxToRem(240px);
+    width: var(--plant-size);
   }
 
   h1 {
     font-family: var(--font-family-heading);
-    font-size: var(--font-size-xxl);
+    font-size: var(--font-size);
     color: var(--color-gray-00);
+  }
+
+  @include from(mobile) {
+    .content {
+      --font-size: var(--font-size-xxl);
+      --plant-size: #{pxToRem(240px)};
+    }
   }
 </style>

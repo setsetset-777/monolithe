@@ -16,7 +16,7 @@
     $width: pxToRem(24px);
     $itemHeight: pxToRem(2px);
 
-    display: none;
+    display: block;
     width: $width;
     height: $height;
     position: relative;
@@ -60,9 +60,9 @@
     }
   }
 
-  @media (max-width: #{$media-width-s}) {
+  @include from(desktop) {
     .sidebar-switch {
-      display: block;
+      display: none;
     }
   }
 </style>

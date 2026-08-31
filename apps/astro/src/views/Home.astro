@@ -65,11 +65,7 @@ const herbier = getHerbier('centre')
     <section class="section section--services">
       <div class="section__inner services">
         <h3 class="services__title">{services.title}</h3>
-        <div class="services__link">
-          <Anchor href={services.url}>
-            {services.linkLabel}
-          </Anchor>
-        </div>
+
         <ul class="services__list">
           {
             services.items.map(({ title, url }) => (
@@ -79,6 +75,12 @@ const herbier = getHerbier('centre')
             ))
           }
         </ul>
+
+        <div class="services__link">
+          <Anchor href={services.url}>
+            {services.linkLabel}
+          </Anchor>
+        </div>
       </div>
     </section>
   </div>
@@ -117,10 +119,11 @@ const herbier = getHerbier('centre')
   @use '../styles/utilities' as *;
 
   .hero {
-    --hero-gap: var(--space-48);
-    --catch-font-size-max: var(--font-size-xxl);
+    --sidebar-height: calc(100dvh - var(--sidebar-padding-y) * 2 - var(--sidebar-logo-height-s));
+    --hero-gap: var(--space-24);
+    --catch-font-size-max: var(--font-size-l);
 
-    height: 100dvh;
+    height: var(--sidebar-height);
     position: relative;
     display: flex;
     align-items: stretch;
@@ -254,24 +257,22 @@ const herbier = getHerbier('centre')
   }
 
   .services {
-    @include grid;
-    row-gap: var(--space-16);
+    --row-gap: var(--space-32);
+    --list-gap: var(--space-16);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--row-gap);
 
     &__title {
       @include font-heading-2;
       color: var(--color-font-gold);
-      grid-column: 1 / span 6;
-    }
-
-    &__link {
-      grid-column: 1 / span 6;
     }
 
     &__list {
       display: flex;
       flex-direction: column;
-      gap: var(--space-24);
-      grid-column: 7 / span 6;
+      gap: var(--list-gap);
     }
 
     &__item {
@@ -307,31 +308,33 @@ const herbier = getHerbier('centre')
     gap: var(--space-32);
   }
 
-  @media (max-width: $media-width-s) {
+  @include from(mobile) {
     .hero {
-      --sidebar-height: calc(100dvh - var(--sidebar-padding-y) * 2 - var(--sidebar-logo-height-s));
-      height: var(--sidebar-height);
-      --hero-gap: var(--space-24);
-      --catch-font-size-max: var(--font-size-l);
+      --sidebar-height: 100dvh;
+      --hero-gap: var(--space-48);
+      --catch-font-size-max: var(--font-size-xxl);
     }
 
     .services {
-      row-gap: var(--space-32);
+      --row-gap: var(--space-32);
+      --list-gap: var(--space-24);
+
+      @include grid;
 
       &__title {
-        grid-column: span 12;
+        grid-column: 1 / span 6;
         order: 1;
       }
 
       &__link {
-        grid-column: span 12;
+        grid-column: 1 / span 6;
         order: 3;
       }
 
       &__list {
-        grid-column: span 12;
+        grid-column: 7 / span 6;
+        grid-row: span 2;
         order: 2;
-        gap: var(--space-16);
       }
     }
   }

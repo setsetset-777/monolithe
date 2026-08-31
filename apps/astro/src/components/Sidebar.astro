@@ -256,7 +256,7 @@ const herbierCentre = getHerbier('centre')
     }
   }
 
-  @media (max-width: #{$media-width-s}) {
+  @include until(desktop) {
     .sidebar {
       --plants-size: #{pxToRem(90px)};
       --plants-bottom: var(--space-48);

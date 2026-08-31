@@ -19,10 +19,10 @@ const { hero, presentation, sections } = Astro.props
 
   <div class="content">
     <section class="presentation">
-      <div class="presentation__left">
-        <Logo class:list={'presentation__logo'} />
+      <div class="presentation__logo">
+        <Logo />
       </div>
-      <div class="presentation__right" set:html={presentation} />
+      <div class="presentation__text" set:html={presentation} />
     </section>
 
     {
@@ -65,22 +65,34 @@ const { hero, presentation, sections } = Astro.props
   }
 
   section {
-    @include grid;
-    padding: var(--space-80) 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--section-padding-x) 0;
   }
 
   .presentation {
-    &__left {
-      grid-column: span 4;
-    }
-
-    &__right {
-      grid-column: 5 / span 8;
-    }
-
     &__logo {
-      color: var(--color-gold-40);
-      width: pxToRem(180px);
+      :global(svg) {
+        color: var(--color-gold-40);
+        max-width: pxToRem(180px);
+        width: 100%;
+      }
+    }
+  }
+
+  @include from(desktop) {
+    section {
+      @include grid;
+    }
+
+    .presentation {
+      &__logo {
+        grid-column: span 4;
+      }
+
+      &__text {
+        grid-column: 5 / span 8;
+      }
     }
   }
 </style>
