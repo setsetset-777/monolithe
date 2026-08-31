@@ -177,4 +177,11 @@ const { logoCatch, contact, services } = Astro.props
       }
     }
   }
+
+  @media (max-width: $media-width-s) {
+    .container {
+      flex-direction: column;
+      align-items: start;
+    }
+  }
 </style>
