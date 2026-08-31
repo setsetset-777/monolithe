@@ -28,7 +28,10 @@ const { url, image, title, date } = Astro.props
     {
       date && (
         <Fragment>
-          ,&nbsp;<span class="date">{date}</span>
+          <>
+            ,&nbsp;
+            <span class="date">{date}</span>
+          </>
         </Fragment>
       )
     }
@@ -46,6 +49,7 @@ const { url, image, title, date } = Astro.props
     border-radius: var(--radius-1);
     overflow: hidden;
     @include transition(box-shadow);
+    grid-column: span var(--project-list-item-span);
 
     &:hover {
       box-shadow: pxToRem(1px) pxToRem(1px) var(--color-gold-30);
@@ -88,12 +92,25 @@ const { url, image, title, date } = Astro.props
   }
 
   .info {
-    @include font-heading-3;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-m);
     padding: var(--space-16);
     color: var(--color-gray-10);
+    display: flex;
   }
 
   .title {
     @include transition(color);
+    @include ellipsis;
+  }
+
+  .date {
+    @include ellipsis;
+  }
+
+  @include from(desktop) {
+    .info {
+      font-size: var(--font-size-l);
+    }
   }
 </style>

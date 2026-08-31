@@ -114,7 +114,7 @@ export default class ProjectsLoader {
         signal: this.controller.signal,
       })
 
-      // await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       if (!response.ok) {
         throw new Error('ProjectsLoader: Failed to load projects')

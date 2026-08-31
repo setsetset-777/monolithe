@@ -79,18 +79,22 @@ $colors: (
   --grid-gap: var(--space-48);
   --sidebar-menu-fontsize: clamp(var(--font-size-m), 6dvh, var(--font-size-xl));
   --home-plants-size: pxToRem(240px);
-  --section-padding-x: var(--space-48);
+  --section-padding-y: var(--space-48);
+  --project-list-item-span: 12;
 }
 
 .body {
   --padding-content-x-start: var(--padding-content-x);
 
-  // Big mobile
   @include from(mobile) {
     --padding-content-x: var(--space-48);
+    --project-list-item-span: 6;
   }
 
-  // Bigger than mobile
+  @include from(big-mobile) {
+    --project-list-item-span: 4;
+  }
+
   @include from(desktop) {
     --sidebar-skew-size: var(--space-80);
     --padding-content-x-start: calc(
@@ -98,16 +102,14 @@ $colors: (
     );
     --home-plants-size: pxToRem(465px);
     --sidebar-padding-y: --padding-content-y;
-    --section-padding-x: var(--space-80);
+    --section-padding-y: var(--space-80);
     --grid-gap: var(--space-64);
   }
 
-  // Large screens
   @include from(big-desktop) {
     --padding-content-x: var(--space-80);
   }
 
-  // Medium high screens
   @include from(s, height) {
     --padding-content-y: var(--space-80);
   }

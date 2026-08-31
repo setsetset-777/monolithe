@@ -14,6 +14,7 @@ $breakpoints: (
   width: (
     small-mobile: pxToRem(480px),
     mobile: pxToRem(768px),
+    big-mobile: pxToRem(900px),
     desktop: pxToRem(1280px),
     big-desktop: pxToRem(1440px),
   ),

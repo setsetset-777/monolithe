@@ -96,6 +96,10 @@ const { hero, services, projects } = Astro.props
 <style lang="scss">
   @use '../styles/utilities' as *;
 
+  .page {
+    --total-loader: 1;
+  }
+
   .content {
     @include content-padding;
     padding-top: var(--space-48);
@@ -150,14 +154,17 @@ const { hero, services, projects } = Astro.props
   }
 
   .list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: var(--space-32);
-    row-gap: var(--space-64);
-    padding: var(--space-64) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding: var(--section-padding-y) 0;
   }
 
   .empty {
+  }
+
+  .loader {
+    grid-column: span var(--project-list-item-span);
   }
 
   .more {
@@ -188,6 +195,22 @@ const { hero, services, projects } = Astro.props
       .more {
         display: none;
       }
+    }
+  }
+
+  @include until(mobile) {
+    .loader {
+      &:nth-of-type(n + 2) {
+        display: none;
+      }
+    }
+  }
+
+  @include from(mobile) {
+    .list {
+      @include grid($gap: var(--space-32));
+      row-gap: var(--space-64);
+      padding: var(--section-padding-y) 0;
     }
   }
 </style>
