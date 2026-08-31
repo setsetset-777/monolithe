@@ -1,4 +1,4 @@
-@use './utilities';
+@use './utilities' as *;
 @use 'sass:map';
 @use 'sass:color';
 
@@ -25,14 +25,14 @@ $colors: (
       #{color.channel($hex, 'blue', $space: rgb)};
   }
 
-  --font-size-base: #{utilities.pxToRem(18px)};
-  --font-size-xs: #{utilities.pxToRem(12px)};
-  --font-size-s: #{utilities.pxToRem(16px)};
-  --font-size-m: #{utilities.pxToRem(18px)};
-  --font-size-l: #{utilities.pxToRem(24px)};
-  --font-size-xl: #{utilities.pxToRem(32px)};
-  --font-size-xxl: #{utilities.pxToRem(48px)};
-  --font-size-xxxl: #{utilities.pxToRem(64px)};
+  --font-size-base: #{pxToRem(18px)};
+  --font-size-xs: #{pxToRem(12px)};
+  --font-size-s: #{pxToRem(16px)};
+  --font-size-m: #{pxToRem(18px)};
+  --font-size-l: #{pxToRem(24px)};
+  --font-size-xl: #{pxToRem(32px)};
+  --font-size-xxl: #{pxToRem(48px)};
+  --font-size-xxxl: #{pxToRem(64px)};
   --font-family-heading: Fenix, Garamond, serif;
   --font-family-body: 'DM Sans', 'Helvetica Neu', Helvetica, sans-serif;
   --font-family-mono: 'DM Mono', Monaco, courrier;
@@ -41,43 +41,74 @@ $colors: (
   --ease-time-medium: 300ms;
   --ease-function: ease-in-out;
 
-  --space-2: #{utilities.pxToRem(2px)};
-  --space-4: #{utilities.pxToRem(4px)};
-  --space-8: #{utilities.pxToRem(8px)};
-  --space-12: #{utilities.pxToRem(12px)};
-  --space-16: #{utilities.pxToRem(16px)};
-  --space-24: #{utilities.pxToRem(24px)};
-  --space-32: #{utilities.pxToRem(32px)};
-  --space-48: #{utilities.pxToRem(48px)};
-  --space-64: #{utilities.pxToRem(64px)};
-  --space-80: #{utilities.pxToRem(80px)};
-  --space-128: #{utilities.pxToRem(128px)};
+  --space-2: #{pxToRem(2px)};
+  --space-4: #{pxToRem(4px)};
+  --space-8: #{pxToRem(8px)};
+  --space-12: #{pxToRem(12px)};
+  --space-16: #{pxToRem(16px)};
+  --space-24: #{pxToRem(24px)};
+  --space-32: #{pxToRem(32px)};
+  --space-48: #{pxToRem(48px)};
+  --space-64: #{pxToRem(64px)};
+  --space-80: #{pxToRem(80px)};
+  --space-128: #{pxToRem(128px)};
 
-  --radius-1: #{utilities.pxToRem(1px)};
-  --radius-2: #{utilities.pxToRem(2px)};
+  --radius-1: #{pxToRem(1px)};
+  --radius-2: #{pxToRem(2px)};
 
   --blur: 3px;
 
   // COMPOSED
   --color-font-gold: var(--color-gold-30);
 
-  --width-container-max: #{utilities.pxToRem(1600px)};
-  --width-sidebar-skew: #{var(--space-80)};
-  --width-sidebar-big: #{utilities.pxToRem(400px)};
-  --width-sidebar-small: #{utilities.pxToRem(300px)};
-  --width-sidebar: var(--width-sidebar-big);
-  --width-home-column-left: #{utilities.pxToRem(320px)};
-  --padding-content-x: #{var(--space-80)};
-  --padding-footer-y: #{var(--space-80)};
+  --layout-max-width: #{pxToRem(1600px)};
+  --sidebar-skew-width: #{var(--space-16)};
+  --sidebar-logo-height-s: #{pxToRem(30px)};
+  --sidebar-logo-height-m: #{pxToRem(45px)};
+  --sidebar-logo-height-l: #{pxToRem(100px)};
+  --sidebar-width-small: #{pxToRem(180px)};
+  --sidebar-width-big: #{pxToRem(360px)};
+  --sidebar-logo-height: var(--sidebar-logo-height-m);
+  --sidebar-width: var(--sidebar-width-small);
+  --sidebar-padding-y: var(--space-24);
+  --home-width-column-left: #{pxToRem(320px)};
+  --padding-content-x: #{var(--space-48)};
+  --padding-content-y: #{var(--space-48)};
+  --footer-padding-y: #{var(--space-80)};
   --gap-grid: var(--space-64);
+  --sidebar-menu-fontsize: clamp(var(--font-size-m), 6dvh, var(--font-size-l));
+  --padding-content-x-start: var(--padding-content-x);
+  --home-plants-size: pxToRem(240px);
 }
 
 .body {
-  --padding-content-x-start: calc(
-    var(--width-sidebar) + var(--width-sidebar-skew) + var(--padding-content-x)
-  );
+  // Bigger than mobile
+  @media (min-width: $media-width-s) {
+    --sidebar-skew-width: #{var(--space-80)};
+    --padding-content-x-start: calc(
+      var(--sidebar-width) + var(--sidebar-skew-width) + var(--padding-content-x) * 2
+    );
+    --home-plants-size: pxToRem(465px);
+    --sidebar-padding-y: --padding-content-y;
+  }
 
-  &--sidebar-small {
-    --width-sidebar: var(--width-sidebar-small);
+  // Large screens
+  @media (min-width: $media-width-l) {
+    --padding-content-x: var(--space-80);
+  }
+
+  // Medium high screens
+  @media (min-height: $media-height-s) {
+    --padding-content-y: var(--space-80);
+  }
+
+  // Big menu
+  @media (min-height: #{$media-height-s}) and (min-width: #{$media-width-l}) {
+    &[data-sidebar-size='big'] {
+      --sidebar-width: var(--sidebar-width-big);
+      --sidebar-logo-height: #{pxToRem(180px)};
+      --sidebar-menu-fontsize: var(--font-size-xxl);
+      --sidebar-logo-height: var(--sidebar-logo-height-l);
+    }
   }
 }

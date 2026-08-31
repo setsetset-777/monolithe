@@ -117,12 +117,15 @@ const herbier = getHerbier('centre')
   @use '../styles/utilities' as *;
 
   .hero {
-    height: 100vh;
+    --hero-gap: var(--space-48);
+    --catch-font-size-max: var(--font-size-xxl);
+
+    height: 100dvh;
     position: relative;
     display: flex;
     align-items: stretch;
     flex-direction: column;
-    gap: var(--space-48);
+    gap: var(--hero-gap);
     padding-bottom: var(--space-16);
     box-sizing: border-box;
 
@@ -166,7 +169,8 @@ const herbier = getHerbier('centre')
     }
 
     &__catch {
-      @include font-heading-1;
+      font-family: var(--font-family-heading);
+      font-size: clamp(var(--font-size-xl), 6dvh, var(--catch-font-size-max));
     }
 
     &__footer {
@@ -190,10 +194,8 @@ const herbier = getHerbier('centre')
   }
 
   .plants {
-    $size: pxToRem(465px);
-    max-height: $size;
+    max-height: var(--home-plants-size);
     flex-grow: 1;
-    margin-top: var(--space-24);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -237,8 +239,9 @@ const herbier = getHerbier('centre')
       flex-direction: column;
 
       #{$root}--hero & {
-        padding-top: var(--space-80);
+        padding-top: var(--padding-content-y);
         gap: var(--space-80);
+        gap: clamp(var(--space-48), 10dvh, var(--space-80));
         flex-grow: 1;
         position: relative;
       }
@@ -260,7 +263,7 @@ const herbier = getHerbier('centre')
       display: flex;
       flex-direction: column;
       gap: var(--space-16);
-      width: var(--width-home-column-left);
+      width: var(--home-width-column-left);
     }
 
     &__title {
@@ -305,5 +308,14 @@ const herbier = getHerbier('centre')
     display: flex;
     flex-direction: column;
     gap: var(--space-32);
+  }
+
+  @media (max-width: $media-width-s) {
+    .hero {
+      --sidebar-height: calc(100dvh - var(--sidebar-padding-y) * 2 - var(--sidebar-logo-height-s));
+      height: var(--sidebar-height);
+      --hero-gap: var(--space-24);
+      --catch-font-size-max: var(--font-size-l);
+    }
   }
 </style>

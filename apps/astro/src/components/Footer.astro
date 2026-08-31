@@ -71,7 +71,7 @@ const { logoCatch, contact, services } = Astro.props
   @use '../styles/utilities' as *;
 
   .footer {
-    padding: var(--padding-footer-y) var(--padding-content-x) var(--padding-footer-y)
+    padding: var(--footer-padding-y) var(--padding-content-x) var(--footer-padding-y)
       var(--padding-content-x-start);
     position: relative;
     color: var(--color-gray-10);
@@ -103,7 +103,7 @@ const { logoCatch, contact, services } = Astro.props
     gap: var(--space-48);
 
     &:first-child {
-      width: var(--width-home-column-left);
+      width: var(--home-width-column-left);
     }
 
     &:last-child {
@@ -157,9 +157,11 @@ const { logoCatch, contact, services } = Astro.props
 
   .setsetset {
     display: flex;
-    gap: var(--space-8);
+    column-gap: var(--space-8);
+    row-gap: var(--space-4);
     align-items: baseline;
     font-size: var(--font-size-xs);
+    flex-wrap: wrap;
 
     a {
       position: relative;

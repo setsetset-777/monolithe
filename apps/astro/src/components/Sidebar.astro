@@ -1,6 +1,7 @@
 ---
 import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
+import SidebarSwitch from '@/components/SidebarSwitch.astro'
 
 import { getHerbier } from '@/lib/herbiers'
 import type { PageSlug } from '@monolithe/api/types'
@@ -22,7 +23,8 @@ type Props = {
 
 const { home, menu, type = 'big', slug, parentSlug } = Astro.props
 
-const herbier = getHerbier('left')
+const herbierLeft = getHerbier('left')
+const herbierCentre = getHerbier('centre')
 ---
 
 <aside
@@ -30,39 +32,59 @@ const herbier = getHerbier('left')
   data-sidebar={type}
   transition:animate="none"
   transition:persist="sidebar"
+  data-open="false"
 >
   <div class="container">
     <div class="content">
-      <a href={home.url} aria-label={home.linkLabel}>
-        <Logo class:list={'logo'} />
-      </a>
-      <Separator />
-      <nav class="menu">
-        <ul class="menu__list" data-menu>
-          {
-            menu.map(({ title, url, slug: itemSlug }) => (
-              <li class="menu__item">
-                <a
-                  class:list={[
-                    'menu__link',
-                    (slug === itemSlug || parentSlug === itemSlug) && 'active',
-                  ]}
-                  href={url}
-                  data-menu-item
-                  data-slug={itemSlug}
-                >
-                  {title}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-      <Separator />
+      <div class="header">
+        <a href={home.url} aria-label={home.linkLabel}>
+          <Logo class:list={'logo'} />
+        </a>
+        <SidebarSwitch />
+      </div>
+      <div class="main">
+        <div class="main__inner">
+          <Separator />
+          <nav class="menu">
+            <ul class="menu__list" data-menu>
+              {
+                menu.map(({ title, url, slug: itemSlug }) => (
+                  <li class="menu__item">
+                    <a
+                      class:list={[
+                        'menu__link',
+                        (slug === itemSlug || parentSlug === itemSlug) && 'active',
+                      ]}
+                      href={url}
+                      data-menu-item
+                      data-slug={itemSlug}
+                    >
+                      {title}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+          <Separator />
+        </div>
+      </div>
     </div>
-    <div class="plants" data-plants>
+    <div class="plants plants--left" data-plants>
       {
-        herbier.map(({ slug, plant }) => {
+        herbierLeft.map(({ slug, plant }) => {
+          const Plant = plant
+          return (
+            <div class="plants__item" data-slug={slug}>
+              <Plant class:list={'plants__svg'} />
+            </div>
+          )
+        })
+      }
+    </div>
+    <div class="plants plants--centre" data-plants>
+      {
+        herbierCentre.map(({ slug, plant }) => {
           const Plant = plant
           return (
             <div class="plants__item" data-slug={slug}>
@@ -78,25 +100,48 @@ const herbier = getHerbier('left')
 <script>
   import { init as initMenu } from '@/lib/menu'
 
+  const menuItemSelector = '[data-menu-item]'
+  const sidebarSelector = '[data-sidebar]'
+  const switchSelector = '[data-sidebar-switch]'
+
   const initSidebarState = () => {
     const body = document.querySelector('body')
     const slug = body?.dataset.slug
-    const sidebar = body?.querySelector<HTMLElement>('[data-sidebar]')
-    if (!slug || !sidebar) return
+    if (!slug) return
     // setTimeout(() => {
-    sidebar.dataset.sidebar = slug === 'pageHome' ? 'big' : 'small'
+    body.dataset.sidebarSize = slug === 'pageHome' ? 'big' : 'small'
     // }, 0)
   }
 
   const initMenuState = () => {
     const body = document.querySelector('body')
     const menuSlug = body?.dataset.menuSlug
-    if (!menuSlug) return
+    const sidebar = document.querySelector<HTMLElement>(sidebarSelector)
+    if (!menuSlug || !sidebar) return
 
-    document.querySelectorAll<HTMLAnchorElement>('[data-menu-item]').forEach((item) => {
+    document.querySelectorAll<HTMLAnchorElement>(menuItemSelector).forEach((item) => {
       item.dataset.slug === menuSlug
         ? item.classList.add('active')
         : item.classList.remove('active')
+      sidebar.dataset.open = 'false'
+    })
+  }
+
+  const initMobile = () => {
+    const button = document.querySelector<HTMLButtonElement>(switchSelector)
+    const sidebar = document.querySelector<HTMLElement>(sidebarSelector)
+    if (!button || !sidebar) return
+    button.addEventListener('click', () => {
+      const nextState = sidebar.dataset.open === 'false' ? 'true' : 'false'
+      sidebar.dataset.open = nextState
+    })
+
+    document.addEventListener('click', (e) => {
+      if (!(e.target instanceof HTMLElement)) return
+      const item = e.target.closest(menuItemSelector)
+      if (item instanceof HTMLElement) {
+        sidebar.dataset.open = 'false'
+      }
     })
   }
 
@@ -106,24 +151,17 @@ const herbier = getHerbier('left')
   })
 
   initMenu('[data-plants]', '[data-menu-item]')
+  initMobile()
 </script>
 
 <style lang="scss">
   @use '../styles/utilities' as *;
 
   .sidebar {
-    --container-width: var(--width-sidebar-big);
-    --logo-width: #{pxToRem(180px)};
-    --link-font-size: var(--font-size-xxl);
-    --menu-gap: 0;
-
-    &[data-sidebar='small'] {
-      --container-width: var(--width-sidebar-small);
-      --logo-width: #{pxToRem(90px)};
-      --link-font-size: var(--font-size-xl);
-      --menu-gap: var(--space-8);
-    }
-
+    --menu-gap: var(--space-4);
+    --content-gap: clamp(var(--space-16), 6dvh, var(--space-48));
+    --logo-height: var(--sidebar-logo-height);
+    --container-padding-y: var(--padding-content-y);
     view-transition-name: none;
 
     height: 100%;
@@ -131,15 +169,15 @@ const herbier = getHerbier('left')
     align-items: stretch;
     justify-content: stretch;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     color: var(--color-gray-100);
 
     &:after {
       content: '';
       display: block;
-      width: var(--width-sidebar-skew);
+      width: var(--sidebar-skew-width);
       background: var(--color-gold-40);
-      clip-path: polygon(0 0, 100% 0, calc(100% - 80px) 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--sidebar-skew-width)) 100%, 0 100%);
       flex-shrink: 0;
       position: absolute;
       top: 0;
@@ -154,10 +192,9 @@ const herbier = getHerbier('left')
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: pxToRem(120px) 0 var(--space-80) var(--space-80);
+    padding: var(--container-padding-y) 0 var(--container-padding-y) var(--padding-content-x);
     justify-content: space-between;
-    width: var(--container-width);
-    box-sizing: border-box;
+    width: var(--sidebar-width);
     @include transition(width);
 
     &:before {
@@ -175,12 +212,24 @@ const herbier = getHerbier('left')
   .content {
     display: flex;
     flex-direction: column;
-    gap: #{var(--space-48)};
+    gap: var(--content-gap);
+  }
+
+  .main {
+    &__inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--content-gap);
+    }
   }
 
   .logo {
-    width: var(--logo-width);
-    @include transition(width);
+    height: var(--logo-height);
+    @include transition(height, medium);
+  }
+
+  .switch {
+    display: none;
   }
 
   .menu {
@@ -195,7 +244,7 @@ const herbier = getHerbier('left')
 
     &__link {
       font-family: var(--font-family-heading);
-      font-size: var(--link-font-size);
+      font-size: var(--sidebar-menu-fontsize);
       text-decoration: none;
       @include transition('color, font-size');
 
@@ -240,6 +289,112 @@ const herbier = getHerbier('left')
 
     &__svg {
       height: 100%;
+    }
+
+    &--centre {
+      display: none;
+    }
+  }
+
+  @media (max-width: #{$media-width-s}) {
+    .sidebar {
+      --plants-size: #{pxToRem(90px)};
+      --plants-bottom: var(--space-48);
+      --padding-bottom: var(--space-48);
+      --content-gap: var(--space-24);
+      --container-padding-y: var(--sidebar-padding-y);
+      --container-padding-bottom: calc(
+        var(--padding-bottom) + var(--plants-size) + var(--content-gap)
+      );
+      --main-rows: 1fr;
+      --main-opacity: 1;
+
+      position: sticky;
+      bottom: initial;
+      right: 0;
+
+      &:after {
+        clip-path: polygon(0 0, 100% calc(100% - var(--sidebar-skew-width)), 100% 0, 0 100%);
+        left: 0;
+        right: 0;
+        bottom: unset;
+        top: 100%;
+        width: auto;
+        height: var(--sidebar-skew-width);
+      }
+    }
+
+    .container {
+      width: 100%;
+      align-items: stretch;
+      padding-right: var(--padding-content-x);
+      padding-bottom: var(--container-padding-bottom);
+      @include transition('padding', medium);
+    }
+
+    .content {
+      align-items: center;
+      gap: 0;
+    }
+
+    .main {
+      align-items: flex-end;
+      display: grid;
+      grid-template-rows: var(--main-rows);
+      @include transition('grid-template-rows, opacity', medium);
+      vertical-align: bottom;
+      opacity: var(--main-opacity);
+
+      &__inner {
+        flex-direction: column;
+        display: flex;
+        overflow: hidden;
+        align-items: center;
+        padding-top: var(--content-gap);
+      }
+    }
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-self: stretch;
+      align-items: start;
+
+      a {
+        display: flex;
+      }
+    }
+
+    .menu {
+      &__list {
+        align-items: center;
+      }
+    }
+
+    .plants {
+      display: none;
+      width: var(--plants-size);
+      height: var(--plants-size);
+      position: absolute;
+      bottom: var(--plants-bottom);
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 24px;
+      @include transition('width, height, bottom', medium);
+
+      &--centre {
+        display: block;
+      }
+    }
+
+    .sidebar[data-open='false'] {
+      --plants-size: #{pxToRem(30px)};
+      --logo-height: var(--sidebar-logo-height-s);
+      --container-padding-bottom: var(--container-padding-y);
+      --plants-bottom: var(--container-padding-y);
+      --main-rows: 0fr;
+      --main-opacity: 0;
     }
   }
 </style>

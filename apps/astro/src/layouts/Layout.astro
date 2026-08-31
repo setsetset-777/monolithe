@@ -28,8 +28,6 @@ const { home, menu } = navigation
 const { logoCatch, contact, services } = footer
 
 const sidebarType = slug === 'pageHome' ? 'big' : 'small'
-
-const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
 ---
 
 <!doctype html>
@@ -62,20 +60,21 @@ const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
 
   <body
     data-theme="light"
-    class:list={['body', ...bodyModifiers.map((a) => `body--${a}`)]}
+    class="body"
     data-slug={slug}
     data-menu-slug={parentSlug ?? slug}
+    data-sidebar-size={slug === 'pageHome' ? 'big' : 'small'}
   >
     <div class="container">
       <div class="container__inner">
         <div class="content">
+          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} parentSlug={parentSlug} />
+
           <main class="main">
             <slot />
           </main>
 
           <Footer logoCatch={logoCatch} contact={contact} services={services} />
-
-          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} parentSlug={parentSlug} />
         </div>
       </div>
     </div>
@@ -130,7 +129,7 @@ const bodyModifiers = [`sidebar-${slug === 'pageHome' ? 'big' : 'small'}`]
     font-size: var(--font-size-m);
 
     &__inner {
-      max-width: var(--width-container-max);
+      max-width: var(--layout-max-width);
       width: 100%;
       display: flex;
       flex-direction: column;

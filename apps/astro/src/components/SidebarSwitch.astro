@@ -1,0 +1,68 @@
+---
+
+---
+
+<button class="sidebar-switch" aria-label="Ouvrir / fermer le menu" data-sidebar-switch>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .sidebar-switch {
+    $height: pxToRem(20px);
+    $width: pxToRem(24px);
+    $itemHeight: pxToRem(2px);
+
+    display: none;
+    width: $width;
+    height: $height;
+    position: relative;
+    cursor: pointer;
+    top: var(--space-8);
+
+    & span {
+      background-color: var(--color-gray-80);
+      position: absolute;
+      border-radius: var(--radius-1);
+      width: 100%;
+      height: $itemHeight;
+      @include transition('transform');
+    }
+    & span:nth-child(1) {
+      top: 0px;
+      left: 0px;
+    }
+    & span:nth-child(2) {
+      top: #{calc($height / 2) - calc($itemHeight / 2)};
+      left: 0px;
+    }
+    & span:nth-child(3) {
+      bottom: 0px;
+      left: 0px;
+    }
+
+    :global([data-open='true']) & {
+      span:nth-child(1),
+      span:nth-child(3) {
+        transform: rotate(45deg);
+        top: #{calc($height / 2) - calc($itemHeight / 2)};
+      }
+      span:nth-child(2) {
+        transform: scale(0);
+        // transition-duration: 50ms;
+      }
+      span:nth-child(3) {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+
+  @media (max-width: #{$media-width-s}) {
+    .sidebar-switch {
+      display: block;
+    }
+  }
+</style>

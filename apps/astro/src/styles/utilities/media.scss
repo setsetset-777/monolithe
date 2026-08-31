@@ -1,0 +1,10 @@
+@use './functions' as *;
+
+$media-height-xs: pxToRem(400px);
+$media-height-s: pxToRem(800px);
+$media-height-m: pxToRem(1200px);
+
+$media-width-xs: pxToRem(480px);
+$media-width-s: pxToRem(768px);
+$media-width-m: pxToRem(1280px);
+$media-width-l: pxToRem(1440px);
