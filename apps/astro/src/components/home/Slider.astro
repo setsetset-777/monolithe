@@ -88,17 +88,52 @@ const { projects } = Astro.props
     const start = () => {
       stop()
 
-      timeout = setTimeout(() => {
-        current++
-        if (current >= slides.length) {
-          current = 0
-        }
-        activateSlide(current)
-      }, duration)
+      timeout = setTimeout(next, duration)
     }
 
     const stop = () => {
       clearTimeout(timeout)
+    }
+
+    const next = () => {
+      current++
+      if (current >= slides.length) {
+        current = 0
+      }
+      activateSlide(current)
+    }
+
+    const previous = () => {
+      current--
+      if (current < 0) {
+        current = slides.length - 1
+      }
+      activateSlide(current)
+    }
+
+    const initSwipe = () => {
+      let touchstartX = 0
+      let touchendX = 0
+
+      document.addEventListener('touchstart', (e) => {
+        touchstartX = e.changedTouches[0].screenX
+      })
+
+      document.addEventListener('touchend', (e) => {
+        touchendX = e.changedTouches[0].screenX
+        if (touchendX < touchstartX) onSwipeRight()
+        if (touchendX > touchstartX) onSwipeLeft()
+      })
+    }
+
+    const onSwipeLeft = () => {
+      console.log('left')
+      previous()
+    }
+
+    const onSwipeRight = () => {
+      console.log('roght')
+      next()
     }
 
     slides.forEach((slide) => {
@@ -116,9 +151,13 @@ const { projects } = Astro.props
       slider.dataset.slider = 'ready'
       activateSlide(current)
     }, 0)
+
+    initSwipe()
   }
 
-  init()
+  document.addEventListener('astro:page-load', () => {
+    init()
+  })
 </script>
 
 <style lang="scss">

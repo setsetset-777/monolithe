@@ -73,19 +73,25 @@ $colors: (
   --sidebar-width: var(--sidebar-width-small);
   --sidebar-padding-y: var(--space-24);
   --home-width-column-left: #{pxToRem(320px)};
-  --padding-content-x: #{var(--space-48)};
+  --padding-content-x: #{var(--space-24)};
   --padding-content-y: #{var(--space-48)};
   --footer-padding-y: #{var(--space-80)};
   --gap-grid: var(--space-64);
   --sidebar-menu-fontsize: clamp(var(--font-size-m), 6dvh, var(--font-size-l));
-  --padding-content-x-start: var(--padding-content-x);
   --home-plants-size: pxToRem(240px);
 }
 
 .body {
+  --padding-content-x-start: var(--padding-content-x);
+
+  // Big mobile
+  @media (min-width: $media-width-xs) {
+    --padding-content-x: var(--space-48);
+  }
+
   // Bigger than mobile
   @media (min-width: $media-width-s) {
-    --sidebar-skew-size: #{var(--space-80)};
+    --sidebar-skew-size: var(--space-80);
     --padding-content-x-start: calc(
       var(--sidebar-width) + var(--sidebar-skew-size) + var(--padding-content-x) * 2
     );
