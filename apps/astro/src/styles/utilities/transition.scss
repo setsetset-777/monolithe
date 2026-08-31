@@ -9,4 +9,8 @@
   @if $type == medium {
     transition-duration: var(--ease-time-medium);
   }
+
+  @if $type == long {
+    transition-duration: var(--ease-time-medium);
+  }
 }

@@ -39,6 +39,7 @@ $colors: (
 
   --ease-time-short: 150ms;
   --ease-time-medium: 300ms;
+  --ease-time-long: 1000ms;
   --ease-function: ease-in-out;
 
   --space-2: #{pxToRem(2px)};
@@ -62,7 +63,7 @@ $colors: (
   --color-font-gold: var(--color-gold-30);
 
   --layout-max-width: #{pxToRem(1600px)};
-  --sidebar-skew-width: #{var(--space-16)};
+  --sidebar-skew-size: #{var(--space-16)};
   --sidebar-logo-height-s: #{pxToRem(30px)};
   --sidebar-logo-height-m: #{pxToRem(45px)};
   --sidebar-logo-height-l: #{pxToRem(100px)};
@@ -84,9 +85,9 @@ $colors: (
 .body {
   // Bigger than mobile
   @media (min-width: $media-width-s) {
-    --sidebar-skew-width: #{var(--space-80)};
+    --sidebar-skew-size: #{var(--space-80)};
     --padding-content-x-start: calc(
-      var(--sidebar-width) + var(--sidebar-skew-width) + var(--padding-content-x) * 2
+      var(--sidebar-width) + var(--sidebar-skew-size) + var(--padding-content-x) * 2
     );
     --home-plants-size: pxToRem(465px);
     --sidebar-padding-y: --padding-content-y;

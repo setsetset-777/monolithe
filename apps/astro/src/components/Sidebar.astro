@@ -33,6 +33,7 @@ const herbierCentre = getHerbier('centre')
   transition:animate="none"
   transition:persist="sidebar"
   data-open="false"
+  data-direction="north"
 >
   <div class="container">
     <div class="content">
@@ -98,60 +99,19 @@ const herbierCentre = getHerbier('centre')
 </aside>
 
 <script>
-  import { init as initMenu } from '@/lib/menu'
+  import Sidebar from '@/lib/Sidebar'
 
-  const menuItemSelector = '[data-menu-item]'
-  const sidebarSelector = '[data-sidebar]'
-  const switchSelector = '[data-sidebar-switch]'
+  const sidebar = new Sidebar()
 
-  const initSidebarState = () => {
-    const body = document.querySelector('body')
-    const slug = body?.dataset.slug
-    if (!slug) return
-    // setTimeout(() => {
-    body.dataset.sidebarSize = slug === 'pageHome' ? 'big' : 'small'
-    // }, 0)
-  }
-
-  const initMenuState = () => {
-    const body = document.querySelector('body')
-    const menuSlug = body?.dataset.menuSlug
-    const sidebar = document.querySelector<HTMLElement>(sidebarSelector)
-    if (!menuSlug || !sidebar) return
-
-    document.querySelectorAll<HTMLAnchorElement>(menuItemSelector).forEach((item) => {
-      item.dataset.slug === menuSlug
-        ? item.classList.add('active')
-        : item.classList.remove('active')
-      sidebar.dataset.open = 'false'
-    })
-  }
-
-  const initMobile = () => {
-    const button = document.querySelector<HTMLButtonElement>(switchSelector)
-    const sidebar = document.querySelector<HTMLElement>(sidebarSelector)
-    if (!button || !sidebar) return
-    button.addEventListener('click', () => {
-      const nextState = sidebar.dataset.open === 'false' ? 'true' : 'false'
-      sidebar.dataset.open = nextState
-    })
-
-    document.addEventListener('click', (e) => {
-      if (!(e.target instanceof HTMLElement)) return
-      const item = e.target.closest(menuItemSelector)
-      if (item instanceof HTMLElement) {
-        sidebar.dataset.open = 'false'
-      }
-    })
-  }
+  sidebar.initOnce()
 
   document.addEventListener('astro:page-load', () => {
-    initSidebarState()
-    initMenuState()
+    sidebar.initOnLoad()
   })
 
-  initMenu('[data-plants]', '[data-menu-item]')
-  initMobile()
+  document.addEventListener('astro:after-preparation', () => {
+    sidebar.close()
+  })
 </script>
 
 <style lang="scss">
@@ -175,9 +135,9 @@ const herbierCentre = getHerbier('centre')
     &:after {
       content: '';
       display: block;
-      width: var(--sidebar-skew-width);
+      width: var(--sidebar-skew-size);
       background: var(--color-gold-40);
-      clip-path: polygon(0 0, 100% 0, calc(100% - var(--sidebar-skew-width)) 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--sidebar-skew-size)) 100%, 0 100%);
       flex-shrink: 0;
       position: absolute;
       top: 0;
@@ -312,15 +272,17 @@ const herbierCentre = getHerbier('centre')
       position: sticky;
       bottom: initial;
       right: 0;
+      top: 0;
+      @include transition(transform, long);
 
       &:after {
-        clip-path: polygon(0 0, 100% calc(100% - var(--sidebar-skew-width)), 100% 0, 0 100%);
+        clip-path: polygon(0 0, 100% calc(100% - var(--sidebar-skew-size)), 100% 0, 0 100%);
         left: 0;
         right: 0;
         bottom: unset;
         top: 100%;
         width: auto;
-        height: var(--sidebar-skew-width);
+        height: var(--sidebar-skew-size);
       }
     }
 
@@ -395,6 +357,10 @@ const herbierCentre = getHerbier('centre')
       --plants-bottom: var(--container-padding-y);
       --main-rows: 0fr;
       --main-opacity: 0;
+
+      &[data-slide-out='true'] {
+        transform: translateY(calc(-100% - var(--sidebar-skew-size)));
+      }
     }
   }
 </style>
