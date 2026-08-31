@@ -1,4 +1,5 @@
 @use './functions' as *;
+@use 'sass:map';
 
 $media-height-xs: pxToRem(400px);
 $media-height-s: pxToRem(800px);
@@ -29,11 +30,11 @@ $ranges: (
 );
 
 @function breakpoint($break, $type) {
-  @return map-get(map-get($breakpoints, $type), $break);
+  @return map.get(map.get($breakpoints, $type), $break);
 }
 
 @function media($break, $type, $direction: from) {
-  @return '#{$type} #{map-get($ranges, $direction)} #{breakpoint($break, $type)}';
+  @return '#{$type} #{map.get($ranges, $direction)} #{breakpoint($break, $type)}';
 }
 
 @mixin from($break, $type: width) {
