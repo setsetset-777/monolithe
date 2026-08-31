@@ -63,6 +63,7 @@ $colors: (
   --color-font-gold: var(--color-gold-30);
 
   --layout-max-width: #{pxToRem(1600px)};
+
   --sidebar-skew-size: #{var(--space-16)};
   --sidebar-logo-height-s: #{pxToRem(30px)};
   --sidebar-logo-height-m: #{pxToRem(45px)};
@@ -72,9 +73,12 @@ $colors: (
   --sidebar-logo-height: var(--sidebar-logo-height-m);
   --sidebar-width: var(--sidebar-width-small);
   --sidebar-padding-y: var(--space-24);
+
   --home-width-column-left: #{pxToRem(320px)};
-  --padding-content-x: #{var(--space-24)};
-  --padding-content-y: #{var(--space-48)};
+
+  --content-padding-x: #{var(--space-24)};
+  --content-padding-y: #{var(--space-48)};
+
   --footer-padding-y: #{var(--space-80)};
   --grid-gap: var(--space-48);
   --sidebar-menu-fontsize: clamp(var(--font-size-m), 6dvh, var(--font-size-xl));
@@ -85,11 +89,11 @@ $colors: (
 }
 
 .body {
-  --padding-content-x-start: var(--padding-content-x);
+  --content-padding-x-start: var(--content-padding-x);
   --hero-tite-font-size: clamp(var(--font-size-xl), 6dvh, var(--hero-title-font-size-max));
 
   @include from(mobile) {
-    --padding-content-x: var(--space-48);
+    --content-padding-x: var(--space-48);
     --project-list-item-span: 6;
     --hero-title-font-size-max: var(--font-size-xxl);
   }
@@ -100,21 +104,21 @@ $colors: (
 
   @include from(desktop) {
     --sidebar-skew-size: var(--space-80);
-    --padding-content-x-start: calc(
-      var(--sidebar-width) + var(--sidebar-skew-size) + var(--padding-content-x) * 2
+    --content-padding-x-start: calc(
+      var(--sidebar-width) + var(--sidebar-skew-size) + var(--content-padding-x) * 2
     );
     --home-plants-size: pxToRem(465px);
-    --sidebar-padding-y: --padding-content-y;
+    --sidebar-padding-y: --content-padding-y;
     --section-padding-y: var(--space-80);
     --grid-gap: var(--space-64);
   }
 
   @include from(big-desktop) {
-    --padding-content-x: var(--space-80);
+    --content-padding-x: var(--space-80);
   }
 
   @include from(s, height) {
-    --padding-content-y: var(--space-80);
+    --content-padding-y: var(--space-80);
   }
 
   // Big menu

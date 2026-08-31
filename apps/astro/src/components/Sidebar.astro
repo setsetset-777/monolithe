@@ -121,7 +121,7 @@ const herbierCentre = getHerbier('centre')
     --menu-gap: var(--space-4);
     --content-gap: clamp(var(--space-16), 6dvh, var(--space-48));
     --logo-height: var(--sidebar-logo-height);
-    --container-padding-y: var(--padding-content-y);
+    --container-padding-y: var(--content-padding-y);
     view-transition-name: none;
 
     height: 100%;
@@ -152,7 +152,7 @@ const herbierCentre = getHerbier('centre')
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: var(--container-padding-y) 0 var(--container-padding-y) var(--padding-content-x);
+    padding: var(--container-padding-y) 0 var(--container-padding-y) var(--content-padding-x);
     justify-content: space-between;
     width: var(--sidebar-width);
     @include transition(width);
@@ -289,7 +289,7 @@ const herbierCentre = getHerbier('centre')
     .container {
       width: 100%;
       align-items: stretch;
-      padding-right: var(--padding-content-x);
+      padding-right: var(--content-padding-x);
       padding-bottom: var(--container-padding-bottom);
       @include transition('padding', medium);
     }
