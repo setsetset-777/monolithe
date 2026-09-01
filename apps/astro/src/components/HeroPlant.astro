@@ -1,6 +1,7 @@
 ---
-import HeroView from './Hero.astro'
-import { getPlant } from '@/lib/herbiers'
+import HeroView from '@/components/Hero.astro'
+import Plant from '@/components/Plant.astro'
+import { getPlantIndex } from '@/lib/herbiers'
 import Separator from '@/components/Separator.astro'
 import type { Hero } from '@monolithe/api/types'
 
@@ -8,12 +9,12 @@ type Props = Hero
 
 const { title, image, slug } = Astro.props
 
-const Plant = getPlant(slug).plant
+const PlantIndex = getPlantIndex(slug)
 ---
 
 <HeroView image={image}>
   <div class="content">
-    <div class="plant"><Plant /></div>
+    <div class="plant"><Plant type="left" index={PlantIndex} /></div>
     <h1>{title}</h1>
     <Separator />
   </div>
