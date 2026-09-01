@@ -90,7 +90,9 @@ const { hero, services, projects } = Astro.props
     })
   }
 
-  onPageLoad()
+  document.addEventListener('astro:page-load', () => {
+    onPageLoad()
+  })
 </script>
 
 <style lang="scss">

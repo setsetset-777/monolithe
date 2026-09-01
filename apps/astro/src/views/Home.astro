@@ -104,18 +104,24 @@ const herbier = getHerbier('centre')
 </div>
 
 <script>
-  const anchors = document.querySelectorAll('[data-scroll]')
+  const initScrolls = () => {
+    const anchors = document.querySelectorAll('[data-scroll]')
 
-  anchors.forEach((anchor) => {
-    if (!(anchor instanceof HTMLElement)) {
-      return
-    }
-    const selector = anchor.dataset.scroll
-    if (!selector) return
-    const target = document.querySelector(selector)
-    anchor.addEventListener('click', () => {
-      target?.scrollIntoView()
+    anchors.forEach((anchor) => {
+      if (!(anchor instanceof HTMLElement)) {
+        return
+      }
+      const selector = anchor.dataset.scroll
+      if (!selector) return
+      const target = document.querySelector(selector)
+      anchor.addEventListener('click', () => {
+        target?.scrollIntoView()
+      })
     })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initScrolls()
   })
 </script>
 

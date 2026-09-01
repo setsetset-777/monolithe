@@ -49,20 +49,25 @@ const {
 </div>
 
 <script>
-  Array.from(document.querySelectorAll<HTMLButtonElement>('[data-email], [data-tel]')).forEach(
-    (el) => {
-      const type = el.dataset.tel ? 'tel' : 'email'
-      const redirect = type === 'tel' ? 'tel' : 'mailto'
-      const hash = el.dataset[type]
-      if (!hash) return
-      const value = atob(hash)
-      el.innerText = value
-      el.addEventListener('click', (e) => {
-        e.preventDefault()
-        window.location.href = `${redirect}:${value}`
-      })
-    },
-  )
+  const initLinks = () => {
+    Array.from(document.querySelectorAll<HTMLButtonElement>('[data-email], [data-tel]')).forEach(
+      (el) => {
+        const type = el.dataset.tel ? 'tel' : 'email'
+        const redirect = type === 'tel' ? 'tel' : 'mailto'
+        const hash = el.dataset[type]
+        if (!hash) return
+        const value = atob(hash)
+        el.innerText = value
+        el.addEventListener('click', (e) => {
+          e.preventDefault()
+          window.location.href = `${redirect}:${value}`
+        })
+      },
+    )
+  }
+  document.addEventListener('astro:page-load', () => {
+    initLinks()
+  })
 </script>
 
 <style lang="scss">
