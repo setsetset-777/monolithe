@@ -218,10 +218,8 @@ const herbier = getHerbier('centre')
       width: 100%;
       display: flex;
       justify-content: center;
-
-      &:first-child {
-        position: relative;
-      }
+      aspect-ratio: 1;
+      display: block;
 
       $total: 5;
       @for $i from 1 through 5 {
@@ -234,6 +232,7 @@ const herbier = getHerbier('centre')
 
     &__svg {
       height: 100%;
+      width: 100%;
     }
   }
 
