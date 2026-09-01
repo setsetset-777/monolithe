@@ -29,7 +29,7 @@ export const formatGeneralData = async ({ payload, locale }: Props): Promise<API
 
     serviceItems.push({
       title: page.title,
-      url: routes[page.id].path,
+      url: routes[slug] && routes[slug].path,
       slug,
     })
   }
