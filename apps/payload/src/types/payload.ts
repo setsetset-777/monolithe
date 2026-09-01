@@ -707,20 +707,11 @@ export interface General {
   id: string;
   navigation: {
     navigationList: ('pagePresentation' | 'pageServices' | 'pageProjects' | 'pageContact')[];
-    items?:
-      | {
-          title: string;
-          url: string;
-          slug: string;
-          id?: string | null;
-        }[]
-      | null;
   };
   footer: {
     logoCatch?: string | null;
     contactText?: string | null;
     contactLabel: string;
-    contactUrl?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -896,14 +887,6 @@ export interface GeneralSelect<T extends boolean = true> {
     | T
     | {
         navigationList?: T;
-        items?:
-          | T
-          | {
-              title?: T;
-              url?: T;
-              slug?: T;
-              id?: T;
-            };
       };
   footer?:
     | T
@@ -911,7 +894,6 @@ export interface GeneralSelect<T extends boolean = true> {
         logoCatch?: T;
         contactText?: T;
         contactLabel?: T;
-        contactUrl?: T;
       };
   updatedAt?: T;
   createdAt?: T;

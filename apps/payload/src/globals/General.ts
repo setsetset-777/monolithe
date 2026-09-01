@@ -40,29 +40,6 @@ export const General: GlobalConfig = {
           ],
           hasMany: true,
         },
-        {
-          name: 'items',
-          type: 'array',
-          virtual: true,
-          hidden: true,
-          fields: [
-            {
-              name: 'title',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'url',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'slug',
-              type: 'text',
-              required: true,
-            },
-          ],
-        },
       ],
     },
     {
@@ -98,46 +75,7 @@ export const General: GlobalConfig = {
             fr: 'Label pour bouton de contact',
           },
         },
-        {
-          name: 'contactUrl',
-          type: 'text',
-          virtual: true,
-          hidden: true,
-        },
       ],
     },
   ],
-  hooks: {
-    afterRead: [
-      async ({ doc, req }) => {
-        const contact = await req.payload.findGlobal({
-          slug: 'pageContact',
-          locale: req.locale,
-        })
-
-        doc.footer.contactUrl = contact.url
-
-        const items = []
-
-        for (const slug of doc.navigation.navigationList) {
-          const page = await req.payload.findGlobal({
-            slug,
-            locale: req.locale,
-          })
-
-          if (!page) continue
-
-          items.push({
-            title: page.title,
-            url: page.url,
-            slug,
-          })
-        }
-
-        doc.navigation.items = items
-
-        return doc
-      },
-    ],
-  },
 }

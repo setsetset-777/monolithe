@@ -17,24 +17,37 @@ export const formatGeneralData = async ({ payload, locale }: Props): Promise<API
     listPublishedCollection({ slug: 'services', payload, locale }),
   ])
 
+  const serviceItems = []
+
+  for (const slug of general.navigation.navigationList) {
+    const page = await payload.findGlobal({
+      slug,
+      locale: locale,
+    })
+
+    if (!page) continue
+
+    serviceItems.push({
+      title: page.title,
+      url: routes[page.id].path,
+      slug,
+    })
+  }
+
   return {
     navigation: {
       home: {
         url: routes['pageHome' as PageSlug].path,
         linkLabel: "Retour à l'accueil",
       },
-      menu: (general.navigation?.items ?? []).map(({ title, slug }) => ({
-        title,
-        url: routes[slug].path,
-        slug: slug as PageSlug,
-      })),
+      menu: serviceItems,
     },
     footer: {
       logoCatch: general.footer!.logoCatch!,
       contact: {
         text: general.footer!.contactText!,
         label: general.footer!.contactLabel!,
-        url: general.footer!.contactUrl!,
+        url: routes.pageContact.path,
       },
       services: {
         title: pageServices.title,
@@ -42,7 +55,7 @@ export const formatGeneralData = async ({ payload, locale }: Props): Promise<API
           title,
           url: routes[id].path,
         }))!,
-        url: routes.pageServices?.path,
+        url: routes.pageServices.path,
       },
     },
     routes,

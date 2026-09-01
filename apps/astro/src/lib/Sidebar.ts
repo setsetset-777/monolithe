@@ -1,7 +1,5 @@
 import debounce from '@/lib/debounce'
 
-type Direction = 'north' | 'south'
-
 export default class Sidebar {
   menuItemSelector = '[data-menu-item]'
   sidebarSelector = '[data-sidebar]'

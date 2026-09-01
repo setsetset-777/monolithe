@@ -9,8 +9,6 @@ interface Props {
 const { images } = Astro.props
 const gallery: Array<Project.GalleryItem[]> = []
 
-let newlineCounter = 0
-let lastIndex = 0
 images.forEach((image) => {
   // Full images get new row
   if (image.fullwidth) {

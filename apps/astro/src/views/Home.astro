@@ -2,7 +2,7 @@
 import Separator from '@/components/Separator.astro'
 import Anchor from '@/components/Anchor.astro'
 import Image from '@/components/Image.astro'
-import Slider, { type Props as SliderProps } from '@/components/home/Slider.astro'
+import Slider from '@/components/home/Slider.astro'
 import ChevronDown from '@/assets/svgs/chevron-down.svg'
 import type { Home } from '@monolithe/api/types'
 import { getHerbier } from '@/lib/herbiers'
@@ -100,7 +100,7 @@ const herbier = getHerbier('centre')
   </section>
 </div>
 
-<script lang="ts">
+<script>
   const anchors = document.querySelectorAll('[data-scroll]')
 
   anchors.forEach((anchor) => {
@@ -108,9 +108,10 @@ const herbier = getHerbier('centre')
       return
     }
     const selector = anchor.dataset.scroll
+    if (!selector) return
     const target = document.querySelector(selector)
     anchor.addEventListener('click', () => {
-      target.scrollIntoView()
+      target?.scrollIntoView()
     })
   })
 </script>

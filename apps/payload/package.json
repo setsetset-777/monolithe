@@ -25,7 +25,8 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "docker-dev": "pnpm dev"
+    "docker-dev": "pnpm dev",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.86.0",

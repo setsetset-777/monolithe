@@ -5,7 +5,8 @@
   "scripts": {
     "compose:dev": "docker compose -f docker-compose.dev.yml",
     "dev": "pnpm -r dev",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "check": "pnpm -r check"
   },
   "repository": {
     "type": "git",

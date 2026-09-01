@@ -51,7 +51,12 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
 
     {
       analytics.enable && (
-        <script defer src={`${analytics.domain}/script.js`} data-website-id={analytics.id} />
+        <script
+          is:inline
+          defer
+          src={`${analytics.domain}/script.js`}
+          data-website-id={analytics.id}
+        />
       )
     }
 

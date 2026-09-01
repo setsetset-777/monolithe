@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "start": "node ./dist/server/entry.mjs"
+    "start": "node ./dist/server/entry.mjs",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.1",
@@ -19,6 +20,7 @@
     "sass": "^1.102.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@monolithe/payload": "workspace:*"
   }
 }

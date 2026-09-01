@@ -5,20 +5,21 @@ interface Props {
   href?: string
   className?: string
   type?: 'default' | 'external' | 'back'
-  as?: string
+  as?: 'a' | 'button' | 'span' | 'div'
 }
 
-const { href, className, type = 'default', as = 'a' } = Astro.props
+const { href, className, type = 'default', as = 'a' }: Props = Astro.props
 
 const target = type === 'external' ? '_blank' : '_self'
+const isLink = as === 'a'
 
 const Container = as
 ---
 
 <Container
-  href={href}
+  href={isLink ? href : undefined}
   class:list={['anchor', className, type && `anchor--${type}`]}
-  target={target}
+  target={isLink ? target : undefined}
 >
   <span class="arrow">
     <Arrow />
