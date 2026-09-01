@@ -3,6 +3,7 @@ import Separator from '@/components/Separator.astro'
 import Anchor from '@/components/Anchor.astro'
 import Image from '@/components/Image.astro'
 import Slider from '@/components/home/Slider.astro'
+import Plant from '@/components/Plant.astro'
 import ChevronDown from '@/assets/svgs/chevron-down.svg'
 import type { Home } from '@monolithe/api/types'
 import { getHerbier } from '@/lib/herbiers'
@@ -38,11 +39,10 @@ const herbier = getHerbier('centre')
       <div class="plants">
         <div class="plants__inner">
           {
-            herbier.map(({ slug, plant }) => {
-              const Plant = plant
+            herbier.map(({ slug, type, index }) => {
               return (
                 <div class="plants__item" data-slug={slug}>
-                  <Plant class:list={'plants__svg'} />
+                  <Plant type={type} index={index} />
                 </div>
               )
             })
@@ -231,11 +231,11 @@ const herbier = getHerbier('centre')
           filter: blur(#{($i - 1) * 0.3}px);
         }
       }
-    }
 
-    &__svg {
-      height: 100%;
-      width: 100%;
+      & :global(svg) {
+        height: 100%;
+        width: 100%;
+      }
     }
   }
 

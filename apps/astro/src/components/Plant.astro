@@ -1,0 +1,20 @@
+---
+interface Props {
+  type: 'centre' | 'left'
+  index: number
+}
+
+const { type, index } = Astro.props
+const id = `herbier-${type}-${index}`
+---
+
+<svg viewBox="0 0 120 120"><use data-plant-href={`/plants.svg#${id}`}></use></svg>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    Array.from(document.querySelectorAll<HTMLElement>('[data-plant-href]')).forEach((el) => {
+      const href = el.dataset.plantHref
+      href && el.setAttribute('href', href)
+    })
+  })
+</script>

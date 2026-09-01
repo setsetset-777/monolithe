@@ -2,6 +2,7 @@
 import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 import SidebarSwitch from '@/components/SidebarSwitch.astro'
+import Plant from '@/components/Plant.astro'
 
 import { getHerbier } from '@/lib/herbiers'
 import type { PageSlug } from '@monolithe/api/types'
@@ -73,11 +74,10 @@ const herbierCentre = getHerbier('centre')
     </div>
     <div class="plants plants--left" data-plants>
       {
-        herbierLeft.map(({ slug, plant }) => {
-          const Plant = plant
+        herbierLeft.map(({ slug, index }) => {
           return (
             <div class="plants__item" data-slug={slug}>
-              <Plant class:list={'plants__svg'} />
+              <Plant type="left" index={index} />
             </div>
           )
         })
@@ -85,11 +85,10 @@ const herbierCentre = getHerbier('centre')
     </div>
     <div class="plants plants--centre" data-plants>
       {
-        herbierCentre.map(({ slug, plant }) => {
-          const Plant = plant
+        herbierCentre.map(({ slug, index }) => {
           return (
             <div class="plants__item" data-slug={slug}>
-              <Plant class:list={'plants__svg'} />
+              <Plant type="centre" index={index} />
             </div>
           )
         })
