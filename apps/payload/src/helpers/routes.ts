@@ -102,6 +102,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         slug: slug,
         urlSlug,
         type: 'global',
+        updatedAt: doc.updatedAt ?? undefined,
         meta: {
           title: doc.title,
         },
@@ -126,6 +127,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
             urlSlug,
             parent: slug,
             type: 'collection',
+            updatedAt: doc.updatedAt ?? undefined,
             meta: {
               title: doc.title,
             },

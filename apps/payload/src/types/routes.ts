@@ -42,6 +42,7 @@ export type Route = {
   urlSlug: string
   parent?: PageSlug
   type: 'global' | 'collection'
+  updatedAt?: string
   meta: {
     title: string
   }
