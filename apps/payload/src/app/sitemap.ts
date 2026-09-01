@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { getPayload, type BasePayload } from 'payload'
 import config from '@payload-config'
 import { getRoutes } from '@/helpers/routes'
