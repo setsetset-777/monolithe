@@ -235,6 +235,7 @@ const herbierCentre = getHerbier('centre')
       top: 0;
       left: 0;
       height: 100%;
+      aspect-ratio: 1;
 
       #{$root}[data-active] & {
         opacity: 0;
@@ -249,6 +250,7 @@ const herbierCentre = getHerbier('centre')
 
     &__svg {
       height: 100%;
+      width: 100%;
     }
 
     &--centre {
@@ -268,6 +270,7 @@ const herbierCentre = getHerbier('centre')
       );
       --main-rows: 1fr;
       --main-opacity: 1;
+      --main-inner-top-padding: var(--content-gap);
 
       position: sticky;
       bottom: initial;
@@ -303,7 +306,7 @@ const herbierCentre = getHerbier('centre')
       align-items: flex-end;
       display: grid;
       grid-template-rows: var(--main-rows);
-      @include transition('grid-template-rows, opacity', medium);
+      @include transition('grid-template-rows, opacity, height', medium);
       vertical-align: bottom;
       opacity: var(--main-opacity);
 
@@ -312,7 +315,8 @@ const herbierCentre = getHerbier('centre')
         display: flex;
         overflow: hidden;
         align-items: center;
-        padding-top: var(--content-gap);
+        padding-top: var(--main-inner-top-padding);
+        @include transition(padding-top, medium);
       }
     }
 
@@ -357,6 +361,7 @@ const herbierCentre = getHerbier('centre')
       --plants-bottom: var(--container-padding-y);
       --main-rows: 0fr;
       --main-opacity: 0;
+      --main-inner-top-padding: 0;
 
       &[data-slide-out='true'] {
         transform: translateY(calc(-100% - var(--sidebar-skew-size)));
