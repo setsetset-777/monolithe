@@ -24,6 +24,9 @@ const { image } = Astro.props
             '1200w': image.sizes?.[3000]?.url!,
           }}
           modifiers={['fill']}
+          fetchpriority="high"
+          loading="eager"
+          decoding="async"
         />
       )
     }

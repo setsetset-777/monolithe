@@ -12,6 +12,8 @@ type Props = {
   class?: string
   modifiers?: Modifier[]
   style?: string
+  fetchpriority?: HTMLImageElement['fetchPriority']
+  decoding?: HTMLImageElement['decoding']
 }
 
 const {
@@ -23,6 +25,8 @@ const {
   class: className,
   modifiers,
   style,
+  fetchpriority,
+  decoding,
 } = Astro.props
 
 const mediaUrl = process.env.MEDIA_URL
@@ -42,6 +46,8 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
       class:list={['image', className, ...(modifiers || [])]}
       loading={loading}
       style={style}
+      fetchpriority={fetchpriority}
+      decoding={decoding}
     />
   )
 }

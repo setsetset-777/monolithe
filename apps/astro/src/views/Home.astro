@@ -27,6 +27,9 @@ const herbier = getHerbier('centre')
               '1200w': presentation.heroImage.sizes?.[3000]?.url!,
             }}
             modifiers={['fill']}
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
           />
         )
       }
