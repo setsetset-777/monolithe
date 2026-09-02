@@ -1,5 +1,5 @@
 import type * as API from '@monolithe/api/types'
-import type { PageProject, Locale } from '@/types'
+import type { Locale } from '@/types'
 import type { BasePayload } from 'payload'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
 import { fetchProjects } from '../fetch/projects'
@@ -7,13 +7,11 @@ import { fetchProjects } from '../fetch/projects'
 interface Props {
   payload: BasePayload
   locale: Locale
-  res: PageProject
   pagination?: {}
   params?: API.Projects.SearchParams
 }
 
-export const formatProjectsData = async ({
-  res: { title: pageTitle, heroImage },
+export const getProjectsData = async ({
   payload,
   locale,
   params = {},
@@ -21,7 +19,11 @@ export const formatProjectsData = async ({
   meta: API.Meta
   data: API.Projects.Data
 }> => {
-  const [services, projects] = await Promise.all([
+  const [pageProjects, services, projects] = await Promise.all([
+    payload.findGlobal({
+      slug: 'pageProjects',
+      locale,
+    }),
     listPublishedCollection({ slug: 'services', payload, locale }),
     fetchProjects({
       payload,
@@ -29,6 +31,8 @@ export const formatProjectsData = async ({
       params,
     }),
   ])
+
+  const { title: pageTitle, heroImage } = pageProjects
 
   return {
     meta: {

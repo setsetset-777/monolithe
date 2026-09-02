@@ -1,27 +1,31 @@
 import type * as API from '@monolithe/api/types'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
-import type { PagePresentation, Locale } from '@/types'
+import type { Locale } from '@/types'
 import { BasePayload } from 'payload'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
 
 interface Props {
   payload: BasePayload
   locale: Locale
-  res: PagePresentation
 }
 
-export const formatPresentationData = async ({
-  res: { title: pageTitle, heroImage, monolithe, sections },
+export const getPresentationData = async ({
   payload,
   locale,
 }: Props): Promise<{
   meta: API.Meta
   data: API.Presentation.Data
 }> => {
-  const [parutions, testimonials] = await Promise.all([
+  const [pagePresentation, parutions, testimonials] = await Promise.all([
+    payload.findGlobal({
+      slug: 'pagePresentation',
+      locale,
+    }),
     listPublishedCollection({ slug: 'parutions', locale, payload }),
     listPublishedCollection({ slug: 'testimonials', locale, payload }),
   ])
+
+  const { title: pageTitle, heroImage, monolithe, sections } = pagePresentation
   return {
     meta: {
       title: pageTitle,

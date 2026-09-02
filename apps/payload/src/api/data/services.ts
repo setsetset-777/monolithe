@@ -1,5 +1,5 @@
 import type * as API from '@monolithe/api/types'
-import type { Locale, PageService, PageSlug, Service } from '@/types'
+import type { Locale } from '@/types'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import { BasePayload } from 'payload'
 import { getRoutes } from '@/helpers/routes'
@@ -8,21 +8,25 @@ import listPublishedCollection from '@/helpers/listPublishedCollection'
 interface Props {
   payload: BasePayload
   locale: Locale
-  res: PageService
 }
 
 export const formatServicesData = async ({
-  res: { title: pageTitle, heroImage },
   locale,
   payload,
 }: Props): Promise<{
   meta: API.Meta
   data: API.Services.Data
 }> => {
-  const [routes, services] = await Promise.all([
+  const [pageServices, routes, services] = await Promise.all([
+    payload.findGlobal({
+      slug: 'pageServices',
+      locale,
+    }),
     getRoutes(payload, locale),
     listPublishedCollection({ slug: 'services', locale, payload }),
   ])
+
+  const { title: pageTitle, heroImage } = pageServices
   return {
     meta: {
       title: pageTitle,

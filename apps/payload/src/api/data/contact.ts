@@ -1,23 +1,31 @@
 import type * as API from '@monolithe/api/types'
-import type { Locale, PageContact, PageSlug } from '@/types'
+import type { Locale } from '@/types'
 import type { BasePayload } from 'payload'
 
-export const formatContactData = async ({
-  res: { title, heroImage, place, email, phone },
-  payload,
-  locale,
-}: {
-  res: PageContact
+interface Props {
   payload: BasePayload
   locale: Locale
-}): Promise<{
+}
+
+export const getContactData = async ({
+  payload,
+  locale,
+}: Props): Promise<{
   meta: API.Meta
   data: API.Contact.Data
 }> => {
-  const general = await payload.findGlobal({
-    slug: 'general',
-    locale,
-  })
+  const [pageContact, general] = await Promise.all([
+    payload.findGlobal({
+      slug: 'pageContact',
+      locale,
+    }),
+    payload.findGlobal({
+      slug: 'general',
+      locale,
+    }),
+  ])
+
+  const { title, heroImage, place, email, phone } = pageContact
   return {
     meta: {
       title,

@@ -9,7 +9,7 @@ type Props = {
   locale: Locale
 }
 
-export const formatGeneralData = async ({ payload, locale }: Props): Promise<API.General.Data> => {
+export const gaetGeneralData = async ({ payload, locale }: Props): Promise<API.General.Data> => {
   const [routes, general, pageServices, services] = await Promise.all([
     getRoutes(payload, locale),
     payload.findGlobal({ slug: 'general' }),

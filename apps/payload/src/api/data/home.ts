@@ -1,24 +1,26 @@
 import { getRoutes } from '@/helpers/routes'
 import type * as API from '@monolithe/api/types'
-import type { Locale, PageHome } from '@/types'
+import type { Locale } from '@/types'
 import type { BasePayload } from 'payload'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
 
 interface Props {
   payload: BasePayload
   locale: Locale
-  res: PageHome
 }
 
-export const formatHomeData = async ({
-  res: { title, presentation, services: servicesSection, projects: projectsSection },
+export const getHomeData = async ({
   locale,
   payload,
 }: Props): Promise<{
   meta: API.Meta
   data: API.Home.Data
 }> => {
-  const [routes, services, highlights] = await Promise.all([
+  const [pageHome, routes, services, highlights] = await Promise.all([
+    payload.findGlobal({
+      slug: 'pageHome',
+      locale,
+    }),
     getRoutes(payload, locale),
     listPublishedCollection({ slug: 'services', payload, locale }),
     listPublishedCollection({
@@ -32,6 +34,8 @@ export const formatHomeData = async ({
       },
     }),
   ])
+
+  const { title, presentation, services: servicesSection, projects: projectsSection } = pageHome
 
   return {
     meta: {
