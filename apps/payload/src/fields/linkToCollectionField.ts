@@ -1,10 +1,11 @@
 import type { CollectionSlug, Field, LabelFunction, StaticLabel } from 'payload'
 import { localizedLabels } from '@/i18n'
 
-type LinkToCollectionFleld = {
+type LinkToCollectionField = {
   label?: LabelFunction | StaticLabel
   slug: CollectionSlug
   name?: string
+  group?: string
 }
 
 const defaultLabel = {
@@ -12,20 +13,16 @@ const defaultLabel = {
   fr: 'Titre',
 }
 
-export const linkToCollectionFleld = ({
-  slug,
-  label,
-  name = 'collection',
-}: LinkToCollectionFleld): Field => {
+export const linkToCollectionField = ({ slug, label }: LinkToCollectionField): Field => {
   return {
-    name,
+    name: 'collectionLink',
     type: 'group',
     label: label ?? localizedLabels.collections[slug]?.plural,
     fields: [
       {
         name: 'slug',
         type: 'text',
-        // hidden: true,
+        hidden: true,
         virtual: true,
         defaultValue: slug,
       },

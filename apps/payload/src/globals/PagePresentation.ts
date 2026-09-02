@@ -5,6 +5,7 @@ import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { linkToCollectionField } from '@/fields/linkToCollectionField'
 
 const TextWithTitleBlock: Block = {
   slug: 'textWithTitleBlock',
@@ -111,31 +112,32 @@ const ParutionBlock: Block = {
         fr: 'Titre',
       },
     },
-    {
-      name: 'parutionList',
-      type: 'array',
-      label: {
-        en: 'Parution list',
-        fr: 'Liste des parutions',
-      },
-      labels: {
-        singular: {
-          en: 'Parution item',
-          fr: 'Élément de parution',
-        },
-        plural: {
-          en: 'Parution items',
-          fr: 'Éléments de parutions',
-        },
-      },
-      fields: [
-        {
-          name: 'parution',
-          type: 'relationship',
-          relationTo: 'parutions',
-        },
-      ],
-    },
+    linkToCollectionField({ slug: 'parutions' }),
+    // {
+    //   name: 'parutionList',
+    //   type: 'array',
+    //   label: {
+    //     en: 'Parution list',
+    //     fr: 'Liste des parutions',
+    //   },
+    //   labels: {
+    //     singular: {
+    //       en: 'Parution item',
+    //       fr: 'Élément de parution',
+    //     },
+    //     plural: {
+    //       en: 'Parution items',
+    //       fr: 'Éléments de parutions',
+    //     },
+    //   },
+    //   fields: [
+    //     {
+    //       name: 'parution',
+    //       type: 'relationship',
+    //       relationTo: 'parutions',
+    //     },
+    //   ],
+    // },
   ],
 }
 
@@ -160,31 +162,33 @@ const TestimonialsBlock: Block = {
         fr: 'Titre',
       },
     },
-    {
-      name: 'testimonialsList',
-      type: 'array',
-      label: {
-        en: 'Terstimonial list',
-        fr: 'Liste des témoignages',
-      },
-      labels: {
-        singular: {
-          en: 'Testimonial item',
-          fr: 'Élément de témoignage',
-        },
-        plural: {
-          en: 'Testimonial items',
-          fr: 'Éléments de témoignage',
-        },
-      },
-      fields: [
-        {
-          name: 'testimonial',
-          type: 'relationship',
-          relationTo: 'testimonials',
-        },
-      ],
-    },
+    linkToCollectionField({ slug: 'testimonials' }),
+
+    // {
+    //   name: 'testimonialsList',
+    //   type: 'array',
+    //   label: {
+    //     en: 'Terstimonial list',
+    //     fr: 'Liste des témoignages',
+    //   },
+    //   labels: {
+    //     singular: {
+    //       en: 'Testimonial item',
+    //       fr: 'Élément de témoignage',
+    //     },
+    //     plural: {
+    //       en: 'Testimonial items',
+    //       fr: 'Éléments de témoignage',
+    //     },
+    //   },
+    //   fields: [
+    //     {
+    //       name: 'testimonial',
+    //       type: 'relationship',
+    //       relationTo: 'testimonials',
+    //     },
+    //   ],
+    // },
   ],
 }
 

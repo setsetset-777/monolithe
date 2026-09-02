@@ -8,6 +8,7 @@ import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 
 import type { Presentation } from '@monolithe/api/types'
+import { undefined, type length } from 'astro:schema'
 
 type Props = Presentation.Data
 
@@ -36,9 +37,11 @@ const { hero, presentation, sections } = Astro.props
             content = <SectionList {...section} />
             break
           case 'parutionsBlock':
+            if (section.list.length <= 0) return
             content = <SectionParutions {...section} />
             break
           case 'testimonialsBlock':
+            if (section.list.length <= 0) return
             content = <SectionTestimonials {...section} />
             break
         }

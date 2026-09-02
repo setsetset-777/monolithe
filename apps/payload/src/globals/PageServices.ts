@@ -4,7 +4,7 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
-import { linkToCollectionFleld } from '@/fields/linkToCollectionFleld'
+import { linkToCollectionField } from '@/fields/linkToCollectionField'
 
 export const PageServices: GlobalConfig = {
   slug: 'pageServices',
@@ -16,7 +16,7 @@ export const PageServices: GlobalConfig = {
     titleField(),
     ...urlFields({ source: 'title', slug: 'pageServices' }),
     heroImageField(),
-    linkToCollectionFleld({ slug: 'services' }),
+    linkToCollectionField({ slug: 'services' }),
   ],
   versions: {
     drafts: true,

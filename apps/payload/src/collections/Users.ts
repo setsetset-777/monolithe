@@ -1,3 +1,4 @@
+import { localizedLabels } from '@/i18n'
 import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -5,14 +6,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  labels: {
-    singular: {
-      fr: 'Utilisateur',
-    },
-    plural: {
-      fr: 'Utilisateurs',
-    },
-  },
+  labels: localizedLabels.collections.users,
   auth: true,
   fields: [
     // Email added by default

@@ -351,9 +351,9 @@ export interface Project {
  */
 export interface Parution {
   id: string;
+  _order?: string | null;
   title: string;
   publisher: string;
-  type: 'paper' | 'web' | 'video';
   date?: string | null;
   /**
    * If not set, parution link will redirect to the raw thumbnail.
@@ -362,6 +362,7 @@ export interface Parution {
   thumbnail?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -369,6 +370,7 @@ export interface Parution {
  */
 export interface Testimonial {
   id: string;
+  _order?: string | null;
   name?: string | null;
   description?: string | null;
   /**
@@ -377,6 +379,7 @@ export interface Testimonial {
   company?: string | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -639,25 +642,28 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "parutions_select".
  */
 export interface ParutionsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   publisher?: T;
-  type?: T;
   date?: T;
   link?: T;
   thumbnail?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials_select".
  */
 export interface TestimonialsSelect<T extends boolean = true> {
+  _order?: T;
   name?: T;
   description?: T;
   company?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -803,24 +809,18 @@ export interface PagePresentation {
           }
         | {
             title?: string | null;
-            parutionList?:
-              | {
-                  parution?: (string | null) | Parution;
-                  id?: string | null;
-                }[]
-              | null;
+            collectionLink?: {
+              slug?: string | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'parutionsBlock';
           }
         | {
             title?: string | null;
-            testimonialsList?:
-              | {
-                  testimonial?: (string | null) | Testimonial;
-                  id?: string | null;
-                }[]
-              | null;
+            collectionLink?: {
+              slug?: string | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'testimonialsBlock';
@@ -840,7 +840,7 @@ export interface PageService {
   title: string;
   urlSlug: string;
   heroImage: string | Media;
-  collection?: {
+  collectionLink?: {
     slug?: string | null;
   };
   _status?: ('draft' | 'published') | null;
@@ -857,7 +857,7 @@ export interface PageProject {
   urlSlug: string;
   heroImage: string | Media;
   backLinkLabel?: string | null;
-  collection?: {
+  collectionLink?: {
     slug?: string | null;
   };
   updatedAt?: string | null;
@@ -973,11 +973,10 @@ export interface PagePresentationSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              parutionList?:
+              collectionLink?:
                 | T
                 | {
-                    parution?: T;
-                    id?: T;
+                    slug?: T;
                   };
               id?: T;
               blockName?: T;
@@ -986,11 +985,10 @@ export interface PagePresentationSelect<T extends boolean = true> {
           | T
           | {
               title?: T;
-              testimonialsList?:
+              collectionLink?:
                 | T
                 | {
-                    testimonial?: T;
-                    id?: T;
+                    slug?: T;
                   };
               id?: T;
               blockName?: T;
@@ -1009,7 +1007,7 @@ export interface PageServicesSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
   heroImage?: T;
-  collection?:
+  collectionLink?:
     | T
     | {
         slug?: T;
@@ -1028,7 +1026,7 @@ export interface PageProjectsSelect<T extends boolean = true> {
   urlSlug?: T;
   heroImage?: T;
   backLinkLabel?: T;
-  collection?:
+  collectionLink?:
     | T
     | {
         slug?: T;

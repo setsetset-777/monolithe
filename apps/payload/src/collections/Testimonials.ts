@@ -1,17 +1,13 @@
+import { localizedLabels } from '@/i18n'
 import type { CollectionConfig } from 'payload'
 
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
-  labels: {
-    plural: {
-      en: 'Testimonials',
-      fr: 'Témoignages',
-    },
-    singular: {
-      en: 'Testimonial',
-      fr: 'Témoignage',
-    },
+  labels: localizedLabels.collections.testimonials,
+  versions: {
+    drafts: true,
   },
+  orderable: true,
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'description'],

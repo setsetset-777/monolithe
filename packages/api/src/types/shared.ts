@@ -29,7 +29,7 @@ export interface Hero {
 export interface Parution {
   title: string
   publisher: string
-  type: 'paper' | 'web' | 'video'
+  // type: 'paper' | 'web' | 'video'
   date: string
   link: string | null | undefined
   thumbnail: Media | null

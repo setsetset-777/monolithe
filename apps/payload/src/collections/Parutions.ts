@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { localizedLabels } from '@/i18n'
 
 export const Parutions: CollectionConfig = {
   slug: 'parutions',
@@ -6,6 +7,11 @@ export const Parutions: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'publisher', 'date', 'type'],
   },
+  versions: {
+    drafts: true,
+  },
+  orderable: true,
+  labels: localizedLabels.collections.parutions,
   fields: [
     {
       name: 'title',
@@ -25,34 +31,34 @@ export const Parutions: CollectionConfig = {
       },
       required: true,
     },
-    {
-      name: 'type',
-      type: 'select',
-      required: true,
-      options: [
-        {
-          value: 'paper',
-          label: {
-            en: 'Newspaper',
-            fr: 'Journal',
-          },
-        },
-        {
-          value: 'web',
-          label: {
-            en: 'Website',
-            fr: 'Site web',
-          },
-        },
-        {
-          value: 'video',
-          label: {
-            en: 'Video',
-            fr: 'Vidéo',
-          },
-        },
-      ],
-    },
+    // {
+    //   name: 'type',
+    //   type: 'select',
+    //   required: true,
+    //   options: [
+    //     {
+    //       value: 'paper',
+    //       label: {
+    //         en: 'Newspaper',
+    //         fr: 'Journal',
+    //       },
+    //     },
+    //     {
+    //       value: 'web',
+    //       label: {
+    //         en: 'Website',
+    //         fr: 'Site web',
+    //       },
+    //     },
+    //     {
+    //       value: 'video',
+    //       label: {
+    //         en: 'Video',
+    //         fr: 'Vidéo',
+    //       },
+    //     },
+    //   ],
+    // },
     {
       name: 'date',
       type: 'text',

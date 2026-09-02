@@ -1,7 +1,7 @@
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { localizedLabels } from '@/i18n'
 import type { CollectionAfterChangeHook } from 'payload'
 import type { CollectionConfig, Block } from 'payload'
 
@@ -17,14 +17,7 @@ export const Projects: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'mainImage', '_status', 'featured'],
   },
-  labels: {
-    singular: {
-      fr: 'Réalisation',
-    },
-    plural: {
-      fr: 'Réalisations',
-    },
-  },
+  labels: localizedLabels.collections.projects,
   fields: [
     titleField(),
     ...urlFields({ source: 'title', slug }),

@@ -1,17 +1,27 @@
 import type * as API from '@monolithe/api/types'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
-import type { PagePresentation } from '@/types'
+import type { PagePresentation, Locale } from '@/types'
+import { BasePayload } from 'payload'
+import listPublishedCollection from '@/helpers/listPublishedCollection'
 
 interface Props {
+  payload: BasePayload
+  locale: Locale
   res: PagePresentation
 }
 
-export const formatPresentationData = ({
+export const formatPresentationData = async ({
   res: { title: pageTitle, heroImage, monolithe, sections },
-}: Props): {
+  payload,
+  locale,
+}: Props): Promise<{
   meta: API.Meta
   data: API.Presentation.Data
-} => {
+}> => {
+  const [parutions, testimonials] = await Promise.all([
+    listPublishedCollection({ slug: 'parutions', locale, payload }),
+    listPublishedCollection({ slug: 'testimonials', locale, payload }),
+  ])
   return {
     meta: {
       title: pageTitle,
@@ -44,16 +54,13 @@ export const formatPresentationData = ({
               })),
             }
           case 'parutionsBlock':
-            const { parutionList } = section
             return {
               type: section.blockType,
               title: title!,
-              list: (parutionList ?? []).map(({ parution }) => {
-                const { title, publisher, type, date, link, thumbnail } = parution as API.Parution
+              list: parutions.docs.map(({ title, publisher, date, link, thumbnail }) => {
                 return {
                   title: title!,
                   publisher: publisher!,
-                  type: type!,
                   date: date!,
                   link: link!,
                   thumbnail: thumbnail as API.Media,
@@ -61,12 +68,10 @@ export const formatPresentationData = ({
               }),
             }
           case 'testimonialsBlock':
-            const { testimonialsList } = section
             return {
               type: section.blockType,
               title: title!,
-              list: (testimonialsList ?? []).map(({ testimonial }) => {
-                const { name, description, company } = testimonial as API.Testimonial
+              list: testimonials.docs.map(({ name, description, company }) => {
                 return {
                   name: name!,
                   description: description!,

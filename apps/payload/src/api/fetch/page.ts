@@ -60,7 +60,7 @@ export const fetchPage = async (
       })
       return {
         slug,
-        ...formatPresentationData({ res }),
+        ...(await formatPresentationData({ res, payload: req.payload, locale: locale })),
       }
 
     case 'pageServices':

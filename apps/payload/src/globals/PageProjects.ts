@@ -2,7 +2,7 @@ import type { GlobalAfterChangeHook, GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
-import { linkToCollectionFleld } from '@/fields/linkToCollectionFleld'
+import { linkToCollectionField } from '@/fields/linkToCollectionField'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 
@@ -24,7 +24,7 @@ export const PageProjects: GlobalConfig = {
         fr: 'Énoncé du lien de retour',
       },
     },
-    linkToCollectionFleld({ slug: 'projects' }),
+    linkToCollectionField({ slug: 'projects' }),
   ],
   admin: {
     group: localizedLabels.groups.pages,

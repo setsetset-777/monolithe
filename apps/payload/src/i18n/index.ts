@@ -11,16 +11,6 @@ export const localization: LocalizationConfigWithNoLabels = {
 
 type LocalizedLabel = Record<Locale['code'], string>
 
-type CollectionLabels = Partial<
-  Record<
-    CollectionSlug,
-    {
-      singular: LocalizedLabel
-      plural: LocalizedLabel
-    }
-  >
->
-
 export const localizedLabels: {
   groups: Record<string, LocalizedLabel>
   fields: Record<string, LocalizedLabel>
@@ -65,6 +55,36 @@ export const localizedLabels: {
       plural: {
         en: 'Services',
         fr: 'Services',
+      },
+    },
+    parutions: {
+      singular: {
+        en: 'Parution',
+        fr: 'Parution',
+      },
+      plural: {
+        en: 'Parutions',
+        fr: 'Parutions',
+      },
+    },
+    testimonials: {
+      singular: {
+        en: 'Témoignage',
+        fr: 'Testimonial',
+      },
+      plural: {
+        en: 'Témoignages',
+        fr: 'Testimonials',
+      },
+    },
+    users: {
+      singular: {
+        en: 'User',
+        fr: 'Utilisateur',
+      },
+      plural: {
+        en: 'Users',
+        fr: 'Utilisateurs',
       },
     },
   },
