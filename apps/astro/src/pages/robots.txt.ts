@@ -7,7 +7,7 @@ Allow: /
 Sitemap: ${sitemapURL}
 `
 
-export const GET: APIRoute = ({ site }) => {
+export const GET: APIRoute = () => {
   const sitemapURL = `${process.env.MEDIA_URL}/sitemap.xml`
   return new Response(getRobotsTxt(sitemapURL))
 }

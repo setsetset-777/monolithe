@@ -1,6 +1,3 @@
-import Plant from '@/components/Plant.astro'
-
-import type { SvgComponent } from 'astro/types'
 import type { PageSlug } from '@monolithe/api/types'
 
 const pagesPlantsOrder = [
@@ -10,8 +7,6 @@ const pagesPlantsOrder = [
   'pageProjects',
   'pageContact',
 ]
-
-type Plant = SvgComponent
 
 type HerbierType = 'left' | 'centre'
 
@@ -23,11 +18,6 @@ type Herbier = {
 
 type Herbiers = Array<Herbier>
 
-// const herbiers: Record<HerbierType, Array<SvgComponent>> = {
-//   left: [HerbierLeft1, HerbierLeft2, HerbierLeft3, HerbierLeft4, HerbierLeft5],
-//   centre: [HerbierCentre1, HerbierCentre2, HerbierCentre3, HerbierCentre4, HerbierCentre5],
-// }
-
 export const getHerbier = (type: HerbierType): Herbiers => {
   return pagesPlantsOrder.map((slug, index) => {
     return {
@@ -38,6 +28,6 @@ export const getHerbier = (type: HerbierType): Herbiers => {
   })
 }
 
-export const getPlantIndex = (slug: PageSlug, type: HerbierType = 'left') => {
+export const getPlantIndex = (slug: PageSlug) => {
   return pagesPlantsOrder.indexOf(slug)
 }

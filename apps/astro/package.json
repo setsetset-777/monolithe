@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@monolithe/payload": "workspace:*"
+    "@monolithe/payload": "workspace:*",
+    "typescript": "5.7.3"
   }
 }

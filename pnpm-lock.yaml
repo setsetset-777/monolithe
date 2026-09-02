@@ -30,6 +30,9 @@ importers:
       '@monolithe/payload':
         specifier: workspace:*
         version: file:apps/payload(@faceless-ui/modal@3.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@playwright/test@1.58.2)(sass@1.102.0)(supports-color@8.1.1)(typescript@5.7.3)
+      typescript:
+        specifier: 5.7.3
+        version: 5.7.3
 
   apps/payload:
     dependencies:

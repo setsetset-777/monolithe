@@ -12,7 +12,7 @@ type Props = {
   class?: string
   modifiers?: Modifier[]
   style?: string
-  fetchpriority?: HTMLImageElement['fetchPriority']
+  fetchpriority?: 'high' | 'auto' | 'low' | null | undefined
   decoding?: HTMLImageElement['decoding']
 }
 
