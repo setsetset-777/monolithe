@@ -46,9 +46,7 @@ const { projects } = Astro.props
   const activeClass = 'active'
   const duration = 3000
 
-  export const init = () => {
-    const slider = document.querySelector('[data-slider]') as HTMLElement
-
+  export const init = (slider: HTMLElement) => {
     if (!slider) {
       return
     }
@@ -154,7 +152,10 @@ const { projects } = Astro.props
   }
 
   document.addEventListener('astro:page-load', () => {
-    init()
+    const slider = document.querySelector('[data-slider]') as HTMLElement
+    if (slider) {
+      init(slider)
+    }
   })
 </script>
 

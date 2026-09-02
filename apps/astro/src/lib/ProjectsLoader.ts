@@ -16,14 +16,12 @@ export default class ProjectsLoader {
   listSelector = '[data-projects-loader-list]'
   moreSelector = '[data-projects-loader-more]'
 
-  constructor({ elementSelector }: { elementSelector: string }) {
-    const el = document.querySelector<HTMLElement>(elementSelector)
-
-    if (!el) {
+  constructor({ element }: { element: HTMLElement }) {
+    if (!element) {
       throw new Error('ProjectsLoader: Element not found')
     }
 
-    this.element = el
+    this.element = element
 
     this.listElement = this.element.querySelector(this.listSelector)
     this.searchParams = new URLSearchParams()

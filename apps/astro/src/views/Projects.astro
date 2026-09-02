@@ -60,9 +60,11 @@ const { hero, services, projects } = Astro.props
   }
 
   function initLoader() {
-    const loader = new ProjectLoader({
-      elementSelector: '#projects',
-    })
+    const element = document.querySelector<HTMLElement>('#projects')
+
+    if (!element) return
+
+    const loader = new ProjectLoader({ element })
 
     loader.init()
 
