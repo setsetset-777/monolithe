@@ -160,6 +160,7 @@ export const Services: CollectionConfig = {
     ],
     afterChange: [
       async () => {
+        revalidateTag(tags.routes(), 'max')
         revalidateTag(tags.services(), 'max')
         revalidateTag(tags.general(), 'max')
         revalidateTag(tags.home(), 'max')

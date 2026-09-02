@@ -30,7 +30,7 @@ export const getHomeData = async ({
       slug: 'pageHome',
       locale,
     }),
-    getRoutes(payload, locale),
+    getRoutes(locale),
     listPublishedCollection({ slug: 'services', payload, locale }),
     listPublishedCollection({
       slug: 'projects',

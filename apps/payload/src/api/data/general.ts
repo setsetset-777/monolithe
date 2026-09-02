@@ -21,7 +21,7 @@ export const gaetGeneralData = async ({ locale }: Props): Promise<API.General.Da
   })
 
   const [routes, general, pageServices, services] = await Promise.all([
-    getRoutes(payload, locale),
+    getRoutes(locale),
     payload.findGlobal({ slug: 'general' }),
     payload.findGlobal({ slug: 'pageServices' }),
     listPublishedCollection({ slug: 'services', payload, locale }),

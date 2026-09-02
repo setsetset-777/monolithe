@@ -29,7 +29,7 @@ export const getProjectListData = async ({
   const { service: selectedServicesSlugs, page, limit } = params
 
   const [routes, services] = await Promise.all([
-    getRoutes(payload, locale),
+    getRoutes(locale),
     payload.find({
       collection: 'services',
       locale,

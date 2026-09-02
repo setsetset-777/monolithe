@@ -33,7 +33,7 @@ export const getProjectData = async ({
       locale,
       id,
     }),
-    getRoutes(payload, locale),
+    getRoutes(locale),
     payload.findGlobal({ slug: 'pageProjects', locale }),
   ])
 

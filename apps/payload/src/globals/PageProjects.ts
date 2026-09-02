@@ -1,10 +1,9 @@
-import type { GlobalAfterChangeHook, GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
 import { heroImageField } from '@/fields/heroImageField'
-import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { revalidateTag } from 'next/cache'
 import { tags } from '@/helpers/cache'
 
@@ -33,8 +32,10 @@ export const PageProjects: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      invalidateRoutesManifestHook as GlobalAfterChangeHook,
-      async () => revalidateTag(tags.projects(), 'max'),
+      async () => {
+        revalidateTag(tags.routes(), 'max')
+        revalidateTag(tags.projects(), 'max')
+      },
     ],
   },
 }

@@ -1,5 +1,10 @@
 import { localization } from '@/i18n'
-import type { BasePayload, GlobalAfterChangeHook, CollectionAfterChangeHook } from 'payload'
+import {
+  type BasePayload,
+  type GlobalAfterChangeHook,
+  type CollectionAfterChangeHook,
+  getPayload,
+} from 'payload'
 import type {
   Manifest,
   RouteConfig,
@@ -11,6 +16,9 @@ import type {
   RoutedGlobalSlug,
   RoutedCollectionSlug,
 } from '@/types'
+import { cacheTag } from 'next/cache'
+import { tags } from './cache'
+import config from '@payload-config'
 
 const { locales, defaultLocale } = localization
 const defaultSlugField = 'urlSlug' as const
@@ -44,42 +52,20 @@ export const routesConfig: RouteConfig = {
   ],
 }
 
-export const getManifest = async (payload: BasePayload): Promise<Manifest> => {
-  payload.logger.info('Generating routes manifest')
-  if (!(typeof cachedManifest === 'undefined' || cachedManifest === null)) {
-    payload.logger.info('Cache found, skipping manifest build')
-    return cachedManifest as Manifest
-  }
+export const getRoutes = async (locale: Locale): Promise<LocalizedRoutes> => {
+  'use cache'
 
-  payload.logger.info('No cache found, building manifest.')
+  cacheTag(tags.routes())
 
-  cachedManifest = {
-    routes: await buildRoutes(payload),
-    generatedAt: new Date().getTime(),
-  }
+  const payload = await getPayload({ config })
 
-  payload.logger.info(`Manifest built: ${JSON.stringify(cachedManifest)}`)
-
-  return cachedManifest
-}
-
-export const invalidateRoutesManifest = () => {
-  cachedManifest = null
-}
-
-export const invalidateRoutesManifestHook:
-  CollectionAfterChangeHook | GlobalAfterChangeHook = () => {
-  invalidateRoutesManifest()
-}
-
-export const getRoutes = async (
-  payload: BasePayload,
-  locale?: Locale,
-): Promise<LocalizedRoutes> => {
   locale = locale || (defaultLocale as Locale)
-  const manifest = await getManifest(payload)
-  const routes: LocalizedRoutes = manifest.routes[locale]!
-  return routes
+
+  const routes = await buildRoutes(payload)
+
+  const localizedRoutes = routes[locale]
+
+  return localizedRoutes ?? {}
 }
 
 const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
@@ -162,9 +148,9 @@ export const resolveRoute = async ({
     path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
   }
 
-  const routes = await getRoutes(payload, locale)
+  const routes = await getRoutes(locale)
 
-  const route = Object.values(routes).find((value) => value.path === path)
+  const route = routes && Object.values(routes).find((value) => value.path === path)
 
   if (!route) {
     throw new Error('No route found')

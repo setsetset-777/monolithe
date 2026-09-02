@@ -170,7 +170,6 @@ export default buildConfig({
 
         try {
           const data = await fetchProjects({
-            payload: req.payload,
             locale: req.locale as Locale,
             params: safeParams,
           })

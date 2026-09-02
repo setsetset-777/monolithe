@@ -31,7 +31,7 @@ export const getServicesData = async ({
       slug: 'pageServices',
       locale,
     }),
-    getRoutes(payload, locale),
+    getRoutes(locale),
     listPublishedCollection({ slug: 'services', locale, payload }),
   ])
 

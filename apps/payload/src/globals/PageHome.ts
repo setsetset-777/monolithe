@@ -1,7 +1,6 @@
-import { GlobalAfterChangeHook, GlobalConfig } from 'payload'
+import { GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
-import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { urlFields } from '@/fields/urlFields'
 import { revalidateTag } from 'next/cache'
 import { tags } from '@/helpers/cache'
@@ -117,8 +116,10 @@ export const PageHome: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      invalidateRoutesManifestHook as GlobalAfterChangeHook,
-      async () => revalidateTag(tags.home(), 'max'),
+      async () => {
+        revalidateTag(tags.routes(), 'max')
+        revalidateTag(tags.home(), 'max')
+      },
     ],
   },
 }

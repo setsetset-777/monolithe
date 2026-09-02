@@ -1,4 +1,5 @@
-import { url } from 'node:inspector/promises'
+import { tags } from '@/helpers/cache'
+import { revalidateTag } from 'next/cache'
 import { GlobalConfig } from 'payload'
 
 export const General: GlobalConfig = {
@@ -78,4 +79,11 @@ export const General: GlobalConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [
+      async () => {
+        revalidateTag(tags.general(), 'max')
+      },
+    ],
+  },
 }

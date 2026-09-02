@@ -1,10 +1,8 @@
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
-import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { localizedLabels } from '@/i18n'
 import { revalidateTag } from 'next/cache'
 import { tags } from '@/helpers/cache'
-import type { CollectionAfterChangeHook } from 'payload'
 import type { CollectionConfig } from 'payload'
 
 export const slug = 'projects'
@@ -131,8 +129,8 @@ export const Projects: CollectionConfig = {
   ],
   hooks: {
     afterChange: [
-      invalidateRoutesManifestHook as CollectionAfterChangeHook,
       async ({ doc }) => {
+        revalidateTag(tags.routes(), 'max')
         revalidateTag(tags.project(doc.id), 'max')
         revalidateTag(tags.projects(), 'max')
         revalidateTag(tags.projectList(), 'max')

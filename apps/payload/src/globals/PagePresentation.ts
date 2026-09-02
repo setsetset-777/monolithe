@@ -1,9 +1,8 @@
-import { GlobalAfterChangeHook, GlobalConfig, type Block } from 'payload'
+import { GlobalConfig, type Block } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
-import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
 import { revalidateTag } from 'next/cache'
@@ -180,8 +179,10 @@ export const PagePresentation: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      invalidateRoutesManifestHook as GlobalAfterChangeHook,
-      async () => revalidateTag(tags.presentation(), 'max'),
+      async () => {
+        revalidateTag(tags.routes(), 'max')
+        revalidateTag(tags.presentation(), 'max')
+      },
     ],
   },
 }

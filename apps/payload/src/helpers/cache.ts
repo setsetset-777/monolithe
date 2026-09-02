@@ -21,4 +21,5 @@ export const tags = {
   projectList: () => `projectList`,
   projectListQueryLocale: (params: API.Projects.SearchParams, locale: Locale) =>
     `projectList:${JSON.stringify(params)}:${normalLocale(locale)}`,
+  routes: () => 'routes',
 }
