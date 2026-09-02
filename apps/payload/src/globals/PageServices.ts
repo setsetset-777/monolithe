@@ -4,6 +4,7 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { linkToCollectionFleld } from '@/fields/linkToCollectionFleld'
 
 export const PageServices: GlobalConfig = {
   slug: 'pageServices',
@@ -15,7 +16,7 @@ export const PageServices: GlobalConfig = {
     titleField(),
     ...urlFields({ source: 'title', slug: 'pageServices' }),
     heroImageField(),
-    // TODO add ui field to show available services
+    linkToCollectionFleld({ slug: 'services' }),
   ],
   versions: {
     drafts: true,

@@ -840,6 +840,9 @@ export interface PageService {
   title: string;
   urlSlug: string;
   heroImage: string | Media;
+  collection?: {
+    slug?: string | null;
+  };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -854,7 +857,9 @@ export interface PageProject {
   urlSlug: string;
   heroImage: string | Media;
   backLinkLabel?: string | null;
-  projects?: (string | Project)[] | null;
+  collection?: {
+    slug?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1004,6 +1009,11 @@ export interface PageServicesSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
   heroImage?: T;
+  collection?:
+    | T
+    | {
+        slug?: T;
+      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1018,7 +1028,11 @@ export interface PageProjectsSelect<T extends boolean = true> {
   urlSlug?: T;
   heroImage?: T;
   backLinkLabel?: T;
-  projects?: T;
+  collection?:
+    | T
+    | {
+        slug?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

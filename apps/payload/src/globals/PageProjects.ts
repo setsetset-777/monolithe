@@ -2,6 +2,7 @@ import type { GlobalAfterChangeHook, GlobalConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
+import { linkToCollectionFleld } from '@/fields/linkToCollectionFleld'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 
@@ -23,13 +24,7 @@ export const PageProjects: GlobalConfig = {
         fr: 'Énoncé du lien de retour',
       },
     },
-    {
-      name: 'projects',
-      type: 'relationship',
-      relationTo: 'projects',
-      hasMany: true,
-    },
-    // TODO: Add UI field for services,
+    linkToCollectionFleld({ slug: 'projects' }),
   ],
   admin: {
     group: localizedLabels.groups.pages,
