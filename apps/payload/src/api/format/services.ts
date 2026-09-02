@@ -37,7 +37,7 @@ export const formatServicesData = async ({
         const { id, linkLabel, type, title, description, urlSlug } = service
         const servicesParams = new URLSearchParams()
         servicesParams.append('service', urlSlug)
-        const projectsUrl = `${routes['pageProjects'].path}#projects?${servicesParams.toString()}`
+        const projectsUrl = `${routes['pageProjects'].path}#services?${servicesParams.toString()}`
         const data = {
           title,
           text: convertLexicalToHTML({ data: description }),

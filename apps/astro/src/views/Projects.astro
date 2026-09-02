@@ -15,7 +15,7 @@ const { hero, services, projects } = Astro.props
 <div class="page">
   <HeroView {...hero} />
   <div class="content">
-    <fieldset class="services" data-services>
+    <fieldset class="services" data-services id="services">
       <ul>
         {
           services.map(({ label, slug }) => (
