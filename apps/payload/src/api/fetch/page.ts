@@ -1,15 +1,12 @@
 import { resolveRoute } from '../../helpers/routes'
 import type { PayloadRequest } from 'payload'
 import type * as API from '@monolithe/api/types'
-import {
-  getContactData,
-  getHomeData,
-  getPresentationData,
-  getProjectData,
-  getProjectsData,
-  formatServicesData,
-} from '../data'
-import { Locale } from '@/types'
+import { getContactData } from '@/api/data/contact'
+import { getHomeData } from '@/api/data/home'
+import { getPresentationData } from '@/api/data/presentation'
+import { getProjectData } from '@/api/data/project'
+import { getProjectsData } from '@/api/data/projects'
+import { getServicesData } from '@/api/data/services'
 
 export const fetchPage = async (
   req: PayloadRequest,
@@ -27,7 +24,6 @@ export const fetchPage = async (
     case 'projects':
       data = await getProjectData({
         id,
-        payload: req.payload,
         locale,
       })
       return {
@@ -38,7 +34,6 @@ export const fetchPage = async (
 
     case 'pageHome':
       data = await getHomeData({
-        payload: req.payload,
         locale,
       })
       return {
@@ -47,15 +42,14 @@ export const fetchPage = async (
       }
 
     case 'pagePresentation':
-      data = await getPresentationData({ payload: req.payload, locale: locale })
+      data = await getPresentationData({ locale })
       return {
         slug,
         ...data,
       }
 
     case 'pageServices':
-      data = await formatServicesData({
-        payload: req.payload,
+      data = await getServicesData({
         locale,
       })
       return {
@@ -65,7 +59,6 @@ export const fetchPage = async (
 
     case 'pageProjects':
       data = await getProjectsData({
-        payload: req.payload,
         locale,
         params,
       })
@@ -75,7 +68,7 @@ export const fetchPage = async (
       }
 
     case 'pageContact':
-      data = await getContactData({ payload: req.payload, locale })
+      data = await getContactData({ locale })
       return {
         slug,
         ...data,

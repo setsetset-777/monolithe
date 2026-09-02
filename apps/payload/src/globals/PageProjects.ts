@@ -5,6 +5,8 @@ import { urlFields } from '@/fields/urlFields'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { revalidateTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
 
 export const PageProjects: GlobalConfig = {
   slug: 'pageProjects',
@@ -30,6 +32,9 @@ export const PageProjects: GlobalConfig = {
     group: localizedLabels.groups.pages,
   },
   hooks: {
-    afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterChange: [
+      invalidateRoutesManifestHook as GlobalAfterChangeHook,
+      async () => revalidateTag(tags.projects(), 'max'),
+    ],
   },
 }

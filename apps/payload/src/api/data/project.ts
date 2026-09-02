@@ -1,23 +1,32 @@
 import type * as API from '@monolithe/api/types'
 import type { Locale, Media } from '@/types'
 import { getRoutes } from '@/helpers/routes'
-import { BasePayload } from 'payload'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
+import { BasePayload, getPayload } from 'payload'
+import config from '@payload-config'
+import { cacheTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
 
 interface Props {
   id: string
-  payload: BasePayload
   locale: Locale
 }
 
 export const getProjectData = async ({
   id,
   locale,
-  payload,
 }: Props): Promise<{
   meta: API.Meta
   data: API.Project.Data
 }> => {
+  'use cache'
+
+  cacheTag(tags.project(id), tags.projectLocale(id, locale))
+
+  const payload = await getPayload({
+    config,
+  })
+
   const [project, routes, pageProjects] = await Promise.all([
     payload.findByID({
       collection: 'projects',

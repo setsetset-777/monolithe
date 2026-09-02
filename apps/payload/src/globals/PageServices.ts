@@ -5,6 +5,8 @@ import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
+import { revalidateTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
 
 export const PageServices: GlobalConfig = {
   slug: 'pageServices',
@@ -25,6 +27,9 @@ export const PageServices: GlobalConfig = {
     group: localizedLabels.groups.pages,
   },
   hooks: {
-    afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterChange: [
+      invalidateRoutesManifestHook as GlobalAfterChangeHook,
+      async () => revalidateTag(tags.services(), 'max'),
+    ],
   },
 }

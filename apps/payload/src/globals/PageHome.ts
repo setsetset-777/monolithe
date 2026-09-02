@@ -3,6 +3,8 @@ import { localizedLabels } from '@/i18n'
 import { titleField } from '@/fields/titleField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
 import { urlFields } from '@/fields/urlFields'
+import { revalidateTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
 
 export const PageHome: GlobalConfig = {
   slug: 'pageHome',
@@ -114,6 +116,9 @@ export const PageHome: GlobalConfig = {
     group: localizedLabels.groups.pages,
   },
   hooks: {
-    afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterChange: [
+      invalidateRoutesManifestHook as GlobalAfterChangeHook,
+      async () => revalidateTag(tags.home(), 'max'),
+    ],
   },
 }

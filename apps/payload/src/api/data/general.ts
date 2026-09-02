@@ -1,15 +1,25 @@
 import type * as API from '@monolithe/api/types'
 import type { PageSlug, Locale } from '@/types'
-import { BasePayload } from 'payload'
+import { BasePayload, getPayload } from 'payload'
 import { getRoutes } from '@/helpers/routes'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
+import { cacheTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
+import config from '@payload-config'
 
 type Props = {
-  payload: BasePayload
   locale: Locale
 }
 
-export const gaetGeneralData = async ({ payload, locale }: Props): Promise<API.General.Data> => {
+export const gaetGeneralData = async ({ locale }: Props): Promise<API.General.Data> => {
+  'use cache'
+
+  cacheTag(tags.general(), tags.generalLocale(locale))
+
+  const payload = await getPayload({
+    config,
+  })
+
   const [routes, general, pageServices, services] = await Promise.all([
     getRoutes(payload, locale),
     payload.findGlobal({ slug: 'general' }),

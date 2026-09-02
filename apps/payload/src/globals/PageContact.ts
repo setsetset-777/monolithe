@@ -4,6 +4,8 @@ import { urlFields } from '@/fields/urlFields'
 import { titleField } from '@/fields/titleField'
 import { heroImageField } from '@/fields/heroImageField'
 import { invalidateRoutesManifestHook } from '@/helpers/routes'
+import { revalidateTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
 
 export const PageContact: GlobalConfig = {
   slug: 'pageContact',
@@ -74,6 +76,9 @@ export const PageContact: GlobalConfig = {
     group: localizedLabels.groups.pages,
   },
   hooks: {
-    afterChange: [invalidateRoutesManifestHook as GlobalAfterChangeHook],
+    afterChange: [
+      invalidateRoutesManifestHook as GlobalAfterChangeHook,
+      async () => revalidateTag(tags.contact(), 'max'),
+    ],
   },
 }

@@ -1,35 +1,44 @@
 import type * as API from '@monolithe/api/types'
 import type { Locale } from '@/types'
-import type { BasePayload } from 'payload'
+import { getPayload } from 'payload'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
-import { fetchProjects } from '../fetch/projects'
+import { getProjectListData } from '@/api/data/project-list'
+import { cacheTag } from 'next/cache'
+import { tags } from '@/helpers/cache'
+import config from '@payload-config'
 
 interface Props {
-  payload: BasePayload
   locale: Locale
   pagination?: {}
   params?: API.Projects.SearchParams
 }
 
 export const getProjectsData = async ({
-  payload,
   locale,
   params = {},
 }: Props): Promise<{
   meta: API.Meta
   data: API.Projects.Data
 }> => {
-  const [pageProjects, services, projects] = await Promise.all([
+  'use cache'
+
+  cacheTag(tags.projects(), tags.projectsQueryLocale(params, locale))
+
+  const payload = await getPayload({
+    config,
+  })
+
+  const [pageProjects, services, projects, test] = await Promise.all([
     payload.findGlobal({
       slug: 'pageProjects',
       locale,
     }),
     listPublishedCollection({ slug: 'services', payload, locale }),
-    fetchProjects({
-      payload,
+    getProjectListData({
       locale,
       params,
     }),
+    payload.find({ collection: 'services', locale }),
   ])
 
   const { title: pageTitle, heroImage } = pageProjects

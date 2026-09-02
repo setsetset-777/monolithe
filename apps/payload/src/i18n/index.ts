@@ -1,13 +1,18 @@
-import type { LocalizationConfigWithNoLabels, Locale, Field, CollectionSlug } from 'payload'
+import type { LocalizationConfigWithNoLabels, Locale, CollectionSlug, TypedLocale } from 'payload'
 import type { TFunction } from '@payloadcms/translations'
 import { enTranslations } from '@payloadcms/translations/languages/en'
 import { frTranslations } from '@payloadcms/translations/languages/fr'
 import type { NestedKeysStripped } from '@payloadcms/translations'
 
+const DEFAULT_LOCALE: TypedLocale = 'fr'
+
 export const localization: LocalizationConfigWithNoLabels = {
   locales: ['fr'],
-  defaultLocale: 'fr',
+  defaultLocale: DEFAULT_LOCALE,
 }
+
+export const normalLocale = (locale?: TypedLocale | null): TypedLocale =>
+  locale ?? (localization.defaultLocale as TypedLocale)
 
 type LocalizedLabel = Record<Locale['code'], string>
 

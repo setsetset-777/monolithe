@@ -1,3 +1,5 @@
+import { tags } from '@/helpers/cache'
+import { revalidateTag } from 'next/cache'
 import type { CollectionConfig, Block, Field } from 'payload'
 
 const encodeSlug = (slug: string) => {
@@ -34,12 +36,9 @@ export const Services: CollectionConfig = {
       type: 'text',
       required: true,
       index: true,
-      // hidden: true,
+      hidden: true,
       admin: {
         readOnly: true,
-      },
-      hooks: {
-        beforeChange: [async ({ siblingData }) => encodeSlug(siblingData.title)],
       },
     },
     {
@@ -152,4 +151,21 @@ export const Services: CollectionConfig = {
       ],
     },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data }) => {
+        data.urlSlug = encodeSlug(data.title)
+        return data
+      },
+    ],
+    afterChange: [
+      async () => {
+        revalidateTag(tags.services(), 'max')
+        revalidateTag(tags.general(), 'max')
+        revalidateTag(tags.home(), 'max')
+        revalidateTag(tags.projectList(), 'max')
+        revalidateTag(tags.projects(), 'max')
+      },
+    ],
+  },
 }
