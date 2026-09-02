@@ -35,7 +35,9 @@ export const formatServicesData = async ({
       },
       sections: services.docs.map((service) => {
         const { id, linkLabel, type, title, description, urlSlug } = service
-        const projectsUrl = `${routes['pageProjects'].path}#${urlSlug}`
+        const servicesParams = new URLSearchParams()
+        servicesParams.append('service', urlSlug)
+        const projectsUrl = `${routes['pageProjects'].path}#projects?${servicesParams.toString()}`
         const data = {
           title,
           text: convertLexicalToHTML({ data: description }),
