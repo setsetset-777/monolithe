@@ -27,7 +27,7 @@ export const formatHomeData = async ({
       locale,
       where: {
         featured: {
-          exists: true,
+          equals: 'true',
         },
       },
     }),
