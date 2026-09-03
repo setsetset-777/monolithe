@@ -35,14 +35,16 @@ export const getServicesData = async ({
     listPublishedCollection({ slug: 'services', locale, payload }),
   ])
 
-  const { title: pageTitle, heroImage } = pageServices
+  const { title, heroImage, meta } = pageServices
   return {
     meta: {
-      title: pageTitle,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       hero: {
-        title: pageTitle,
+        title,
         image: heroImage as API.Media,
         slug: 'pageServices',
       },

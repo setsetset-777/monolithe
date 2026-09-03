@@ -41,15 +41,17 @@ export const getProjectsData = async ({
     payload.find({ collection: 'services', locale }),
   ])
 
-  const { title: pageTitle, heroImage } = pageProjects
+  const { title, heroImage, meta } = pageProjects
 
   return {
     meta: {
-      title: pageTitle,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       hero: {
-        title: pageTitle,
+        title,
         image: heroImage as API.Media,
         slug: 'pageProjects',
       },

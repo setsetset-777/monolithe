@@ -14,7 +14,7 @@ interface Props {
 export const getPresentationData = async ({
   locale,
 }: Props): Promise<{
-  meta: API.Meta
+  meta?: API.Meta
   data: API.Presentation.Data
 }> => {
   'use cache'
@@ -34,10 +34,12 @@ export const getPresentationData = async ({
     listPublishedCollection({ slug: 'testimonials', locale, payload }),
   ])
 
-  const { title: pageTitle, heroImage, monolithe, sections } = pagePresentation
+  const { title: pageTitle, heroImage, monolithe, sections, meta } = pagePresentation
   return {
     meta: {
-      title: pageTitle,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       hero: {

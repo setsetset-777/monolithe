@@ -4,6 +4,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 
 import { en } from '@payloadcms/translations/languages/en'
 import { fr } from '@payloadcms/translations/languages/fr'
@@ -73,7 +74,17 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    seoPlugin({
+      collections: ['projects'],
+      globals: ['pageHome', 'pagePresentation', 'pageServices', 'pageProjects', 'pageContact'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => `Gravvure et Art Funéraire à Bren – Monolithe. — ${doc.title}`,
+      generateDescription: () =>
+        'Leila Danerol – Artisane graveuse sur Bren, Drôme – Création, restauration, gravure de monuments funéraires',
+      tabbedUI: true,
+    }),
+  ],
   endpoints: [
     {
       path: '/general',
@@ -130,7 +141,7 @@ export default buildConfig({
 
         try {
           const data = await fetchPage(req, path, safeParams)
-          // req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
+          req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
 
           if (!data) {
             return Response.json(null, { status: 404 })

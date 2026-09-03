@@ -36,7 +36,9 @@ export interface Parution {
 }
 
 export interface Meta {
-  title: string
+  title?: string
+  description?: string
+  image?: Media
 }
 
 // Base on Payloads pagination response

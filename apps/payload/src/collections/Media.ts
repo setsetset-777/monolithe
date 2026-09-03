@@ -62,6 +62,14 @@ export const Media: CollectionConfig = {
         },
         withoutEnlargement: true,
       },
+      {
+        name: 'og',
+        width: 1200,
+        height: 630,
+        formatOptions: {
+          format: 'png',
+        },
+      },
     ],
   },
   admin: {

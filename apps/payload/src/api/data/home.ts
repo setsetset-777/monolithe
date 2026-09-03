@@ -44,11 +44,13 @@ export const getHomeData = async ({
     }),
   ])
 
-  const { title, presentation, services: servicesSection, projects: projectsSection } = pageHome
+  const { presentation, services: servicesSection, projects: projectsSection, meta } = pageHome
 
   return {
     meta: {
-      title,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       presentation: {

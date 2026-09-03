@@ -227,6 +227,14 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
   };
 }
 /**
@@ -341,6 +349,14 @@ export interface Project {
         id?: string | null;
       }[]
     | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -569,6 +585,16 @@ export interface MediaSelect<T extends boolean = true> {
               filesize?: T;
               filename?: T;
             };
+        og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
       };
 }
 /**
@@ -632,6 +658,13 @@ export interface ProjectsSelect<T extends boolean = true> {
         fullwidth?: T;
         description?: T;
         id?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -744,6 +777,14 @@ export interface PageHome {
     linkLabel?: string | null;
     projectLinkLabel?: string | null;
   };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -827,6 +868,14 @@ export interface PagePresentation {
           }
       )[]
     | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+  };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -842,6 +891,14 @@ export interface PageService {
   heroImage: string | Media;
   collectionLink?: {
     slug?: string | null;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
   };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -859,6 +916,14 @@ export interface PageProject {
   backLinkLabel?: string | null;
   collectionLink?: {
     slug?: string | null;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -879,6 +944,14 @@ export interface PageContact {
     title?: string | null;
     introduction?: string | null;
     actionLabel?: string | null;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -930,6 +1003,13 @@ export interface PageHomeSelect<T extends boolean = true> {
         title?: T;
         linkLabel?: T;
         projectLinkLabel?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -994,6 +1074,13 @@ export interface PagePresentationSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1011,6 +1098,13 @@ export interface PageServicesSelect<T extends boolean = true> {
     | T
     | {
         slug?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   _status?: T;
   updatedAt?: T;
@@ -1030,6 +1124,13 @@ export interface PageProjectsSelect<T extends boolean = true> {
     | T
     | {
         slug?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1052,6 +1153,13 @@ export interface PageContactSelect<T extends boolean = true> {
         title?: T;
         introduction?: T;
         actionLabel?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;

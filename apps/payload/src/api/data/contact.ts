@@ -34,10 +34,12 @@ export const getContactData = async ({
     }),
   ])
 
-  const { title, heroImage, place, email, phone } = pageContact
+  const { title, heroImage, place, email, phone, meta } = pageContact
   return {
     meta: {
-      title,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       hero: {

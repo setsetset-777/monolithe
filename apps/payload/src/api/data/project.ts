@@ -37,11 +37,13 @@ export const getProjectData = async ({
     payload.findGlobal({ slug: 'pageProjects', locale }),
   ])
 
-  const { title, mainImage, description, gallery } = project
+  const { title, mainImage, description, gallery, meta } = project
 
   return {
     meta: {
-      title,
+      title: meta?.title ?? undefined,
+      description: meta?.description ?? undefined,
+      image: (meta?.image as API.Media) ?? undefined,
     },
     data: {
       hero: {
