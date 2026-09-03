@@ -108,6 +108,9 @@ export const customTranslations: Record<Locale['code'], Record<string, any>> = {
         'Edit the visible {{items}} on the frontend directly from the collection page by editing their published status',
       label: 'Go to {{collection}}',
     },
+    cache: {
+      invalidate: 'Empty cache',
+    },
   },
   fr: {
     general: {
@@ -125,6 +128,9 @@ export const customTranslations: Record<Locale['code'], Record<string, any>> = {
       description:
         'Éditez les {{items}} visibles sur le site directement à partir de leur page de collection en gérant leur statut de publication.',
       label: 'Aller aux {{collection}}',
+    },
+    cache: {
+      invalidate: 'Vider le cache',
     },
   },
 }

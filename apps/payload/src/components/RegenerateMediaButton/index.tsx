@@ -7,7 +7,6 @@ export default function RegenerateMediaButton() {
   const { user } = useAuth()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [isReady, setIsReady] = useState<boolean>(false)
 
   if (!user || user.role !== 'admin') {
     return null
@@ -25,8 +24,6 @@ export default function RegenerateMediaButton() {
       if (!response.ok) {
         setError(data.message || `Request failed (${response.status})`)
       }
-
-      setIsReady(true)
     } catch (err) {
       console.error(err)
       setError(err as string)

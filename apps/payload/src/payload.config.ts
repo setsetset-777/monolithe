@@ -32,6 +32,7 @@ import { fetchPage } from '@/api/fetch/page'
 import { Locale } from '@/types'
 import safeProjectsParams from '@/helpers/safeProjectsParams'
 import { fetchProjects } from '@/api/fetch/projects'
+import { invalidateAll } from './helpers/cache'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -49,6 +50,9 @@ export default buildConfig({
           email: process.env.ADMIN_EMAIL,
         }
       : false,
+    components: {
+      settingsMenu: ['@/components/InvalidateCache'],
+    },
   },
   i18n: {
     supportedLanguages: { en, fr },
@@ -198,6 +202,28 @@ export default buildConfig({
       handler: async (req) => {
         try {
           await regenerateMedia(req.payload, 'media')
+          return Response.json({
+            ok: true,
+          })
+        } catch (err) {
+          return Response.json(
+            {
+              ok: false,
+              message: err instanceof Error ? err.message : String(err),
+            },
+            {
+              status: 500,
+            },
+          )
+        }
+      },
+    },
+    {
+      path: '/cache',
+      method: 'get',
+      handler: async () => {
+        try {
+          invalidateAll()
           return Response.json({
             ok: true,
           })

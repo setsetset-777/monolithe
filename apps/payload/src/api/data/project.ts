@@ -21,7 +21,7 @@ export const getProjectData = async ({
 }> => {
   'use cache'
 
-  cacheTag(tags.project(id), tags.projectLocale(id, locale))
+  cacheTag(tags.projectAll(), tags.project(id), tags.projectLocale(id, locale))
 
   const payload = await getPayload({
     config,
