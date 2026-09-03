@@ -38,7 +38,7 @@ const { hero, services, projects } = Astro.props
       <div class="projects__container list" data-projects-loader-list>
         <ProjectList projects={projects.docs} />
         {
-          Array.from({ length: 2 }).map(() => (
+          Array.from({ length: 3 }).map(() => (
             <div class="loader">
               <ProjectListSkeleton />
             </div>
@@ -200,11 +200,17 @@ const { hero, services, projects } = Astro.props
         display: none;
       }
     }
+
+    &[data-state='loading'] {
+      & :global(.project-list-item) {
+        display: none;
+      }
+    }
   }
 
-  @include until(mobile) {
+  @include until(big-mobile) {
     .loader {
-      &:nth-of-type(n + 2) {
+      &:nth-of-type(n + 3) {
         display: none;
       }
     }
