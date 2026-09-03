@@ -36,9 +36,9 @@ export const Services: CollectionConfig = {
       type: 'text',
       required: true,
       index: true,
-      hidden: true,
       admin: {
         readOnly: true,
+        hidden: true,
       },
     },
     {
