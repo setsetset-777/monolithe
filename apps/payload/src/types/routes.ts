@@ -1,5 +1,6 @@
 import type { TypedLocale, DataFromGlobalSlug, DataFromCollectionSlug } from 'payload'
 import type { PageSlug } from '@/types'
+import type * as API from '@monolithe/api/types'
 
 export type Manifest = {
   generatedAt: number
@@ -43,9 +44,7 @@ export type Route = {
   parent?: PageSlug
   type: 'global' | 'collection'
   updatedAt?: string
-  meta: {
-    title: string
-  }
+  meta?: API.Meta
 }
 
 export type LocalizedRoutes = { [key: string]: Route }

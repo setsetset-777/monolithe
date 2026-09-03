@@ -14,7 +14,7 @@ interface Props {
 export const getPresentationData = async ({
   locale,
 }: Props): Promise<{
-  meta?: API.Meta
+  meta: API.Meta
   data: API.Presentation.Data
 }> => {
   'use cache'

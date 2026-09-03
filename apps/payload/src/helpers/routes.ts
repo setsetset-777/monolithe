@@ -15,6 +15,7 @@ import type {
   Route,
   RoutedGlobalSlug,
   RoutedCollectionSlug,
+  Media,
 } from '@/types'
 import { cacheTag } from 'next/cache'
 import { tags } from './cache'
@@ -86,11 +87,13 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         id: global.id,
         path: `/${path || urlSlug}`,
         slug: slug,
-        urlSlug,
+        urlSlug: urlSlug as string,
         type: 'global',
         updatedAt: doc.updatedAt ?? undefined,
         meta: {
-          title: doc.title,
+          title: doc.meta?.title ?? undefined,
+          description: doc.meta?.description ?? undefined,
+          image: (doc.meta?.image as Media) ?? undefined,
         },
       }
       if (children) {
