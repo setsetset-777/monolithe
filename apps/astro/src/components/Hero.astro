@@ -4,12 +4,13 @@ import type { Media } from '@monolithe/api/types'
 
 interface Props {
   image: Media
+  isPlant?: boolean
 }
 
-const { image } = Astro.props
+const { image, isPlant } = Astro.props
 ---
 
-<section class="hero">
+<section class:list={['hero', isPlant && 'hero--plant']}>
   <div class="inner">
     <slot />
   </div>
@@ -40,6 +41,10 @@ const { image } = Astro.props
     --padding-top: var(--space-48);
     --padding-bottom: var(--space-80);
     position: relative;
+
+    &--plant {
+      // max-height: 75dvh;
+    }
   }
 
   .inner {
@@ -48,6 +53,7 @@ const { image } = Astro.props
     padding-bottom: var(--padding-bottom);
     position: relative;
     z-index: 1;
+    display: flex;
   }
 
   .image {
@@ -74,7 +80,15 @@ const { image } = Astro.props
     }
   }
 
-  @include from(mobile) {
+  @include until(m, height) {
+    .hero {
+      &--plant {
+        max-height: 75dvh;
+      }
+    }
+  }
+
+  @media (#{media(s, height, from)}) and (#{media(mobile, width, from)}) {
     .hero {
       --padding-top: var(--space-80);
       --padding-bottom: var(--space-128);

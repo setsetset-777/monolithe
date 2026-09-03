@@ -86,6 +86,7 @@ $colors: (
   --section-padding-y: var(--space-48);
   --project-list-item-span: 12;
   --hero-title-font-size-max: var(--font-size-l);
+  --hero-plant-plant-size: #{pxToRem(90px)};
 }
 
 .body {
@@ -109,7 +110,6 @@ $colors: (
     );
     --home-plants-size: pxToRem(465px);
     --sidebar-padding-y: --content-padding-y;
-    --section-padding-y: var(--space-80);
     --grid-gap: var(--space-64);
   }
 
@@ -119,6 +119,11 @@ $colors: (
 
   @include from(s, height) {
     --content-padding-y: var(--space-80);
+  }
+
+  @media (#{media(s, height, from)}) and (#{media(desktop, width, from)}) {
+    --section-padding-y: var(--space-80);
+    --hero-plant-plant-size: #{pxToRem(180px)};
   }
 
   // Big menu

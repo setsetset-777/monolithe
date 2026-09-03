@@ -12,7 +12,7 @@ const { title, image, slug } = Astro.props
 const PlantIndex = getPlantIndex(slug)
 ---
 
-<HeroView image={image}>
+<HeroView image={image} isPlant={true}>
   <div class="content">
     <div class="plant"><Plant type="left" index={PlantIndex} /></div>
     <h1>{title}</h1>
@@ -24,12 +24,11 @@ const PlantIndex = getPlantIndex(slug)
   @use '../styles/utilities' as *;
 
   .content {
-    --font-size: var(--font-size-xl);
-    --plant-size: #{pxToRem(180px)};
+    --plant-size: var(--hero-plant-plant-size);
 
     display: flex;
     flex-direction: column;
-    gap: var(--space-48);
+    gap: clamp(var(--space-16), 6dvh, var(--space-48));
   }
 
   .plant {
@@ -39,14 +38,7 @@ const PlantIndex = getPlantIndex(slug)
 
   h1 {
     font-family: var(--font-family-heading);
-    font-size: var(--font-size);
+    font-size: var(--hero-tite-font-size);
     color: var(--color-gray-00);
-  }
-
-  @include from(mobile) {
-    .content {
-      --font-size: var(--font-size-xxl);
-      --plant-size: #{pxToRem(240px)};
-    }
   }
 </style>
