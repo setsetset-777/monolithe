@@ -36,26 +36,66 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
 
 {
   src && (
-    <img
-      src={formatSrc(src)}
-      srcset={Object.keys(srcset)
-        .map((key) => `${formatSrc(srcset[key])} ${key}`)
-        .join(',')}
-      sizes={sizes}
-      alt={alt}
-      class:list={['image', className, ...(modifiers || [])]}
-      loading={loading}
-      style={style}
-      fetchpriority={fetchpriority}
-      decoding={decoding}
-    />
+    <div class="wrapper">
+      <img
+        src={formatSrc(src)}
+        srcset={Object.keys(srcset)
+          .map((key) => `${formatSrc(srcset[key])} ${key}`)
+          .join(',')}
+        sizes={sizes}
+        alt={alt}
+        class:list={['image', className, ...(modifiers || [])]}
+        loading={loading}
+        style={style}
+        fetchpriority={fetchpriority}
+        decoding={decoding}
+        data-load
+      />
+    </div>
   )
 }
 
+<script>
+  const initImages = () => {
+    const images = document.querySelectorAll<HTMLImageElement>('img[data-load]')
+    images.forEach((image) => {
+      if (image.complete) {
+        image.setAttribute('load', 'complete')
+      }
+
+      image.addEventListener(
+        'load',
+        () => {
+          image.setAttribute('load', 'complete')
+        },
+        { once: true },
+      )
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initImages()
+  })
+</script>
+
 <style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-gray-80);
+  }
+
   .image {
     display: block;
     width: 100%;
+    opacity: 0;
+    @include transition(opacity);
+
+    &[load='complete'] {
+      opacity: 1;
+    }
   }
 
   .fill {
