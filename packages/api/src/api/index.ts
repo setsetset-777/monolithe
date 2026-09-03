@@ -25,7 +25,7 @@ let config: InitConfig = {
  * @param locale
  * @returns
  */
-export async function fetchPage(path: string, locale?: Payload.Locale): Promise<PageData> {
+export async function fetchPage(path: string, locale?: Payload.Locale): Promise<PageData | null> {
   return request(
     buildUrl({
       slug: 'page',
@@ -39,7 +39,7 @@ export async function fetchPage(path: string, locale?: Payload.Locale): Promise<
  * @param locale
  * @returns
  */
-export async function fetchGeneral(locale?: Payload.Locale): Promise<General.Data> {
+export async function fetchGeneral(locale?: Payload.Locale): Promise<General.Data | null> {
   return request(
     buildUrl({
       slug: 'general',
@@ -60,7 +60,7 @@ export async function fetchProjects(
     limit?: string
   },
   locale?: Payload.Locale,
-): Promise<Projects.List> {
+): Promise<Projects.List | null> {
   const safeParams = ProjectsSearchParams.safeParse(params)
 
   if (!safeParams.success) {
@@ -158,7 +158,7 @@ async function login(): Promise<void> {
  * @param url
  * @returns
  */
-async function request<T>(url: string): Promise<T> {
+async function request<T>(url: string): Promise<T | null> {
   if (!token) {
     await login()
   }
@@ -182,6 +182,14 @@ async function request<T>(url: string): Promise<T> {
         Authorization: `Bearer ${token}`,
       },
     })
+  }
+
+  if (res.status === 401) {
+    console.log('???????')
+  }
+
+  if (res.status === 404) {
+    return null
   }
 
   if (!res.ok) {

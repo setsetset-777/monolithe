@@ -13,66 +13,76 @@ export const fetchPage = async (
   path: string,
   params: API.Projects.SearchParams,
 ): Promise<API.PageData | null> => {
-  const {
-    locale,
-    route: { slug, id },
-  } = await resolveRoute({ path, payload: req.payload })
-  let res
-  let data
+  try {
+    const route = await resolveRoute({ path, payload: req.payload })
 
-  switch (slug) {
-    case 'projects':
-      data = await getProjectData({
-        id,
-        locale,
-      })
-      return {
-        slug,
-        parentSlug: 'pageProjects',
-        ...data,
-      }
+    if (!route) {
+      return null
+    }
 
-    case 'pageHome':
-      data = await getHomeData({
-        locale,
-      })
-      return {
-        slug,
-        ...data,
-      }
+    const {
+      locale,
+      route: { slug, id },
+    } = route
 
-    case 'pagePresentation':
-      data = await getPresentationData({ locale })
-      return {
-        slug,
-        ...data,
-      }
+    let data
 
-    case 'pageServices':
-      data = await getServicesData({
-        locale,
-      })
-      return {
-        slug,
-        ...data,
-      }
+    switch (slug) {
+      case 'projects':
+        data = await getProjectData({
+          id,
+          locale,
+        })
+        return {
+          slug,
+          parentSlug: 'pageProjects',
+          ...data,
+        }
 
-    case 'pageProjects':
-      data = await getProjectsData({
-        locale,
-        params,
-      })
-      return {
-        slug,
-        ...data,
-      }
+      case 'pageHome':
+        data = await getHomeData({
+          locale,
+        })
+        return {
+          slug,
+          ...data,
+        }
 
-    case 'pageContact':
-      data = await getContactData({ locale })
-      return {
-        slug,
-        ...data,
-      }
+      case 'pagePresentation':
+        data = await getPresentationData({ locale })
+        return {
+          slug,
+          ...data,
+        }
+
+      case 'pageServices':
+        data = await getServicesData({
+          locale,
+        })
+        return {
+          slug,
+          ...data,
+        }
+
+      case 'pageProjects':
+        data = await getProjectsData({
+          locale,
+          params,
+        })
+        return {
+          slug,
+          ...data,
+        }
+
+      case 'pageContact':
+        data = await getContactData({ locale })
+        return {
+          slug,
+          ...data,
+        }
+    }
+  } catch (e) {
+    throw e
   }
   return null
 }

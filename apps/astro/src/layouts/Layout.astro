@@ -1,9 +1,10 @@
 ---
+import { getGeneral } from '@/lib/page'
 import Sidebar from '@/components/Sidebar.astro'
 import Footer from '@/components/Footer.astro'
 import { ClientRouter } from 'astro:transitions'
 
-import type { General, PageSlug } from '@monolithe/api/types'
+import type { PageSlug } from '@monolithe/api/types'
 
 const analytics = {
   enable: process.env.ANALYTICS_ENABLE === 'true',
@@ -12,20 +13,17 @@ const analytics = {
 }
 
 type Props = {
-  footer: General.Footer
-  navigation: General.Navigation
   meta: {
     title: string
   }
-  slug: PageSlug
+  noGeneral?: boolean
+  slug?: PageSlug
   parentSlug?: PageSlug
 }
 
-const { footer, navigation, meta, slug, parentSlug } = Astro.props
+const { meta, slug, parentSlug, noGeneral } = Astro.props
 
-const { home, menu } = navigation
-
-const { logoCatch, contact, services } = footer
+const { navigation, footer } = !noGeneral ? await getGeneral() : {}
 
 const sidebarType = slug === 'pageHome' ? 'big' : 'small'
 ---
@@ -73,13 +71,19 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
     <div class="container">
       <div class="container__inner">
         <div class="content">
-          <Sidebar home={home} menu={menu} type={sidebarType} slug={slug} parentSlug={parentSlug} />
+          <Sidebar
+            home={navigation?.home}
+            menu={navigation?.menu}
+            type={sidebarType}
+            slug={slug}
+            parentSlug={parentSlug}
+          />
 
           <main class="main">
             <slot />
           </main>
 
-          <Footer logoCatch={logoCatch} contact={contact} services={services} />
+          <Footer {...footer} />
         </div>
       </div>
     </div>

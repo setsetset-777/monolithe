@@ -7,13 +7,13 @@ import Logo777 from '@/assets/svgs/777.svg'
 import type { ServicesList } from '@monolithe/api/types'
 
 interface Props {
-  logoCatch: string
-  contact: {
+  logoCatch?: string
+  contact?: {
     text: string
     label: string
     url: string
   }
-  services: ServicesList
+  services?: ServicesList
 }
 
 const { logoCatch, contact, services } = Astro.props
@@ -31,31 +31,33 @@ const { logoCatch, contact, services } = Astro.props
 
       <Separator />
 
-      <div class="contact">
-        <p class="contact__text">
-          {contact.text}
-        </p>
-        <Action className="contact__action" href={contact.url}>
-          {contact.label}
-        </Action>
-      </div>
+      {
+        contact && (
+          <div class="contact">
+            <p class="contact__text">{contact.text}</p>
+            <Action className="contact__action" href={contact.url}>
+              {contact.label}
+            </Action>
+          </div>
+        )
+      }
     </div>
 
     <div class="column">
-      <div class="services">
-        <h4 class="services__title">
-          {services.title}
-        </h4>
-        <ul class="services__list">
-          {
-            services.items.map(({ title, url }) => (
-              <li class="services__item">
-                <a href={url}>{title}</a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+      {
+        services && (
+          <div class="services">
+            <h4 class="services__title">{services.title}</h4>
+            <ul class="services__list">
+              {services.items.map(({ title, url }) => (
+                <li class="services__item">
+                  <a href={url}>{title}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
 
       <p class="setsetset">
         <span>Design & Code par</span>

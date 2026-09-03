@@ -139,25 +139,29 @@ export const resolveRoute = async ({
 }): Promise<{
   locale: Locale
   route: Route
-}> => {
-  const paths = path.replace(/^\/+/, '').split('/')
-  locale = localization.locales.includes(paths[0]) ? (paths[0] as Locale) : (locale as Locale)
+} | null> => {
+  try {
+    const paths = path.replace(/^\/+/, '').split('/')
+    locale = localization.locales.includes(paths[0]) ? (paths[0] as Locale) : (locale as Locale)
 
-  if (locale) {
-    // Remove locale
-    path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
-  }
+    if (locale) {
+      // Remove locale
+      path = path.replace(new RegExp(`^${locale}(?=\/|$)`), '')
+    }
 
-  const routes = await getRoutes(locale)
+    const routes = await getRoutes(locale)
 
-  const route = routes && Object.values(routes).find((value) => value.path === path)
+    const route = routes && Object.values(routes).find((value) => value.path === path)
 
-  if (!route) {
-    throw new Error('No route found')
-  }
+    if (!route) {
+      return null
+    }
 
-  return {
-    locale,
-    route,
+    return {
+      locale,
+      route,
+    }
+  } catch (e) {
+    throw e
   }
 }

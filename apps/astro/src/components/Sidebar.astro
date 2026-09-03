@@ -8,17 +8,17 @@ import { getHerbier } from '@/lib/herbiers'
 import type { PageSlug } from '@monolithe/api/types'
 
 type Props = {
-  home: {
+  home?: {
     url: string
     linkLabel: string
   }
-  menu: {
+  menu?: {
     title: string
     url: string
     slug: PageSlug
   }[]
   type?: 'big' | 'small'
-  slug: PageSlug
+  slug?: PageSlug
   parentSlug?: PageSlug
 }
 
@@ -39,7 +39,7 @@ const herbierCentre = getHerbier('centre')
   <div class="container">
     <div class="content">
       <div class="header">
-        <a href={home.url} aria-label={home.linkLabel}>
+        <a href={home?.url ?? '/'} aria-label={home?.linkLabel ?? 'Accueil'}>
           <Logo class:list={'logo'} />
         </a>
         <SidebarSwitch />
@@ -47,28 +47,32 @@ const herbierCentre = getHerbier('centre')
       <div class="main">
         <div class="main__inner">
           <Separator />
-          <nav class="menu">
-            <ul class="menu__list" data-menu>
-              {
-                menu.map(({ title, url, slug: itemSlug }) => (
-                  <li class="menu__item">
-                    <a
-                      class:list={[
-                        'menu__link',
-                        (slug === itemSlug || parentSlug === itemSlug) && 'active',
-                      ]}
-                      href={url}
-                      data-menu-item
-                      data-slug={itemSlug}
-                    >
-                      {title}
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </nav>
-          <Separator />
+          {
+            menu && (
+              <Fragment>
+                <nav class="menu">
+                  <ul class="menu__list" data-menu>
+                    {menu.map(({ title, url, slug: itemSlug }) => (
+                      <li class="menu__item">
+                        <a
+                          class:list={[
+                            'menu__link',
+                            (slug === itemSlug || parentSlug === itemSlug) && 'active',
+                          ]}
+                          href={url}
+                          data-menu-item
+                          data-slug={itemSlug}
+                        >
+                          {title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+                <Separator />
+              </Fragment>
+            )
+          }
         </div>
       </div>
     </div>

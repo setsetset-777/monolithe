@@ -1,51 +1,29 @@
 ---
 import '../styles/index.scss'
 
-import { getPage, getGeneral } from '@/lib/page'
-import Layout from '@/layouts/Layout.astro'
-import Home from '../views/Home.astro'
-import Presentation from '../views/Presentation.astro'
-import Services from '../views/Services.astro'
-import Projects from '../views/Projects.astro'
-import Project from '../views/Project.astro'
-import Contact from '../views/Contact.astro'
+import { getPage } from '@/lib/page'
+import NotFound from '@/layouts/NotFound.astro'
+import Error from '@/layouts/Error.astro'
+import Page from '@/layouts/Page.astro'
+
+import type { PageData } from '@monolithe/api/types'
 
 const { path } = Astro.params
 
-const { slug, data, meta, parentSlug } = await getPage(
-  `/${path ?? ''}?${Astro.url.searchParams.toString()}`,
-)
+let page: PageData | null = null
+let error = false
 
-if (!slug) {
-  return Astro.redirect('/404')
+try {
+  page = await getPage(`/${path ?? ''}?${Astro.url.searchParams.toString()}`)
+} catch (e) {
+  console.error(e)
+  error = true
+  Astro.response.status = 500
 }
 
-const { navigation, footer } = await getGeneral()
+if (!page) {
+  Astro.response.status = 404
+}
 ---
 
-<Layout
-  navigation={navigation}
-  footer={footer}
-  meta={{ title: meta.title }}
-  slug={slug}
-  parentSlug={parentSlug}
->
-  {slug === 'pageHome' && <Home {...data} />}
-  {slug === 'pagePresentation' && <Presentation {...data} />}
-  {slug === 'pageServices' && <Services {...data} />}
-  {slug === 'pageProjects' && <Projects {...data} />}
-  {slug === 'projects' && <Project {...data} />}
-  {slug === 'pageContact' && <Contact {...data} />}
-</Layout>
-
-<style lang="scss">
-  html,
-  body {
-    background-color: var(--color-gray-100);
-    color: var(--color-gray-00);
-    font-family: var(--font-family-body);
-    height: 100%;
-    font-size: var(--font-size-s);
-    scroll-behavior: smooth;
-  }
-</style>
+{error ? <Error /> : page ? <Page page={page} /> : <NotFound />}

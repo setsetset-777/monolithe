@@ -1,0 +1,27 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Home from '@/views/Home.astro'
+import Presentation from '@/views/Presentation.astro'
+import Services from '@/views/Services.astro'
+import Projects from '@/views/Projects.astro'
+import Project from '@/views/Project.astro'
+import Contact from '@/views/Contact.astro'
+import type { PageData } from '@monolithe/api/types'
+
+interface Props {
+  page: PageData
+}
+
+const { page } = Astro.props
+
+const { slug, data, meta, parentSlug } = page ?? {}
+---
+
+<Layout meta={{ title: meta.title }} slug={slug} parentSlug={parentSlug}>
+  {slug === 'pageHome' && <Home {...data} />}
+  {slug === 'pagePresentation' && <Presentation {...data} />}
+  {slug === 'pageServices' && <Services {...data} />}
+  {slug === 'pageProjects' && <Projects {...data} />}
+  {slug === 'projects' && <Project {...data} />}
+  {slug === 'pageContact' && <Contact {...data} />}
+</Layout>
