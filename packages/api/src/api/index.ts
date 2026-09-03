@@ -165,7 +165,7 @@ async function request<T>(url: string): Promise<T> {
 
   let res = await fetch(url, {
     headers: {
-      Authorization: config.env === 'development' ? '' : `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 
@@ -179,7 +179,7 @@ async function request<T>(url: string): Promise<T> {
 
     res = await fetch(url, {
       headers: {
-        Authorization: config.env === 'development' ? '' : `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
   }

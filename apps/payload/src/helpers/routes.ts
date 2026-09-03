@@ -123,7 +123,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
     }
   }
 
-  payload.logger.info(routes, 'Built routes')
+  // payload.logger.info(routes, 'Built routes')
 
   return routes
 }

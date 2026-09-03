@@ -79,9 +79,13 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        req.payload.logger.info(req.query, 'Hiiting endpoint /general')
+        if (!req.user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
+        req.payload.logger.info('Hiiting endpoint /general')
         const data = await fetchGeneral(req)
-        req.payload.logger.info(data, `Fetched data for general`)
+        // req.payload.logger.info(data, `Fetched data for general`)
 
         return Response.json({
           ok: true,
@@ -93,7 +97,11 @@ export default buildConfig({
       path: '/page',
       method: 'get',
       handler: async (req) => {
-        req.payload.logger.info(req.query, 'Hiiting endpoint /page')
+        if (!req.user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
+        req.payload.logger.info('Hiiting endpoint /page')
         const [path, search] = (req.query.path as string).split('?')
         let params = new URLSearchParams(search)
         let safeParams
@@ -122,7 +130,7 @@ export default buildConfig({
 
         try {
           const data = await fetchPage(req, path, safeParams)
-          req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
+          // req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
           return Response.json({
             ok: true,
             ...data,
@@ -145,7 +153,7 @@ export default buildConfig({
       path: '/projects-list',
       method: 'get',
       handler: async (req) => {
-        req.payload.logger.info(req.query, 'Hiiting endpoint /projects')
+        req.payload.logger.info('Hiiting endpoint /projects')
 
         let params = new URLSearchParams(req.search)
         let safeParams
@@ -200,6 +208,14 @@ export default buildConfig({
       path: '/regenerate-media',
       method: 'post',
       handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
+        if (req.user.role !== 'admin') {
+          return Response.json({ message: 'Forbidden' }, { status: 403 })
+        }
+
         try {
           await regenerateMedia(req.payload, 'media')
           return Response.json({
@@ -221,7 +237,15 @@ export default buildConfig({
     {
       path: '/cache',
       method: 'get',
-      handler: async () => {
+      handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
+        if (req.user.role !== 'admin') {
+          return Response.json({ message: 'Forbidden' }, { status: 403 })
+        }
+
         try {
           invalidateAll()
           return Response.json({
