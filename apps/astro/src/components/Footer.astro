@@ -35,9 +35,11 @@ const { logoCatch, contact, services } = Astro.props
         contact && (
           <div class="contact">
             <p class="contact__text">{contact.text}</p>
-            <Action className="contact__action" href={contact.url}>
-              {contact.label}
-            </Action>
+            {contact.label && (
+              <Action className="contact__action" href={contact.url}>
+                {contact.label}
+              </Action>
+            )}
           </div>
         )
       }

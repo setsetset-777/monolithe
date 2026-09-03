@@ -11,7 +11,7 @@ type Props = {
   locale: Locale
 }
 
-export const gaetGeneralData = async ({ locale }: Props): Promise<API.General.Data> => {
+export const getGeneralData = async ({ locale }: Props): Promise<API.General.Data> => {
   'use cache'
 
   cacheTag(tags.general(), tags.generalLocale(locale))
@@ -29,7 +29,7 @@ export const gaetGeneralData = async ({ locale }: Props): Promise<API.General.Da
 
   const serviceItems = []
 
-  for (const slug of general.navigation.navigationList) {
+  for (const slug of general.navigation.navigationList || []) {
     const page = await payload.findGlobal({
       slug,
       locale: locale,
