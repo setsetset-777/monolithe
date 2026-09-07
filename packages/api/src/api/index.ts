@@ -185,7 +185,7 @@ async function request<T>(url: string): Promise<T | null> {
   }
 
   if (res.status === 401) {
-    console.log('???????')
+    //TODO handle not authenticated errors
   }
 
   if (res.status === 404) {

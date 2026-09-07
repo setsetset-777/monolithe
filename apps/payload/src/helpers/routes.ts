@@ -1,10 +1,5 @@
 import { localization } from '@/i18n'
-import {
-  type BasePayload,
-  type GlobalAfterChangeHook,
-  type CollectionAfterChangeHook,
-  getPayload,
-} from 'payload'
+import { type BasePayload, getPayload } from 'payload'
 import type {
   Manifest,
   RouteConfig,

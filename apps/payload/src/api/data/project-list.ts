@@ -51,14 +51,14 @@ export const getProjectListData = async ({
       page: page ?? 1,
       limit: limit ?? apiConfig.projectsLimit,
     },
-    where: {
-      services:
-        selectedServicesIds.length > 0
-          ? {
+    where:
+      selectedServicesIds.length > 0
+        ? {
+            services: {
               in: selectedServicesIds,
-            }
-          : [],
-    },
+            },
+          }
+        : {},
   })
 
   return {
