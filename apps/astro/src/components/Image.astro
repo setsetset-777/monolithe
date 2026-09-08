@@ -1,5 +1,5 @@
 ---
-type Modifier = 'fill'
+type Fit = 'fill' | 'contain'
 
 type Props = {
   src?: string | null | undefined
@@ -10,7 +10,7 @@ type Props = {
   loading?: HTMLImageElement['loading']
   sizes?: HTMLImageElement['sizes']
   class?: string
-  modifiers?: Modifier[]
+  fit?: Fit
   style?: string
   fetchpriority?: 'high' | 'auto' | 'low' | null | undefined
   decoding?: HTMLImageElement['decoding']
@@ -23,7 +23,7 @@ const {
   loading = 'lazy',
   sizes = '100w',
   class: className,
-  modifiers,
+  fit = 'fill',
   style,
   fetchpriority,
   decoding,
@@ -36,7 +36,7 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
 
 {
   src && (
-    <div class="wrapper">
+    <div class:list={['wrapper', className, fit]}>
       <img
         src={formatSrc(src)}
         srcset={Object.keys(srcset)
@@ -44,7 +44,7 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
           .join(',')}
         sizes={sizes}
         alt={alt}
-        class:list={['image', className, ...(modifiers || [])]}
+        class="image"
         loading={loading}
         style={style}
         fetchpriority={fetchpriority}
@@ -98,7 +98,17 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
   }
 
   .fill {
-    object-fit: cover;
     height: 100%;
+    .image {
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .contain {
+    .image {
+      object-fit: contain;
+      height: 100%;
+    }
   }
 </style>

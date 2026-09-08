@@ -22,7 +22,7 @@ const { projects } = Astro.props
                 '800w': image.sizes?.[1000]?.url!,
                 '1600w': image.sizes?.[2000]?.url!,
               }}
-              modifiers={['fill']}
+              fit="contain"
             />
           )}
           <a href={url}>

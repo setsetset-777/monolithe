@@ -10,21 +10,18 @@ const { title, text, image } = Astro.props
 <section>
   <h3 class="title">{title}</h3>
   <div class="image">
-    <div class="image__inner">
-      {
-        image && (
-          <Image
-            src={image.url}
-            alt={image.alt}
-            srcset={{
-              '800w': image.sizes?.[2000]?.url!,
-              '1200w': image.sizes?.[3000]?.url!,
-            }}
-            modifiers={['fill']}
-          />
-        )
-      }
-    </div>
+    {
+      image && (
+        <Image
+          src={image.url}
+          alt={image.alt}
+          srcset={{
+            '800w': image.sizes?.[2000]?.url!,
+            '1200w': image.sizes?.[3000]?.url!,
+          }}
+        />
+      )
+    }
   </div>
   <div class="text p-space" set:html={text} />
 </section>
@@ -54,6 +51,7 @@ const { title, text, image } = Astro.props
   @include from(mobile) {
     section {
       @include grid;
+      grid-template-rows: auto minmax(0, 1fr);
     }
 
     .title {
@@ -65,12 +63,6 @@ const { title, text, image } = Astro.props
       grid-column: span 5;
       grid-row: span 2;
       order: 1;
-
-      &__inner {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-      }
     }
 
     .text {
