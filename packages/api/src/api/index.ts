@@ -126,6 +126,10 @@ async function fetchLogin() {
   })
 
   if (!res.ok) {
+    const body = await res.text().catch(() => '')
+
+    logger.error(`Unable to login (${res.status}): ${body}`)
+
     throw new Error(`Unable to login (${res.status})`)
   }
 
@@ -164,35 +168,39 @@ async function request<T>(url: string): Promise<T | null> {
   }
 
   let res = await fetch(url, {
-    // headers: {
-    //   Authorization: `Bearer ${token}`,
-    // },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 
   // Token expired: refresh once
-  // if (res.status === 401) {
-  //   logger.info('Payload token expired. Refreshing.')
+  if (res.status === 401) {
+    logger.info('Payload token expired. Refreshing.')
 
-  //   token = null
+    token = null
 
-  //   await login()
+    await login()
 
-  //   res = await fetch(url, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  // }
+    res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  }
 
-  // if (res.status === 401) {
-  //   //TODO handle not authenticated errors
-  // }
+  if (res.status === 401) {
+    //TODO handle not authenticated errors
+  }
 
   if (res.status === 404) {
     return null
   }
 
   if (!res.ok) {
+    const body = await res.text().catch(() => '')
+
+    logger.error(`Payload request failed (${res.status}): ${body}`)
+
     throw new Error(`Payload request failed (${res.status}) for ${url}`)
   }
 
