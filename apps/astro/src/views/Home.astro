@@ -330,22 +330,12 @@ const herbier = getHerbier('centre')
       --row-gap: var(--space-32);
       --list-gap: var(--space-24);
 
-      @include grid;
-
-      &__title {
-        grid-column: 1 / span 6;
-        order: 1;
-      }
-
-      &__link {
-        grid-column: 1 / span 6;
-        order: 3;
-      }
-
       &__list {
-        grid-column: 7 / span 6;
-        grid-row: span 2;
-        order: 2;
+        @include grid;
+      }
+
+      &__item {
+        grid-column: span 6;
       }
     }
   }
