@@ -12,7 +12,9 @@ const { title, list } = Astro.props
     {
       list.map(({ description, name, company }) => (
         <div class="testimonial">
-          <p class="testimonial__description">{description}</p>
+          <div class="testimonial__description">
+            <p>{description}</p>
+          </div>
           <div class="testimonial__info">
             <span class="testimonial__name">{name}</span>
             <span class="testimonial__company">{company}</span>
@@ -51,6 +53,33 @@ const { title, list } = Astro.props
 
     &__description {
       @include font-heading-3;
+      position: relative;
+
+      p {
+        position: relative;
+        z-index: 2;
+      }
+
+      &:before,
+      &:after {
+        display: block;
+        position: absolute;
+        color: var(--color-gold-50);
+        font-size: 8rem;
+        z-index: 1;
+      }
+
+      &:before {
+        content: '“';
+        top: -2rem;
+        left: -2rem;
+      }
+
+      &:after {
+        content: '”';
+        right: -1rem;
+        bottom: -6rem;
+      }
     }
 
     &__info {
