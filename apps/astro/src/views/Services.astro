@@ -41,7 +41,7 @@ const { hero, sections } = Astro.props
                 </div>
                 <div class="section__text" set:html={text} />
                 <div class="section__link">
-                  <Anchor href={projectsUrl}>{linkLabel}</Anchor>
+                  {linkLabel && <Anchor href={projectsUrl}>{linkLabel}</Anchor>}
                 </div>
               </section>
             )
@@ -72,7 +72,7 @@ const { hero, sections } = Astro.props
                     </div>
                   ))}
                 </div>
-                <Anchor href={projectsUrl}>{linkLabel}</Anchor>
+                {linkLabel && <Anchor href={projectsUrl}>{linkLabel}</Anchor>}
               </section>
             )
             break
