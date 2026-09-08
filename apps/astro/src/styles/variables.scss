@@ -1,0 +1,138 @@
+@use './utilities' as *;
+@use 'sass:map';
+@use 'sass:color';
+
+$colors: (
+  'gray-00': #ffffff,
+  'gray-10': #b4b4b4,
+  'gray-20': #a9a9a9,
+  'gray-50': #292929,
+  'gray-80': #222222,
+  'gray-100': #1e1e1e,
+  'gold-10': #ffe14b,
+  'gold-20': #fed81d,
+  'gold-30': #d4af37,
+  'gold-40': #ab9420,
+  'gold-50': #6d5d0d,
+);
+
+:root {
+  // BASE
+  @each $name, $hex in $colors {
+    --color-#{$name}: #{$hex};
+    --color-#{$name}-rgb:
+      #{color.channel($hex, 'red', $space: rgb)}, #{color.channel($hex, 'green', $space: rgb)},
+      #{color.channel($hex, 'blue', $space: rgb)};
+  }
+
+  --font-size-base: #{pxToRem(18px)};
+  --font-size-xs: #{pxToRem(12px)};
+  --font-size-s: #{pxToRem(16px)};
+  --font-size-m: #{pxToRem(18px)};
+  --font-size-l: #{pxToRem(24px)};
+  --font-size-xl: #{pxToRem(32px)};
+  --font-size-xxl: #{pxToRem(48px)};
+  --font-size-xxxl: #{pxToRem(64px)};
+  --font-family-heading: Fenix, Garamond, serif;
+  --font-family-body: 'DM Sans', 'Helvetica Neu', Helvetica, sans-serif;
+  --font-family-mono: 'DM Mono', Monaco, courrier;
+
+  --ease-time-short: 150ms;
+  --ease-time-medium: 300ms;
+  --ease-time-long: 1000ms;
+  --ease-function: ease-in-out;
+
+  --space-2: #{pxToRem(2px)};
+  --space-4: #{pxToRem(4px)};
+  --space-8: #{pxToRem(8px)};
+  --space-12: #{pxToRem(12px)};
+  --space-16: #{pxToRem(16px)};
+  --space-24: #{pxToRem(24px)};
+  --space-32: #{pxToRem(32px)};
+  --space-48: #{pxToRem(48px)};
+  --space-64: #{pxToRem(64px)};
+  --space-80: #{pxToRem(80px)};
+  --space-128: #{pxToRem(128px)};
+
+  --radius-1: #{pxToRem(1px)};
+  --radius-2: #{pxToRem(2px)};
+
+  --blur: 3px;
+
+  // COMPOSED
+  --color-font-gold: var(--color-gold-30);
+
+  --layout-max-width: #{pxToRem(1600px)};
+
+  --sidebar-skew-size: #{var(--space-16)};
+  --sidebar-logo-height-s: #{pxToRem(30px)};
+  --sidebar-logo-height-m: #{pxToRem(45px)};
+  --sidebar-logo-height-l: #{pxToRem(100px)};
+  --sidebar-width-small: #{pxToRem(180px)};
+  --sidebar-width-big: #{pxToRem(360px)};
+  --sidebar-logo-height: var(--sidebar-logo-height-m);
+  --sidebar-width: var(--sidebar-width-small);
+  --sidebar-padding-y: var(--space-24);
+
+  --home-width-column-left: #{pxToRem(320px)};
+
+  --content-padding-x: #{var(--space-24)};
+  --content-padding-y: #{var(--space-48)};
+
+  --footer-padding-y: #{var(--space-80)};
+  --grid-gap: var(--space-48);
+  --sidebar-menu-fontsize: clamp(var(--font-size-m), 6dvh, var(--font-size-xl));
+  --home-plants-size: pxToRem(240px);
+  --section-padding-y: var(--space-48);
+  --project-list-item-span: 12;
+  --hero-title-font-size-max: var(--font-size-l);
+  --hero-plant-plant-size: #{pxToRem(90px)};
+}
+
+.body {
+  --content-padding-x-start: var(--content-padding-x);
+  --hero-tite-font-size: clamp(var(--font-size-xl), 6dvh, var(--hero-title-font-size-max));
+
+  @include from(mobile) {
+    --content-padding-x: var(--space-48);
+    --project-list-item-span: 6;
+    --hero-title-font-size-max: var(--font-size-xxl);
+  }
+
+  @include from(big-mobile) {
+    --project-list-item-span: 4;
+  }
+
+  @include from(desktop) {
+    --sidebar-skew-size: var(--space-80);
+    --content-padding-x-start: calc(
+      var(--sidebar-width) + var(--sidebar-skew-size) + var(--content-padding-x) * 2
+    );
+    --home-plants-size: pxToRem(465px);
+    --sidebar-padding-y: --content-padding-y;
+    --grid-gap: var(--space-64);
+  }
+
+  @include from(big-desktop) {
+    --content-padding-x: var(--space-80);
+  }
+
+  @include from(s, height) {
+    --content-padding-y: var(--space-80);
+  }
+
+  @media (#{media(s, height, from)}) and (#{media(desktop, width, from)}) {
+    --section-padding-y: var(--space-80);
+    --hero-plant-plant-size: #{pxToRem(180px)};
+  }
+
+  // Big menu
+  @media (#{media(s, height, from)}) and (#{media(big-desktop, width, from)}) {
+    &[data-sidebar-size='big'] {
+      --sidebar-width: var(--sidebar-width-big);
+      --sidebar-logo-height: #{pxToRem(180px)};
+      --sidebar-menu-fontsize: var(--font-size-xxl);
+      --sidebar-logo-height: var(--sidebar-logo-height-l);
+    }
+  }
+}

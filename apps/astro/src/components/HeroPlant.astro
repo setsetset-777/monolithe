@@ -1,0 +1,44 @@
+---
+import HeroView from '@/components/Hero.astro'
+import Plant from '@/components/Plant.astro'
+import { getPlantIndex } from '@/lib/herbiers'
+import Separator from '@/components/Separator.astro'
+import type { Hero } from '@monolithe/api/types'
+
+type Props = Hero
+
+const { title, image, slug } = Astro.props
+
+const PlantIndex = getPlantIndex(slug)
+---
+
+<HeroView image={image} isPlant={true}>
+  <div class="content">
+    <div class="plant"><Plant type="left" index={PlantIndex} /></div>
+    <h1>{title}</h1>
+    <Separator />
+  </div>
+</HeroView>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .content {
+    --plant-size: var(--hero-plant-plant-size);
+
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--space-16), 6dvh, var(--space-48));
+  }
+
+  .plant {
+    color: var(--color-gold-40);
+    width: var(--plant-size);
+  }
+
+  h1 {
+    font-family: var(--font-family-heading);
+    font-size: var(--hero-tite-font-size);
+    color: var(--color-gray-00);
+  }
+</style>

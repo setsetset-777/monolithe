@@ -1,0 +1,78 @@
+---
+import HeroView from '@/components/Hero.astro'
+import Anchor from '@/components/Anchor.astro'
+import Gallery from '@/components/project/Gallery.astro'
+import Separator from '@/components/Separator.astro'
+import type { Project } from '@monolithe/api/types'
+type Props = Project.Data
+
+const { hero, gallery } = Astro.props
+---
+
+<div class="page">
+  <HeroView image={hero.image}>
+    <div class="hero">
+      {
+        hero.backLinkLabel && (
+          <Anchor href={hero.backLink} type="back">
+            {hero.backLinkLabel}
+          </Anchor>
+        )
+      }
+      <div class="hero__content">
+        <h1 class="hero__title">{hero.title}</h1>
+        <Separator />
+        {hero.text && <div class="hero__text" set:html={hero.text} />}
+      </div>
+    </div>
+  </HeroView>
+  <div class="content">
+    <Gallery images={gallery} />
+    <div class="footer">
+      <Separator />
+      {
+        hero.backLinkLabel && (
+          <Anchor href={hero.backLink} type="back">
+            {hero.backLinkLabel}
+          </Anchor>
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-64);
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+    }
+
+    &__title {
+      font-family: var(--font-family-heading);
+      font-size: var(--hero-tite-font-size);
+    }
+  }
+
+  .content {
+    @include content-padding;
+    padding-top: var(--content-padding-y);
+    padding-bottom: var(--content-padding-y);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-64);
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+</style>

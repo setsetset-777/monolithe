@@ -1,0 +1,226 @@
+---
+import HeroView from '@/components/HeroPlant.astro'
+import ProjectList from '@/components/projects/ProjectList.astro'
+import ProjectListSkeleton from '@/components/projects/ProjectListSkeleton.astro'
+import ProjectListMore from '@/components/projects/ProjectListMore.astro'
+import Separator from '@/components/Separator.astro'
+
+import type { Projects } from '@monolithe/api/types'
+
+type Props = Projects.Data
+
+const { hero, services, projects } = Astro.props
+---
+
+<div class="page">
+  <HeroView {...hero} />
+  <div class="content">
+    <fieldset class="services" data-services id="services">
+      <ul>
+        {
+          services.map(({ label, slug }) => (
+            <li>
+              <input type="checkbox" id={slug} name="projects-service" value={slug} />
+              <label for={slug}>{label}</label>
+            </li>
+          ))
+        }
+      </ul>
+    </fieldset>
+    <Separator />
+    <div
+      class="projects"
+      id="projects"
+      aria-live="polite"
+      data-more={projects.hasNextPage ? 'true' : undefined}
+      data-state={projects.totalDocs > 0 ? 'idle' : 'empty'}
+    >
+      <div class="projects__container list" data-projects-loader-list>
+        <ProjectList projects={projects.docs} />
+        {
+          Array.from({ length: 3 }).map(() => (
+            <div class="loader">
+              <ProjectListSkeleton />
+            </div>
+          ))
+        }
+      </div>
+      <div class="empty">Aucun projets trouvés</div>
+      <div class="more"><ProjectListMore /></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import ProjectLoader from '../lib/ProjectsLoader'
+
+  function onPageLoad() {
+    initServicesChecked()
+    initLoader()
+  }
+
+  function initLoader() {
+    const element = document.querySelector<HTMLElement>('#projects')
+
+    if (!element) return
+
+    const loader = new ProjectLoader({ element })
+
+    loader.init()
+
+    document.querySelector('.services')?.addEventListener('change', async (e) => {
+      if (!(e.currentTarget instanceof HTMLElement)) return
+
+      const services = Array.from(
+        e.currentTarget.querySelectorAll<HTMLInputElement>(
+          'input[name="projects-service"]:checked',
+        ),
+      ).map((item) => item.value)
+
+      await loader.fetch({ services })
+    })
+  }
+
+  function initServicesChecked() {
+    const url = new URL(window.location.href)
+    const services = url.searchParams.getAll('service')
+
+    Array.from(
+      document.querySelectorAll<HTMLInputElement>('input[name="projects-service"]'),
+    ).forEach((input) => {
+      input.checked = !!services?.includes(input.value)
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    onPageLoad()
+  })
+</script>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .page {
+    --total-loader: 1;
+  }
+
+  .content {
+    @include content-padding;
+    padding-top: var(--content-padding-y);
+    padding-bottom: var(--content-padding-y);
+  }
+
+  .services {
+    padding: var(--space-48) 0;
+
+    ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--space-24);
+    }
+
+    label {
+      @include font-heading-4;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-8);
+      align-items: baseline;
+      color: var(--color-gray-10);
+      @include transition(color);
+
+      &:hover {
+        color: var(--color-gray-00);
+      }
+
+      &:before {
+        content: '';
+        display: block;
+        width: pxToRem(8px);
+        height: pxToRem(8px);
+        border: var(--color-gold-30) solid 1px;
+        border-radius: var(--radius-2);
+        @include transition(background-color);
+      }
+    }
+
+    input[type='checkbox'] {
+      display: none;
+      &:checked + label {
+        color: var(--color-gray-00);
+
+        &:before {
+          background-color: var(--color-gold-30);
+        }
+      }
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding: var(--section-padding-y) 0;
+  }
+
+  .empty {
+  }
+
+  .loader {
+    grid-column: span var(--project-list-item-span);
+  }
+
+  .more {
+    @include transition(opacity);
+  }
+
+  #projects {
+    &[data-state='loading'] {
+      .more {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+
+    &:not([data-state='empty']) {
+      .empty {
+        display: none;
+      }
+    }
+
+    &:not([data-state='loading']) {
+      .loader {
+        display: none;
+      }
+    }
+
+    &:not([data-more]) {
+      .more {
+        display: none;
+      }
+    }
+
+    &[data-state='loading'] {
+      & :global(.project-list-item) {
+        display: none;
+      }
+    }
+  }
+
+  @include until(big-mobile) {
+    .loader {
+      &:nth-of-type(n + 3) {
+        display: none;
+      }
+    }
+  }
+
+  @include from(mobile) {
+    .list {
+      @include grid($gap: var(--space-32));
+      row-gap: var(--space-64);
+      padding: var(--section-padding-y) 0;
+    }
+  }
+</style>

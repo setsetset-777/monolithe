@@ -1,0 +1,101 @@
+---
+import HeroView from '@/components/HeroPlant.astro'
+import SectionTextWithTitle from '@/components/presentation/SectionTextWithTitle.astro'
+import SectionList from '@/components/presentation/SectionList.astro'
+import SectionParutions from '@/components/presentation/SectionParutions.astro'
+import SectionTestimonials from '@/components/presentation/SectionTestimonials.astro'
+import Logo from '@/assets/svgs/logo.svg'
+import Separator from '@/components/Separator.astro'
+
+import type { Presentation } from '@monolithe/api/types'
+
+type Props = Presentation.Data
+
+const { hero, presentation, sections } = Astro.props
+---
+
+<div class="page">
+  <HeroView {...hero} />
+
+  <div class="content">
+    <section class="presentation">
+      <div class="presentation__logo">
+        <Logo />
+      </div>
+      <div class="presentation__text" set:html={presentation} />
+    </section>
+
+    {
+      sections.map((section, index) => {
+        let content
+        switch (section.type) {
+          case 'textWithTitleBlock':
+            content = <SectionTextWithTitle {...section} />
+            break
+          case 'listBlock':
+            content = <SectionList {...section} />
+            break
+          case 'parutionsBlock':
+            if (section.list.length <= 0) return
+            content = <SectionParutions {...section} />
+            break
+          case 'testimonialsBlock':
+            if (section.list.length <= 0) return
+            content = <SectionTestimonials {...section} />
+            break
+        }
+        if (content) {
+          return (
+            <>
+              {index < sections.length && <Separator />}
+              {content}
+            </>
+          )
+        }
+      })
+    }
+  </div>
+</div>
+
+<style lang="scss">
+  @use '../styles/utilities/' as *;
+
+  .content {
+    @include content-padding;
+    padding-top: var(--content-padding-y);
+    padding-bottom: var(--content-padding-y);
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    padding: var(--section-padding-y) 0;
+    gap: var(--space-48);
+  }
+
+  .presentation {
+    &__logo {
+      :global(svg) {
+        color: var(--color-gold-40);
+        max-width: pxToRem(180px);
+        width: 100%;
+      }
+    }
+  }
+
+  @include from(mobile) {
+    section {
+      @include grid;
+    }
+
+    .presentation {
+      &__logo {
+        grid-column: span 4;
+      }
+
+      &__text {
+        grid-column: 5 / span 8;
+      }
+    }
+  }
+</style>

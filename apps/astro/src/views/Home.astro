@@ -1,0 +1,342 @@
+---
+import Separator from '@/components/Separator.astro'
+import Anchor from '@/components/Anchor.astro'
+import Image from '@/components/Image.astro'
+import Slider from '@/components/home/Slider.astro'
+import Plant from '@/components/Plant.astro'
+import ChevronDown from '@/assets/svgs/chevron-down.svg'
+import type { Home } from '@monolithe/api/types'
+import { getHerbier } from '@/lib/herbiers'
+
+type Props = Home.Data
+
+const { presentation, services, projects } = Astro.props
+
+const herbier = getHerbier('centre')
+---
+
+<div class="page">
+  <section class="section section--hero hero">
+    <div class="hero__image">
+      {
+        presentation.heroImage && (
+          <Image
+            src={presentation.heroImage.url}
+            alt={presentation.heroImage.alt}
+            srcset={{
+              '800w': presentation.heroImage.sizes?.[2000]?.url!,
+              '1200w': presentation.heroImage.sizes?.[3000]?.url!,
+            }}
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+          />
+        )
+      }
+    </div>
+    <div class="section__inner">
+      <div class="plants">
+        <div class="plants__inner">
+          {
+            herbier.map(({ slug, type, index }) => {
+              return (
+                <div class="plants__item" data-slug={slug}>
+                  <Plant type={type} index={index} />
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+      <div class="hero__content">
+        <h2 class="hero__catch" set:html={presentation.catch} />
+        <Separator />
+        <Anchor href={presentation.url}>
+          {presentation.linkLabel}
+        </Anchor>
+      </div>
+    </div>
+    <div class="hero__footer">
+      <button class="hero__down" aria-label="Défiler" data-scroll="#content">
+        <ChevronDown />
+      </button>
+    </div>
+  </section>
+
+  <div id="content" class="body">
+    <section class="section section--services">
+      <div class="section__inner services">
+        <h3 class="services__title">{services.title}</h3>
+
+        <ul class="services__list">
+          {
+            services.items.map(({ title, url }) => (
+              <li class="services__item">
+                <a href={url}>{title}</a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="services__link">
+          <Anchor href={services.url}>
+            {services.linkLabel}
+          </Anchor>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="content-padding">
+    <Separator />
+  </div>
+
+  <section class="page-home__section section section--projects">
+    <div class="section__inner projects">
+      <Slider projects={projects} class:list={'projects__slider'} />
+
+      <Anchor href={projects.url}>
+        {projects.linkLabel}
+      </Anchor>
+    </div>
+  </section>
+</div>
+
+<script>
+  const initScrolls = (anchors: NodeListOf<HTMLElement>) => {
+    anchors.forEach((anchor) => {
+      if (!(anchor instanceof HTMLElement)) {
+        return
+      }
+      const selector = anchor.dataset.scroll
+      if (!selector) return
+      const target = document.querySelector(selector)
+      anchor.addEventListener('click', () => {
+        target?.scrollIntoView()
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const anchors = document.querySelectorAll<HTMLElement>('[data-scroll]')
+    initScrolls(anchors)
+  })
+</script>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .hero {
+    --sidebar-height: calc(100dvh - var(--sidebar-padding-y) * 2 - var(--sidebar-logo-height-s));
+    --hero-gap: var(--space-24);
+    --hero-opacity: 25%;
+    --catch-font-size-max: var(--font-size-l);
+
+    height: var(--sidebar-height);
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: var(--hero-gap);
+    padding-bottom: var(--space-16);
+    box-sizing: border-box;
+
+    &__image {
+      width: 100dvw;
+      height: 100%;
+      position: absolute;
+      @include bleed;
+      overflow: hidden;
+
+      & :global(img) {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        filter: grayscale(100%) blur(var(--blur));
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          var(--color-gray-50) var(--hero-opacity),
+          rgba(var(--color-gray-50-rgb), 0) 300%
+        );
+      }
+    }
+
+    &__content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-32);
+    }
+
+    &__catch {
+      font-family: var(--font-family-heading);
+      font-size: var(--hero-tite-font-size);
+    }
+
+    &__footer {
+      @include content-padding;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__down {
+      color: var(--color-gray-10);
+      cursor: pointer;
+      @include transition('color, transform');
+      position: relative;
+
+      &:hover {
+        color: var(--color-gold-30);
+        transform: translateY(var(--space-2));
+      }
+    }
+  }
+
+  .plants {
+    max-height: var(--home-plants-size);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__inner {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    &__item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      aspect-ratio: 1;
+      display: block;
+
+      $total: 5;
+      @for $i from 1 through 5 {
+        &:nth-child(#{$total - $i + 1}) {
+          color: var(--color-gold-#{$i}0);
+          filter: blur(#{($i - 1) * 0.2}px);
+        }
+      }
+
+      & :global(svg) {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  .section {
+    $root: &;
+
+    &__inner {
+      @include content-padding;
+      display: flex;
+      flex-direction: column;
+
+      #{$root}--hero & {
+        padding-top: var(--content-padding-y);
+        gap: clamp(var(--space-48), 10dvh, var(--space-80));
+        flex-grow: 1;
+        position: relative;
+      }
+
+      #{$root}--services &,
+      #{$root}--projects & {
+        padding-top: var(--space-80);
+        padding-bottom: var(--space-80);
+      }
+    }
+  }
+
+  .services {
+    --row-gap: var(--space-32);
+    --list-gap: var(--space-16);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--row-gap);
+
+    &__title {
+      @include font-heading-2;
+      color: var(--color-font-gold);
+    }
+
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--list-gap);
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-8);
+      align-items: center;
+
+      a {
+        @include font-heading-3;
+        text-decoration: none;
+
+        &:hover {
+          color: var(--color-font-gold);
+        }
+      }
+
+      &:before {
+        $size: pxToRem(4px);
+        content: '';
+        display: block;
+        width: $size;
+        height: $size;
+        background-color: var(--color-font-gold);
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  @include from(mobile) {
+    .hero {
+      --sidebar-height: 100dvh;
+      --hero-gap: var(--space-48);
+      --catch-font-size-max: var(--font-size-xxl);
+    }
+
+    .services {
+      --row-gap: var(--space-32);
+      --list-gap: var(--space-24);
+
+      &__list {
+        @include grid;
+      }
+
+      &__item {
+        grid-column: span 6;
+      }
+    }
+  }
+</style>

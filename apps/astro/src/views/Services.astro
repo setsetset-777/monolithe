@@ -1,0 +1,207 @@
+---
+import Hero from '@/components/HeroPlant.astro'
+import Separator from '@/components/Separator.astro'
+import Image from '@/components/Image.astro'
+import Anchor from '@/components/Anchor.astro'
+
+import type { Services } from '@monolithe/api/types'
+
+type Props = Services.Data
+
+const { hero, sections } = Astro.props
+---
+
+<div class="page">
+  <Hero {...hero} />
+  <div class="sections">
+    {
+      sections.map((section, index) => {
+        const { title, type, slug, text, projectsUrl, linkLabel } = section
+        let SectionView
+        switch (type) {
+          case 'singleLevel':
+            const { image } = section
+            SectionView = (
+              <section class="section section--single" id={slug}>
+                <h3 class="section__title">{title}</h3>
+                <div class="section__image">
+                  {image && (
+                    <Image
+                      src={image.url}
+                      alt={image.alt}
+                      srcset={{
+                        '400w': image.sizes?.[500]?.url!,
+                        '800w': image.sizes?.[1000]?.url!,
+                      }}
+                    />
+                  )}
+                </div>
+                <div class="section__text" set:html={text} />
+                <div class="section__link">
+                  {linkLabel && <Anchor href={projectsUrl}>{linkLabel}</Anchor>}
+                </div>
+              </section>
+            )
+            break
+          case 'multiLevel':
+            const { subsections } = section
+            SectionView = (
+              <section class="section section--multi" id={slug}>
+                <div class="section__content">
+                  <h3 class="section__title">{title}</h3>
+                  <div class="section__text" set:html={text} />
+                </div>
+                <div class="section__subsections">
+                  {subsections.map(({ title, image, text }) => (
+                    <div class="subsection">
+                      <h4 class="subsection__title">{title}</h4>
+                      {image && (
+                        <Image
+                          src={image.url}
+                          alt={image.alt}
+                          srcset={{
+                            '400w': image.sizes?.[500]?.url!,
+                            '800w': image.sizes?.[1000]?.url!,
+                          }}
+                        />
+                      )}
+                      <div class="subsection__text" set:html={text} />
+                    </div>
+                  ))}
+                </div>
+                {linkLabel && <Anchor href={projectsUrl}>{linkLabel}</Anchor>}
+              </section>
+            )
+            break
+        }
+        return (
+          <>
+            {SectionView}
+            {index < sections.length - 1 && <Separator />}
+          </>
+        )
+      })
+    }
+  </div>
+</div>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+  .sections {
+    @include content-padding;
+    padding-top: var(--content-padding-y);
+    padding-bottom: var(--content-padding-y);
+  }
+
+  .section {
+    $section: &;
+    padding: var(--section-padding-y) 0;
+
+    &__title {
+      @include font-heading-2;
+      color: var(--color-font-gold);
+    }
+
+    &__subsections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-48);
+    }
+
+    &--single {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+    }
+
+    &--multi {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+
+      & #{$section} {
+        &__content {
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-24);
+        }
+      }
+    }
+  }
+
+  .subsection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+
+    &__title {
+      @include font-heading-3;
+      color: var(--color-font-gold);
+    }
+  }
+
+  @include from(mobile) {
+    .section {
+      --multi-content-span: 8;
+
+      $section: &;
+
+      &--single {
+        @include grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+
+        & #{$section} {
+          &__title {
+            grid-column: span 7;
+          }
+
+          &__text {
+            grid-column: span 7;
+          }
+
+          &__link {
+            grid-column: span 7;
+          }
+
+          &__image {
+            grid-column: span 5;
+            grid-row: span 3;
+            height: 100%;
+            overflow: hidden;
+            border-radius: var(--radius-1);
+            position: relative;
+          }
+        }
+      }
+
+      &--multi {
+        & #{$section} {
+          &__content {
+            @include grid;
+            row-gap: var(--space-24);
+          }
+
+          &__title,
+          &__text {
+            grid-column: span var(--multi-content-span);
+          }
+
+          &__subsections {
+            grid-column: span 12;
+            @include grid;
+          }
+        }
+      }
+    }
+
+    .subsection {
+      grid-column: span 6;
+    }
+  }
+
+  @include from(desktop) {
+    .section {
+      --multi-content-span: 7;
+    }
+  }
+</style>

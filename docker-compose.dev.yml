@@ -1,61 +1,58 @@
 services:
-  client:
-    image: node:20-alpine
-    container_name: monolithe-client
+  astro:
+    image: node:22-alpine
+    container_name: monolithe-astro
     working_dir: /workspace
-
-    environment:
-      NODE_ENV: development
-
-    env_file: ".env"
-
-    command: sh -c "
-      npm i -g pnpm &&
-      pnpm install --ignore-scripts=false &&
-      pnpm --filter client build &&
-      pnpm --filter client dev"
-
+    command: >
+      sh -c "npm -g install pnpm && pnpm install && pnpm --filter @monolithe/astro dev --port ${SERVER_PORT} --host"
+    ports:
+      - '${SERVER_PORT:-3000}:${SERVER_PORT:-3000}'
     volumes:
       - ./:/workspace
-      - client-dist:/workspace/apps/client/dist
-      - config:/wokrspace/config
-      # Add for local toolbox debugging
-      # - ../toolbox:/workspace/toolbox
-
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+      # - /workspace/apps/astro/.astro
+    tmpfs:
+      - /workspace/apps/astro/.astro
+    env_file:
+      - .env
+    stop_grace_period: 1s
     networks:
       - monolithe
 
-  server:
-    image: node:20-alpine
-    container_name: monolithe-server
+  payload:
+    image: node:22-alpine
+    container_name: monolithe-payload
     working_dir: /workspace
-    depends_on:
-      - client
-
-    command: sh -c "
-      npm i -g pnpm &&
-      pnpm install &&
-      pnpm --filter server dev"
-
-    env_file: ".env"
-
-    environment:
-      NODE_ENV: development
-      MANIFEST_FILE: ".vite/manifest.json"
-      MAIN_FILE: "src/js/main.ts"
-      RESET_FILE: "src/styles/reset.scss"
-      CLIENT_DIST: "/workspace/client-dist"
-      CONFIG_DIST: "/workspace/config"
-
+    command: >
+      sh -c "npm -g install pnpm && pnpm install && pnpm --filter @monolithe/payload dev"
+    ports:
+      - '${PAYLOAD_PORT:-3001}:${PAYLOAD_PORT:-3001}'
     volumes:
       - ./:/workspace
-      - client-dist:/workspace/client-dist
-      - config:/wokrspace/config
-      # Add for local toolbox debugging
-      # - ../toolbox:/workspace/toolbox
+      - media:/workspace/media
+      - pnpm_store:/pnpm/store
+      - node_modules:/workspace/node_modules
+    depends_on:
+      mongo:
+        condition: service_started
+    env_file:
+      - .env
+    networks:
+      - monolithe
 
+  # Ensure your DATABASE_URI uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
+  mongo:
+    image: mongo:latest
+    container_name: monolithe-mongo
     ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
+      - '${MONGO_PORT:-27017}:${MONGO_PORT:-27017}'
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - data:/data/db
+    logging:
+      driver: none
     networks:
       - monolithe
 
@@ -64,6 +61,7 @@ networks:
     name: monolithe
 
 volumes:
-  client-dist:
-  config:
+  data:
+  pnpm_store:
   node_modules:
+  media:

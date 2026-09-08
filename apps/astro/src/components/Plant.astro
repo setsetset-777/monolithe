@@ -1,0 +1,43 @@
+---
+interface Props {
+  type: 'centre' | 'left'
+  index: number
+}
+
+const { type, index } = Astro.props
+const id = `herbier-${type}-${index}`
+---
+
+<svg viewBox="0 0 120 120" class="plant"><use data-plant-href={`/plants.svg#${id}`}></use></svg>
+
+<script>
+  const revealPlants = () => {
+    document.querySelectorAll<SVGUseElement>('[data-plant-href]').forEach((use) => {
+      use.parentElement?.setAttribute('data-loaded', 'true')
+    })
+  }
+
+  document.addEventListener('astro:page-load', async () => {
+    const uses = Array.from(document.querySelectorAll<HTMLElement>('[data-plant-href]'))
+
+    uses.forEach((use) => {
+      const href = use.dataset.plantHref
+      href && use.setAttribute('href', href)
+    })
+
+    requestAnimationFrame(revealPlants)
+  })
+</script>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .plant {
+    opacity: 0;
+    @include transition(opacity);
+
+    &[data-loaded] {
+      opacity: 1;
+    }
+  }
+</style>

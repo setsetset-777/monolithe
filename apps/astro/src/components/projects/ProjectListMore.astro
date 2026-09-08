@@ -1,0 +1,43 @@
+---
+import MoreSVG from '../../assets/svgs/more.svg'
+---
+
+<button class="project-list-more" data-projects-loader-more>
+  <span class="icon">
+    <MoreSVG />
+  </span>
+  <span class="label">Voir plus de projets</span>
+</button>
+
+<style lang="scss">
+  @use '../../styles/utilities' as *;
+
+  .project-list-more {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-8);
+    align-items: center;
+    color: var(--color-gray-10);
+    cursor: pointer;
+    padding: var(--space-8) var(--space-16) var(--space-8) var(--space-12);
+    border: var(--color-gray-10) solid 1px;
+    border-radius: var(--radius-1);
+    @include transition('color, border-color, background-color');
+
+    &:hover {
+      color: var(--color-gray-00);
+      border-color: var(--color-gray-00);
+      background-color: var(--color-gray-50);
+
+      .icon {
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .icon {
+    display: flex;
+    color: var(--color-gold-30);
+    @include transition(transform);
+  }
+</style>

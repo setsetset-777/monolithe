@@ -1,0 +1,146 @@
+---
+import HeroView from '@/components/HeroPlant.astro'
+import Logo from '@/assets/svgs/logo.svg'
+import Separator from '@/components/Separator.astro'
+
+import type { Contact, Hero } from '@monolithe/api/types'
+
+type Props = {
+  hero: Hero
+  info: Contact.Info
+}
+
+const {
+  hero,
+  info: { logoCatch, place, email, phone },
+} = Astro.props
+---
+
+<div class="page">
+  <HeroView {...hero} />
+  <div class="content">
+    <section class="info">
+      <div class="info__company">
+        <div class="logo">
+          <Logo />
+        </div>
+        {logoCatch && <p class="logo-catch">{logoCatch}</p>}
+      </div>
+      <div class="info__contact">
+        {place && <p class="place">{place}</p>}
+        {
+          email && (
+            <button data-email={btoa(email)} type="button" class="email">
+              &nbsp;
+            </button>
+          )
+        }
+        {
+          phone && (
+            <button data-tel={btoa(phone)} type="button" class="phone">
+              &nbsp;
+            </button>
+          )
+        }
+      </div>
+    </section>
+    <Separator />
+  </div>
+</div>
+
+<script>
+  const initLinks = (links: NodeListOf<HTMLButtonElement>) => {
+    Array.from(links).forEach((el) => {
+      const type = el.dataset.tel ? 'tel' : 'email'
+      const redirect = type === 'tel' ? 'tel' : 'mailto'
+      const hash = el.dataset[type]
+      if (!hash) return
+      const value = atob(hash)
+      el.innerText = value
+      el.addEventListener('click', (e) => {
+        e.preventDefault()
+        window.location.href = `${redirect}:${value}`
+      })
+    })
+  }
+  document.addEventListener('astro:page-load', () => {
+    const links = document.querySelectorAll<HTMLButtonElement>('[data-email], [data-tel]')
+    initLinks(links)
+  })
+</script>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .content {
+    @include content-padding;
+    padding-top: var(--content-padding-y);
+    padding-bottom: var(--content-padding-y);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding-top: var(--section-padding-y);
+    padding-bottom: var(--section-padding-y);
+
+    &__company {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      gap: var(--space-8);
+    }
+
+    &__contact {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      gap: var(--space-8);
+    }
+  }
+
+  .logo {
+    color: var(--color-gold-30);
+    width: pxToRem(90px);
+  }
+
+  .place {
+    font-weight: bold;
+  }
+
+  .email,
+  .phone {
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-flex;
+  }
+
+  @include from(mobile) {
+    .info {
+      @include grid;
+
+      &__company {
+        grid-column: span 6;
+      }
+
+      &__contact {
+        grid-column: span 6;
+      }
+    }
+  }
+
+  @include from(big-mobile) {
+    .info {
+      &__company {
+        grid-column: span 4;
+      }
+
+      &__contact {
+        grid-column: span 8;
+      }
+    }
+  }
+</style>
