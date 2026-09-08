@@ -132,7 +132,9 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
     const selector = match && match[0]
 
     if (selector) {
-      scrollToElement(selector)
+      setTimeout(() => {
+        scrollToElement(selector)
+      }, 200)
     }
   }
 
@@ -152,7 +154,7 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
     loader.dataset.active = 'false'
   })
 
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('astro:after-swap', () => {
     initScrollHash()
   })
 
