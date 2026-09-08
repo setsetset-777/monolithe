@@ -12,9 +12,13 @@ const { hero, gallery } = Astro.props
 <div class="page">
   <HeroView image={hero.image}>
     <div class="hero">
-      <Anchor href={hero.backLink} type="back">
-        {hero.backLinkLabel}
-      </Anchor>
+      {
+        hero.backLinkLabel && (
+          <Anchor href={hero.backLink} type="back">
+            {hero.backLinkLabel}
+          </Anchor>
+        )
+      }
       <div class="hero__content">
         <h1 class="hero__title">{hero.title}</h1>
         <Separator />
@@ -26,9 +30,13 @@ const { hero, gallery } = Astro.props
     <Gallery images={gallery} />
     <div class="footer">
       <Separator />
-      <Anchor href={hero.backLink} type="back">
-        {hero.backLinkLabel}
-      </Anchor>
+      {
+        hero.backLinkLabel && (
+          <Anchor href={hero.backLink} type="back">
+            {hero.backLinkLabel}
+          </Anchor>
+        )
+      }
     </div>
   </div>
 </div>

@@ -913,7 +913,7 @@ export interface PageProject {
   title: string;
   urlSlug: string;
   heroImage: string | Media;
-  backLinkLabel?: string | null;
+  backLinkLabel: string;
   collectionLink?: {
     slug?: string | null;
   };

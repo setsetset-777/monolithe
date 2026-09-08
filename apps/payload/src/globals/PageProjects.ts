@@ -24,6 +24,7 @@ export const PageProjects: GlobalConfig = {
         en: 'Back link label',
         fr: 'Énoncé du lien de retour',
       },
+      required: true,
     },
     linkToCollectionField({ slug: 'projects' }),
   ],
