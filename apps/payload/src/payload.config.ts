@@ -90,9 +90,9 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        if (!req.user) {
-          return Response.json({ message: 'Unauthorized' }, { status: 401 })
-        }
+        // if (!req.user) {
+        //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        // }
 
         req.payload.logger.info('Hiiting endpoint /general')
         const data = await fetchGeneral(req)
@@ -108,9 +108,9 @@ export default buildConfig({
       path: '/page',
       method: 'get',
       handler: async (req) => {
-        if (!req.user) {
-          return Response.json({ message: 'Unauthorized' }, { status: 401 })
-        }
+        // if (!req.user) {
+        //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        // }
 
         req.payload.logger.info('Hiiting endpoint /page')
         const [path, search] = (req.query.path as string).split('?')
@@ -141,7 +141,7 @@ export default buildConfig({
 
         try {
           const data = await fetchPage(req, path, safeParams)
-          req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
+          // req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
 
           if (!data) {
             return Response.json(null, { status: 404 })
