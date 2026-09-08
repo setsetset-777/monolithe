@@ -25,19 +25,17 @@ const { hero, sections } = Astro.props
               <section class="section section--single" id={slug}>
                 <h3 class="section__title">{title}</h3>
                 <div class="section__image">
-                  <div>
-                    {image && (
-                      <Image
-                        src={image.url}
-                        alt={image.alt}
-                        srcset={{
-                          '400w': image.sizes?.[500]?.url!,
-                          '800w': image.sizes?.[1000]?.url!,
-                        }}
-                        modifiers={['fill']}
-                      />
-                    )}
-                  </div>
+                  {image && (
+                    <Image
+                      src={image.url}
+                      alt={image.alt}
+                      srcset={{
+                        '400w': image.sizes?.[500]?.url!,
+                        '800w': image.sizes?.[1000]?.url!,
+                      }}
+                      modifiers={['fill']}
+                    />
+                  )}
                 </div>
                 <div class="section__text" set:html={text} />
                 <div class="section__link">
@@ -151,6 +149,7 @@ const { hero, sections } = Astro.props
 
       &--single {
         @include grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
 
         & #{$section} {
           &__title {
@@ -172,12 +171,6 @@ const { hero, sections } = Astro.props
             overflow: hidden;
             border-radius: var(--radius-1);
             position: relative;
-
-            > div {
-              position: absolute;
-              height: 100%;
-              width: 100%;
-            }
           }
         }
       }
