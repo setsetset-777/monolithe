@@ -76,6 +76,11 @@ const formatSrc = (src: string) => `${mediaUrl}${src}`
   document.addEventListener('astro:page-load', () => {
     initImages()
   })
+
+  document.addEventListener('images:load', () => {
+    console.log(">>>> 'images:load'")
+    initImages()
+  })
 </script>
 
 <style lang="scss">
