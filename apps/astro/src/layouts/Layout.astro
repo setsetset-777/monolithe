@@ -21,7 +21,10 @@ type Props = {
 
 const { meta, slug, parentSlug, noGeneral } = Astro.props
 
-const { navigation, footer } = !noGeneral ? await getGeneral() : {}
+const general = !noGeneral ? await getGeneral() : null
+
+const navigation = general?.navigation ?? undefined
+const footer = general?.footer ?? undefined
 
 const sidebarType = slug === 'pageHome' ? 'big' : 'small'
 ---
