@@ -94,6 +94,15 @@ export default buildConfig({
         //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
         // }
 
+        const { user } = await req.payload.auth({ headers: req.headers })
+
+        if (!user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
+        console.log('>>>', req.user)
+        console.log('!!!', (await req.payload.auth({ headers: req.headers })).user)
+
         const start = performance.now()
 
         req.payload.logger.info('Hiiting endpoint /general')
@@ -116,7 +125,17 @@ export default buildConfig({
         //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
         // }
 
+        console.log('>>>', req.user)
+        console.log('!!!', (await req.payload.auth({ headers: req.headers })).user)
+
+        const { user } = await req.payload.auth({ headers: req.headers })
+
+        if (!user) {
+          return Response.json({ message: 'Unauthorized' }, { status: 401 })
+        }
+
         req.payload.logger.info('Hiiting endpoint /page')
+
         const [path, search] = (req.query.path as string).split('?')
         let params = new URLSearchParams(search)
         let safeParams
