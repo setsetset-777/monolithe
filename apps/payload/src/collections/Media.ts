@@ -20,6 +20,9 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     staticDir: 'media',
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', 'public, max-age=86400')
+    },
     adminThumbnail: 'big',
     imageSizes: [
       {

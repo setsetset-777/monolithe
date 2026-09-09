@@ -94,9 +94,13 @@ export default buildConfig({
           return Response.json({ message: 'Unauthorized' }, { status: 401 })
         }
 
+        const start = performance.now()
+
         req.payload.logger.info('Hiiting endpoint /general')
         const data = await fetchGeneral(req)
         // req.payload.logger.info(data, `Fetched data for general`)
+
+        req.payload.logger.info(`fetch /page took ${Math.round(performance.now() - start)}ms`)
 
         return Response.json({
           ok: true,
@@ -140,12 +144,16 @@ export default buildConfig({
         }
 
         try {
+          const start = performance.now()
+
           const data = await fetchPage(req, path, safeParams)
           // req.payload.logger.info(data, `Fetched data for ${req.query.path}`)
 
           if (!data) {
             return Response.json(null, { status: 404 })
           }
+
+          req.payload.logger.info(`fetch /page took ${Math.round(performance.now() - start)}ms`)
 
           return Response.json({
             ok: true,
