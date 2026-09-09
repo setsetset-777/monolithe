@@ -56,9 +56,7 @@ export type PageData = {
 export type FetchData = Promise<Record<string, any>>
 
 export interface InitConfig {
-  enable: boolean
   apiUrl: string
   serviceUser: string
-  servicePassord: string
-  env: 'production' | 'development'
+  servicePassword: string
 }

@@ -1,20 +1,56 @@
-import { fetchGeneral, fetchPage, fetchProjects } from './api'
+import { init, request, buildUrl } from './api'
+import { ProjectsSearchParams } from './schemas/projects-search-params'
 import type { General, PageData, Projects } from './types/api'
 import type { Payload } from './types/payload'
 
+init({
+  apiUrl: `${process.env.PAYLOAD_API_URL}`,
+  serviceUser: `${process.env.PAYLOAD_SERVICE_USER}`,
+  servicePassword: `${process.env.PAYLOAD_SERVICE_PASSWORD}`,
+})
+
 const general = async (locale?: Payload.Locale): Promise<General.Data | null> => {
-  return fetchGeneral(locale)
+  return request(
+    buildUrl({
+      slug: 'general',
+      params: { locale },
+    }),
+  )
 }
 
 const page = async (path: string, locale?: Payload.Locale): Promise<PageData | null> => {
-  return fetchPage(path, locale)
+  return request(
+    buildUrl({
+      slug: 'page',
+      params: { path, locale },
+    }),
+  )
 }
 
 const projects = async (
-  params: Parameters<typeof fetchProjects>[0],
+  params: {
+    service?: string[]
+    page?: string
+    limit?: string
+  },
   locale?: Payload.Locale,
 ): Promise<Projects.List | null> => {
-  return fetchProjects(params, locale)
+  const safeParams = ProjectsSearchParams.safeParse(params)
+  if (!safeParams.success) {
+    throw new Error('Invalid query parameters')
+  }
+
+  return request(
+    buildUrl({
+      slug: 'projects-list',
+      params: {
+        locale,
+        ...{
+          ...params,
+        },
+      },
+    }),
+  )
 }
 
 export default {
