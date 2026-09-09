@@ -90,18 +90,11 @@ export default buildConfig({
       path: '/general',
       method: 'get',
       handler: async (req) => {
-        // if (!req.user) {
-        //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
-        // }
-
         const { user } = await req.payload.auth({ headers: req.headers })
 
         if (!user) {
           return Response.json({ message: 'Unauthorized' }, { status: 401 })
         }
-
-        console.log('>>>', req.user)
-        console.log('!!!', (await req.payload.auth({ headers: req.headers })).user)
 
         const start = performance.now()
 
@@ -121,13 +114,6 @@ export default buildConfig({
       path: '/page',
       method: 'get',
       handler: async (req) => {
-        // if (!req.user) {
-        //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
-        // }
-
-        console.log('>>>', req.user)
-        console.log('!!!', (await req.payload.auth({ headers: req.headers })).user)
-
         const { user } = await req.payload.auth({ headers: req.headers })
 
         if (!user) {
