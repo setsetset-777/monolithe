@@ -46,11 +46,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    autoLogin: isDev
-      ? {
-          email: process.env.ADMIN_EMAIL,
-        }
-      : false,
+    // autoLogin: isDev
+    //   ? {
+    //       email: process.env.ADMIN_EMAIL,
+    //     }
+    //   : false,
     components: {
       settingsMenu: ['@/components/InvalidateCache'],
     },
@@ -96,9 +96,15 @@ export default buildConfig({
         //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
         // }
 
+        req.payload.logger.info('Hiiting endpoint /general')
+        const presentation = await req.payload.findGlobal({
+          slug: 'pagePresentation',
+        })
+
+        console.log('????', presentation)
+
         const start = performance.now()
 
-        req.payload.logger.info('Hiiting endpoint /general')
         const data = await fetchGeneral(req)
         // req.payload.logger.info(data, `Fetched data for general`)
 
