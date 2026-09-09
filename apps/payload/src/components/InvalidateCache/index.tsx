@@ -21,7 +21,7 @@ export default function InvalidateCache(props: AfterListClientProps) {
     setIsLoading(true)
     try {
       const response = await fetch('/api/cache', {
-        method: 'POST',
+        method: 'GET',
       })
 
       const data = await response.json().catch(() => ({}))
