@@ -315,6 +315,9 @@ export interface Project {
   id: string;
   _order?: string | null;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   /**
    * check to display project on home page
@@ -762,6 +765,9 @@ export interface General {
 export interface PageHome {
   id: string;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   presentation: {
     catch?: string | null;
@@ -795,6 +801,9 @@ export interface PageHome {
 export interface PagePresentation {
   id: string;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   heroImage: string | Media;
   monolithe?: {
@@ -887,6 +896,9 @@ export interface PagePresentation {
 export interface PageService {
   id: string;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   heroImage: string | Media;
   collectionLink?: {
@@ -911,6 +923,9 @@ export interface PageService {
 export interface PageProject {
   id: string;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   heroImage: string | Media;
   backLinkLabel: string;
@@ -935,6 +950,9 @@ export interface PageProject {
 export interface PageContact {
   id: string;
   title: string;
+  /**
+   * URL slugs must be unique and match the title when possible. Avoid spaces and special characters. Leave empty for the field to automatically fill.
+   */
   urlSlug: string;
   heroImage: string | Media;
   place?: string | null;
