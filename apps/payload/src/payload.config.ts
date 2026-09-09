@@ -262,6 +262,7 @@ export default buildConfig({
       path: '/cache',
       method: 'get',
       handler: async (req) => {
+        req.payload.logger.info('Hitting /cache endpoint')
         if (!req.user) {
           return Response.json({ message: 'Unauthorized' }, { status: 401 })
         }

@@ -51,7 +51,7 @@ export const routesConfig: RouteConfig = {
 export const getRoutes = async (locale: Locale): Promise<LocalizedRoutes> => {
   'use cache'
 
-  cacheTag(tags.routes())
+  cacheTag(tags.routes(), tags.routesLocales(locale))
 
   const payload = await getPayload({ config })
 
@@ -96,6 +96,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
         const collections = await payload.find({
           collection: children.slug as RoutedCollectionSlug,
           locale: locale as Locale,
+          pagination: false,
         })
 
         for (const collection of collections.docs) {
@@ -113,7 +114,9 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
             type: 'collection',
             updatedAt: doc.updatedAt ?? undefined,
             meta: {
-              title: doc.title,
+              title: doc.meta?.title ?? undefined,
+              description: doc.meta?.description ?? undefined,
+              image: (doc.meta?.image as Media) ?? undefined,
             },
           }
         }

@@ -28,6 +28,7 @@ export const tags = {
   generalLocale: (locale: Locale) => `general:${normalLocale(locale)}`,
   projectListQueryLocale: (params: API.Projects.SearchParams, locale: Locale) =>
     `projectList:${JSON.stringify(params)}:${normalLocale(locale)}`,
+  routesLocales: (locale: Locale) => `routes:${normalLocale(locale)}`,
 }
 
 export const invalidateAll = () => {
