@@ -49,9 +49,9 @@ export const routesConfig: RouteConfig = {
 }
 
 export const getRoutes = async (locale: Locale): Promise<LocalizedRoutes> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.routes(), tags.routesLocales(locale))
+  // cacheTag(tags.routes(), tags.routesLocales(locale))
 
   const payload = await getPayload({ config })
 

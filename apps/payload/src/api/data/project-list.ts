@@ -18,9 +18,9 @@ export const getProjectListData = async ({
   locale,
   params = {},
 }: Props): Promise<API.Projects.List> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.projectList(), tags.projectListQueryLocale(params, locale))
+  // cacheTag(tags.projectList(), tags.projectListQueryLocale(params, locale))
 
   const payload = await getPayload({
     config,

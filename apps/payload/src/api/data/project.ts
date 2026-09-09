@@ -19,9 +19,9 @@ export const getProjectData = async ({
   meta: API.Meta
   data: API.Project.Data
 }> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.projectAll(), tags.project(id), tags.projectLocale(id, locale))
+  // cacheTag(tags.projectAll(), tags.project(id), tags.projectLocale(id, locale))
 
   const payload = await getPayload({
     config,

@@ -18,9 +18,9 @@ export const getServicesData = async ({
   meta: API.Meta
   data: API.Services.Data
 }> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.services(), tags.servicesLocale(locale))
+  // cacheTag(tags.services(), tags.servicesLocale(locale))
 
   const payload = await getPayload({
     config,

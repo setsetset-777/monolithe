@@ -12,9 +12,9 @@ type Props = {
 }
 
 export const getGeneralData = async ({ locale }: Props): Promise<API.General.Data> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.general(), tags.generalLocale(locale))
+  // cacheTag(tags.general(), tags.generalLocale(locale))
 
   const payload = await getPayload({
     config,

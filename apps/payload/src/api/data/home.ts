@@ -17,9 +17,9 @@ export const getHomeData = async ({
   meta: API.Meta
   data: API.Home.Data
 }> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.home(), tags.homeLocale(locale))
+  // cacheTag(tags.home(), tags.homeLocale(locale))
 
   const payload = await getPayload({
     config,

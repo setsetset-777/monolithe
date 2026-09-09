@@ -15,9 +15,9 @@ export const getContactData = async ({
   meta: API.Meta
   data: API.Contact.Data
 }> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.contact(), tags.contactLocale(locale))
+  // cacheTag(tags.contact(), tags.contactLocale(locale))
 
   const payload = await getPayload({
     config,

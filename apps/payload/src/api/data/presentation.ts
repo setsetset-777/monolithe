@@ -17,9 +17,9 @@ export const getPresentationData = async ({
   meta: API.Meta
   data: API.Presentation.Data
 }> => {
-  'use cache'
+  // 'use cache'
 
-  cacheTag(tags.presentation(), tags.presentationLocale(locale))
+  // cacheTag(tags.presentation(), tags.presentationLocale(locale))
 
   const payload = await getPayload({
     config,
