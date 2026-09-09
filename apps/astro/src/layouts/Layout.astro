@@ -104,7 +104,7 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
         </div>
       </div>
     </div>
-    <div class="page-loader" data-page-loader data-active="false"></div>
+    <div class="page-loader" data-page-loader data-hidden="true"></div>
   </body>
 </html>
 
@@ -139,19 +139,19 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
   }
 
   document.addEventListener('astro:before-preparation', () => {
-    const loader = document.querySelector<HTMLElement>('[data-page-loader')
+    const loader = document.querySelector<HTMLElement>('[data-page-loader]')
     if (!loader) return
     clearTimeout(timeout)
     timeout = setTimeout(() => {
-      loader.dataset.active = 'true'
+      loader.dataset.hidden = 'false'
     }, 150)
   })
 
   document.addEventListener('astro:after-preparation', () => {
     clearTimeout(timeout)
-    const loader = document.querySelector<HTMLElement>('[data-page-loader')
+    const loader = document.querySelector<HTMLElement>('[data-page-loader]')
     if (!loader) return
-    loader.dataset.active = 'false'
+    loader.dataset.hidden = 'true'
   })
 
   document.addEventListener('astro:after-swap', () => {
@@ -214,13 +214,23 @@ const sidebarType = slug === 'pageHome' ? 'big' : 'small'
     bottom: 0;
     left: 0;
     background-color: var(--color-gray-50);
+    z-index: 2;
+    display: block;
     opacity: 0.5;
-    z-index: 1;
+    transition:
+      opacity var(--ease-time-short) var(--ease-function),
+      display var(--ease-time-short) allow-discrete;
+    transition-behavior: allow-discrete;
 
-    display: none;
+    &[data-hidden='true'] {
+      display: none;
+      opacity: 0;
+    }
+  }
 
-    &[data-active='true'] {
-      display: block;
+  @starting-style {
+    .page-loader:not([data-hidden='true']) {
+      opacity: 0;
     }
   }
 </style>
