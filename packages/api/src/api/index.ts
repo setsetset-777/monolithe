@@ -32,7 +32,7 @@ export async function request<T>(url: string): Promise<T | null> {
 
   let res = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `JWT ${token}`,
     },
   })
 
@@ -46,7 +46,7 @@ export async function request<T>(url: string): Promise<T | null> {
 
     res = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `JWT ${token}`,
       },
     })
   }
