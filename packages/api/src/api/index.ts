@@ -1,6 +1,6 @@
 import logger from '@monolithe/logger'
 import type { InitConfig } from '../types/api'
-import { login, resetToken, token } from './auth'
+// import { login, resetToken, token } from './auth'
 
 // Default config
 export let config: InitConfig = {
@@ -26,30 +26,32 @@ export function init(initConfig: InitConfig) {
  * @returns
  */
 export async function request<T>(url: string): Promise<T | null> {
-  if (!token) {
-    await login()
-  }
+  // if (!token) {
+  //   await login()
+  // }
 
-  let res = await fetch(url, {
-    headers: {
-      Authorization: `JWT ${token}`,
-    },
-  })
+  // let res = await fetch(url, {
+  //   headers: {
+  //     Authorization: `JWT ${token}`,
+  //   },
+  // })
 
   // Token expired: refresh once
-  if (res.status === 401) {
-    logger.info('Payload token expired. Refreshing.')
+  // if (res.status === 401) {
+  //   logger.info('Payload token expired. Refreshing.')
 
-    resetToken()
+  //   resetToken()
 
-    await login()
+  //   await login()
 
-    res = await fetch(url, {
-      headers: {
-        Authorization: `JWT ${token}`,
-      },
-    })
-  }
+  //   res = await fetch(url, {
+  //     headers: {
+  //       Authorization: `JWT ${token}`,
+  //     },
+  //   })
+  // }
+
+  let res = await fetch(url)
 
   if (res.status === 404) {
     return null
