@@ -46,11 +46,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    // autoLogin: isDev
-    //   ? {
-    //       email: process.env.ADMIN_EMAIL,
-    //     }
-    //   : false,
+    autoLogin: isDev
+      ? {
+          email: process.env.ADMIN_EMAIL,
+        }
+      : false,
     components: {
       settingsMenu: ['@/components/InvalidateCache'],
     },
@@ -101,12 +101,10 @@ export default buildConfig({
           slug: 'pagePresentation',
         })
 
-        console.log('????', presentation)
-
         const start = performance.now()
 
         const data = await fetchGeneral(req)
-        req.payload.logger.info(data, `Fetched data for general`)
+        // req.payload.logger.info(data, `Fetched data for general`)
 
         req.payload.logger.info(`fetch /page took ${Math.round(performance.now() - start)}ms`)
 

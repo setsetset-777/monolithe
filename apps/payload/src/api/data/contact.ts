@@ -1,8 +1,7 @@
 import type * as API from '@monolithe/api/types'
 import type { Locale } from '@/types'
 import { getPayload } from 'payload'
-import { cacheTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { cached, tags } from '@/helpers/cache'
 import config from '@payload-config'
 
 interface Props {
@@ -15,44 +14,45 @@ export const getContactData = async ({
   meta: API.Meta
   data: API.Contact.Data
 }> => {
-  // 'use cache'
+  return cached<{
+    meta: API.Meta
+    data: API.Contact.Data
+  }>(async () => {
+    const payload = await getPayload({
+      config,
+    })
 
-  // cacheTag(tags.contact(), tags.contactLocale(locale))
-
-  const payload = await getPayload({
-    config,
-  })
-
-  const [pageContact, general] = await Promise.all([
-    payload.findGlobal({
-      slug: 'pageContact',
-      locale,
-    }),
-    payload.findGlobal({
-      slug: 'general',
-      locale,
-    }),
-  ])
-
-  const { title, heroImage, place, email, phone, meta } = pageContact
-  return {
-    meta: {
-      title: meta?.title ?? undefined,
-      description: meta?.description ?? undefined,
-      image: (meta?.image as API.Media) ?? undefined,
-    },
-    data: {
-      hero: {
-        title,
-        image: heroImage as API.Media,
+    const [pageContact, general] = await Promise.all([
+      payload.findGlobal({
         slug: 'pageContact',
+        locale,
+      }),
+      payload.findGlobal({
+        slug: 'general',
+        locale,
+      }),
+    ])
+
+    const { title, heroImage, place, email, phone, meta } = pageContact
+    return {
+      meta: {
+        title: meta?.title ?? undefined,
+        description: meta?.description ?? undefined,
+        image: (meta?.image as API.Media) ?? undefined,
       },
-      info: {
-        logoCatch: general.footer.logoCatch ?? undefined,
-        place: place ?? undefined,
-        email: email ?? undefined,
-        phone: phone ?? undefined,
+      data: {
+        hero: {
+          title,
+          image: heroImage as API.Media,
+          slug: 'pageContact',
+        },
+        info: {
+          logoCatch: general.footer.logoCatch ?? undefined,
+          place: place ?? undefined,
+          email: email ?? undefined,
+          phone: phone ?? undefined,
+        },
       },
-    },
-  }
+    }
+  }, tags.contact(locale))
 }

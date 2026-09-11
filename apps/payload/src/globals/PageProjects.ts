@@ -4,8 +4,8 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
 import { heroImageField } from '@/fields/heroImageField'
-import { revalidateTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { invalidate, invalidatePrefix, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 
 export const PageProjects: GlobalConfig = {
   slug: 'pageProjects',
@@ -33,9 +33,10 @@ export const PageProjects: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.routes(), 'max')
-        revalidateTag(tags.projects(), 'max')
+      async ({ req }) => {
+        invalidate(tags.routes(req.locale as Locale))
+        invalidatePrefix('projects')
+        invalidatePrefix('project')
       },
     ],
   },

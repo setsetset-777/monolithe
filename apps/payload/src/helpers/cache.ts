@@ -1,38 +1,82 @@
 import { normalLocale } from '@/i18n'
 import { Locale } from '@/types'
 import * as API from '@monolithe/api/types'
-import { revalidateTag } from 'next/cache'
+import { LRUCache } from 'lru-cache'
 
-const globalTags = {
-  projectAll: () => 'project',
-  home: () => 'home',
-  presentation: () => 'presentation',
-  services: () => `services`,
-  projects: () => `projects`,
-  contact: () => `contact`,
-  general: () => `general`,
-  projectList: () => `projectList`,
-  routes: () => 'routes',
+type Tag = string
+
+const store = new LRUCache<Tag, any>({
+  max: 500,
+})
+const pending = new Map<Tag, Promise<any>>()
+
+export function cached<T>(fn: () => Promise<T>, key: Tag): Promise<T> {
+  if (store.has(key)) {
+    console.log(`>>>> cache: hitting cache for ${key}`)
+    return store.get(key)
+  }
+  if (pending.has(key)) {
+    console.log(`>>>> cache: pending cache for ${key}`)
+    return pending.get(key) as Promise<T>
+  }
+
+  console.log(`>>>> cache: missing cache for ${key}`)
+
+  const promise = fn()
+    .then((result) => {
+      store.set(key, result)
+      pending.delete(key)
+      return result
+    })
+    .catch((err) => {
+      pending.delete(key)
+      throw err
+    })
+
+  pending.set(key, promise)
+  return promise
 }
 
-export const tags = {
-  ...globalTags,
-  project: (id: string) => `project:${id}`,
-  projectLocale: (id: string, locale: Locale) => `project:${id}:${normalLocale(locale)}`,
-  homeLocale: (locale: Locale) => `home:${normalLocale(locale)}`,
-  presentationLocale: (locale: Locale) => `presentation:${normalLocale(locale)}`,
-  servicesLocale: (locale: Locale) => `services:${normalLocale(locale)}`,
-  projectsQueryLocale: (params: API.Projects.SearchParams, locale: Locale) =>
-    `projects:${JSON.stringify(params)}:${normalLocale(locale)}`,
-  contactLocale: (locale: Locale) => `contact:${normalLocale(locale)}`,
-  generalLocale: (locale: Locale) => `general:${normalLocale(locale)}`,
-  projectListQueryLocale: (params: API.Projects.SearchParams, locale: Locale) =>
-    `projectList:${JSON.stringify(params)}:${normalLocale(locale)}`,
-  routesLocales: (locale: Locale) => `routes:${normalLocale(locale)}`,
+export function invalidate(key: Tag) {
+  store.delete(key)
 }
 
 export const invalidateAll = () => {
-  Object.values(globalTags).forEach((tag) => {
-    revalidateTag(tag(), 'max')
-  })
+  store.clear()
+}
+
+const prefixes = {
+  home: 'home',
+  project: 'project',
+  presentation: 'presentation',
+  services: 'services',
+  projects: 'projects',
+  contact: 'contact',
+  general: 'general',
+  projectList: 'projectList',
+  routes: 'routes',
+} as const
+
+type Prefix = (typeof prefixes)[keyof typeof prefixes]
+
+export const invalidatePrefix = (prefix: Prefix) => {
+  for (const key of store.keys()) {
+    if (key.startsWith(`${prefix}:`)) {
+      store.delete(key)
+    }
+  }
+}
+
+export const tags = {
+  home: (locale: Locale) => `${prefixes.home}:${normalLocale(locale)}`,
+  project: (id: string, locale: Locale) => `${prefixes.project}:${id}:${normalLocale(locale)}`,
+  presentation: (locale: Locale) => `${prefixes.presentation}:${normalLocale(locale)}`,
+  services: (locale: Locale) => `${prefixes.services}:${normalLocale(locale)}`,
+  projects: (params: API.Projects.SearchParams, locale: Locale) =>
+    `${prefixes.projects}:${JSON.stringify(params)}:${normalLocale(locale)}`,
+  contact: (locale: Locale) => `${prefixes.contact}:${normalLocale(locale)}`,
+  general: (locale: Locale) => `${prefixes.general}:${normalLocale(locale)}`,
+  projectList: (params: API.Projects.SearchParams, locale: Locale) =>
+    `${prefixes.projectList}:${JSON.stringify(params)}:${normalLocale(locale)}`,
+  routes: (locale: Locale) => `${prefixes.routes}:${normalLocale(locale)}`,
 }

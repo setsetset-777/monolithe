@@ -4,8 +4,8 @@ import { titleField } from '@/fields/titleField'
 import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
-import { revalidateTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { invalidate, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 
 export const PageServices: GlobalConfig = {
   slug: 'pageServices',
@@ -27,9 +27,9 @@ export const PageServices: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.routes(), 'max')
-        revalidateTag(tags.services(), 'max')
+      async ({ req }) => {
+        invalidate(tags.routes(req.locale as Locale))
+        invalidate(tags.services(req.locale as Locale))
       },
     ],
   },

@@ -1,5 +1,5 @@
-import { tags } from '@/helpers/cache'
-import { revalidateTag } from 'next/cache'
+import { invalidate, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 import { GlobalConfig } from 'payload'
 
 export const General: GlobalConfig = {
@@ -81,8 +81,8 @@ export const General: GlobalConfig = {
   ],
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.general(), 'max')
+      async ({ req }) => {
+        invalidate(tags.general(req.locale as Locale))
       },
     ],
   },

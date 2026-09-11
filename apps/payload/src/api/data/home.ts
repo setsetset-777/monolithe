@@ -4,8 +4,7 @@ import type { Locale } from '@/types'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
-import { cacheTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { cached, tags } from '@/helpers/cache'
 
 interface Props {
   locale: Locale
@@ -17,66 +16,67 @@ export const getHomeData = async ({
   meta: API.Meta
   data: API.Home.Data
 }> => {
-  // 'use cache'
+  return cached<{
+    meta: API.Meta
+    data: API.Home.Data
+  }>(async () => {
+    const payload = await getPayload({
+      config,
+    })
 
-  // cacheTag(tags.home(), tags.homeLocale(locale))
+    const [pageHome, routes, services, highlights] = await Promise.all([
+      payload.findGlobal({
+        slug: 'pageHome',
+        locale,
+      }),
+      getRoutes(locale),
+      listPublishedCollection({ slug: 'services', payload, locale }),
+      listPublishedCollection({
+        slug: 'projects',
+        payload,
+        locale,
+        where: {
+          featured: {
+            equals: 'true',
+          },
+        },
+      }),
+    ])
 
-  const payload = await getPayload({
-    config,
-  })
+    const { presentation, services: servicesSection, projects: projectsSection, meta } = pageHome
 
-  const [pageHome, routes, services, highlights] = await Promise.all([
-    payload.findGlobal({
-      slug: 'pageHome',
-      locale,
-    }),
-    getRoutes(locale),
-    listPublishedCollection({ slug: 'services', payload, locale }),
-    listPublishedCollection({
-      slug: 'projects',
-      payload,
-      locale,
-      where: {
-        featured: {
-          equals: 'true',
+    return {
+      meta: {
+        title: meta?.title ?? undefined,
+        description: meta?.description ?? undefined,
+        image: (meta?.image as API.Media) ?? undefined,
+      },
+      data: {
+        presentation: {
+          heroImage: presentation.heroImage as API.Media,
+          catch: presentation.catch || '',
+          url: routes['pagePresentation'].path,
+          linkLabel: presentation.linkLabel || undefined,
+        },
+        services: {
+          title: servicesSection.title!,
+          url: routes['pageServices'].path,
+          linkLabel: servicesSection?.linkLabel!,
+          items: (services.docs || []).map((item) => ({
+            title: item.title,
+            url: routes[item.id].path,
+          })),
+        },
+        projects: {
+          highlights: highlights.docs.map((item) => ({
+            title: item.title!,
+            url: routes[item.id].path,
+            image: item.mainImage as API.Media,
+          }))!,
+          linkLabel: projectsSection.linkLabel!,
+          url: routes['pageProjects'].path,
         },
       },
-    }),
-  ])
-
-  const { presentation, services: servicesSection, projects: projectsSection, meta } = pageHome
-
-  return {
-    meta: {
-      title: meta?.title ?? undefined,
-      description: meta?.description ?? undefined,
-      image: (meta?.image as API.Media) ?? undefined,
-    },
-    data: {
-      presentation: {
-        heroImage: presentation.heroImage as API.Media,
-        catch: presentation.catch || '',
-        url: routes['pagePresentation'].path,
-        linkLabel: presentation.linkLabel || undefined,
-      },
-      services: {
-        title: servicesSection.title!,
-        url: routes['pageServices'].path,
-        linkLabel: servicesSection?.linkLabel!,
-        items: (services.docs || []).map((item) => ({
-          title: item.title,
-          url: routes[item.id].path,
-        })),
-      },
-      projects: {
-        highlights: highlights.docs.map((item) => ({
-          title: item.title!,
-          url: routes[item.id].path,
-          image: item.mainImage as API.Media,
-        }))!,
-        linkLabel: projectsSection.linkLabel!,
-        url: routes['pageProjects'].path,
-      },
-    },
-  }
+    }
+  }, tags.home(locale))
 }

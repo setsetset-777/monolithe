@@ -3,8 +3,8 @@ import { localizedLabels } from '@/i18n'
 import { urlFields } from '@/fields/urlFields'
 import { titleField } from '@/fields/titleField'
 import { heroImageField } from '@/fields/heroImageField'
-import { revalidateTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { invalidate, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 
 export const PageContact: GlobalConfig = {
   slug: 'pageContact',
@@ -76,9 +76,9 @@ export const PageContact: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.routes(), 'max')
-        revalidateTag(tags.contact(), 'max')
+      async ({ req }) => {
+        invalidate(tags.routes(req.locale as Locale))
+        invalidate(tags.contact(req.locale as Locale))
       },
     ],
   },

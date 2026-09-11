@@ -1,5 +1,5 @@
-import { tags } from '@/helpers/cache'
-import { revalidateTag } from 'next/cache'
+import { invalidate, invalidatePrefix, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 import type { CollectionConfig, Block, Field } from 'payload'
 
 const encodeSlug = (slug: string) => {
@@ -159,13 +159,13 @@ export const Services: CollectionConfig = {
       },
     ],
     afterChange: [
-      async () => {
-        revalidateTag(tags.routes(), 'max')
-        revalidateTag(tags.services(), 'max')
-        revalidateTag(tags.general(), 'max')
-        revalidateTag(tags.home(), 'max')
-        revalidateTag(tags.projectList(), 'max')
-        revalidateTag(tags.projects(), 'max')
+      async ({ req }) => {
+        invalidate(tags.routes(req.locale as Locale))
+        invalidate(tags.services(req.locale as Locale))
+        invalidate(tags.general(req.locale as Locale))
+        invalidate(tags.home(req.locale as Locale))
+        invalidatePrefix('projectList')
+        invalidatePrefix('projects')
       },
     ],
   },

@@ -1,10 +1,9 @@
 import type * as API from '@monolithe/api/types'
 import type { PageSlug, Locale } from '@/types'
-import { BasePayload, getPayload } from 'payload'
+import { getPayload } from 'payload'
 import { getRoutes } from '@/helpers/routes'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
-import { cacheTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { cached, tags } from '@/helpers/cache'
 import config from '@payload-config'
 
 type Props = {
@@ -12,62 +11,60 @@ type Props = {
 }
 
 export const getGeneralData = async ({ locale }: Props): Promise<API.General.Data> => {
-  // 'use cache'
-
-  // cacheTag(tags.general(), tags.generalLocale(locale))
-
-  const payload = await getPayload({
-    config,
-  })
-
-  const [routes, general, pageServices, services] = await Promise.all([
-    getRoutes(locale),
-    payload.findGlobal({ slug: 'general' }),
-    payload.findGlobal({ slug: 'pageServices' }),
-    listPublishedCollection({ slug: 'services', payload, locale }),
-  ])
-
-  const serviceItems = []
-
-  for (const slug of general.navigation.navigationList || []) {
-    const page = await payload.findGlobal({
-      slug,
-      locale: locale,
+  return cached<API.General.Data>(async () => {
+    const payload = await getPayload({
+      config,
     })
 
-    if (!page) continue
+    const [routes, general, pageServices, services] = await Promise.all([
+      getRoutes(locale),
+      payload.findGlobal({ slug: 'general' }),
+      payload.findGlobal({ slug: 'pageServices' }),
+      listPublishedCollection({ slug: 'services', payload, locale }),
+    ])
 
-    serviceItems.push({
-      title: page.title,
-      url: routes[slug] && routes[slug].path,
-      slug,
-    })
-  }
+    const serviceItems = []
 
-  return {
-    navigation: {
-      home: {
-        url: routes['pageHome' as PageSlug].path,
-        linkLabel: "Retour à l'accueil",
+    for (const slug of general.navigation.navigationList || []) {
+      const page = await payload.findGlobal({
+        slug,
+        locale: locale,
+      })
+
+      if (!page) continue
+
+      serviceItems.push({
+        title: page.title,
+        url: routes[slug] && routes[slug].path,
+        slug,
+      })
+    }
+
+    return {
+      navigation: {
+        home: {
+          url: routes['pageHome' as PageSlug].path,
+          linkLabel: "Retour à l'accueil",
+        },
+        menu: serviceItems,
       },
-      menu: serviceItems,
-    },
-    footer: {
-      logoCatch: general.footer!.logoCatch!,
-      contact: {
-        text: general.footer!.contactText!,
-        label: general.footer!.contactLabel!,
-        url: routes.pageContact.path,
+      footer: {
+        logoCatch: general.footer!.logoCatch!,
+        contact: {
+          text: general.footer!.contactText!,
+          label: general.footer!.contactLabel!,
+          url: routes.pageContact.path,
+        },
+        services: {
+          title: pageServices.title,
+          items: (services.docs || []).map(({ title, id }) => ({
+            title,
+            url: routes[id].path,
+          }))!,
+          url: routes.pageServices.path,
+        },
       },
-      services: {
-        title: pageServices.title,
-        items: (services.docs || []).map(({ title, id }) => ({
-          title,
-          url: routes[id].path,
-        }))!,
-        url: routes.pageServices.path,
-      },
-    },
-    routes,
-  }
+      routes,
+    }
+  }, tags.general(locale))
 }

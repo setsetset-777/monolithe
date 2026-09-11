@@ -12,8 +12,7 @@ import type {
   RoutedCollectionSlug,
   Media,
 } from '@/types'
-import { cacheTag } from 'next/cache'
-import { tags } from './cache'
+import { cached, tags } from './cache'
 import config from '@payload-config'
 
 const { locales, defaultLocale } = localization
@@ -49,19 +48,15 @@ export const routesConfig: RouteConfig = {
 }
 
 export const getRoutes = async (locale: Locale): Promise<LocalizedRoutes> => {
-  // 'use cache'
-
-  // cacheTag(tags.routes(), tags.routesLocales(locale))
-
-  const payload = await getPayload({ config })
-
   locale = locale || (defaultLocale as Locale)
 
-  const routes = await buildRoutes(payload)
+  return cached(async () => {
+    const payload = await getPayload({ config })
 
-  const localizedRoutes = routes[locale]
+    const routes = await buildRoutes(payload)
 
-  return localizedRoutes ?? {}
+    return routes[locale] ?? {}
+  }, tags.routes(locale))
 }
 
 const buildRoutes = async (payload: BasePayload): Promise<Routes> => {

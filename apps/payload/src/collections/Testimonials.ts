@@ -1,6 +1,6 @@
-import { tags } from '@/helpers/cache'
+import { invalidate, tags } from '@/helpers/cache'
 import { localizedLabels } from '@/i18n'
-import { revalidateTag } from 'next/cache'
+import { Locale } from '@/types'
 import type { CollectionConfig } from 'payload'
 
 export const Testimonials: CollectionConfig = {
@@ -48,8 +48,8 @@ export const Testimonials: CollectionConfig = {
   ],
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.presentation(), 'max')
+      async ({ req }) => {
+        invalidate(tags.presentation(req.locale as Locale))
       },
     ],
   },

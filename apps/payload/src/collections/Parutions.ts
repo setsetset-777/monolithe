@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { localizedLabels } from '@/i18n'
-import { tags } from '@/helpers/cache'
-import { revalidateTag } from 'next/cache'
+import { invalidate, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 
 export const Parutions: CollectionConfig = {
   slug: 'parutions',
@@ -87,8 +87,8 @@ export const Parutions: CollectionConfig = {
   ],
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.presentation(), 'max')
+      async ({ req }) => {
+        invalidate(tags.presentation(req.locale as Locale))
       },
     ],
   },

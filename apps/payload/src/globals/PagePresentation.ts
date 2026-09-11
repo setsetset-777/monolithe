@@ -5,8 +5,8 @@ import { urlFields } from '@/fields/urlFields'
 import { heroImageField } from '@/fields/heroImageField'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { linkToCollectionField } from '@/fields/linkToCollectionField'
-import { revalidateTag } from 'next/cache'
-import { tags } from '@/helpers/cache'
+import { invalidate, tags } from '@/helpers/cache'
+import { Locale } from '@/types'
 
 const TextWithTitleBlock: Block = {
   slug: 'textWithTitleBlock',
@@ -179,9 +179,9 @@ export const PagePresentation: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async () => {
-        revalidateTag(tags.routes(), 'max')
-        revalidateTag(tags.presentation(), 'max')
+      async ({ req }) => {
+        invalidate(tags.routes(req.locale as Locale))
+        invalidate(tags.presentation(req.locale as Locale))
       },
     ],
   },
