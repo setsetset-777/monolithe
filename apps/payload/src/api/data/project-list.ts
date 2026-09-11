@@ -30,6 +30,7 @@ export const getProjectListData = async ({
         payload.find({
           collection: 'services',
           locale,
+          draft: false,
           where: {
             urlSlug: {
               in: selectedServicesSlugs,

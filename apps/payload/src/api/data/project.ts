@@ -32,9 +32,10 @@ export const getProjectData = async ({
           collection: 'projects',
           locale,
           id,
+          draft: false,
         }),
         getRoutes(locale),
-        payload.findGlobal({ slug: 'pageProjects', locale }),
+        payload.findGlobal({ slug: 'pageProjects', locale, draft: false }),
       ])
 
       const { title, mainImage, description, gallery, meta } = project

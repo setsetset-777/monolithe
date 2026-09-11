@@ -32,13 +32,14 @@ export const getProjectsData = async ({
         payload.findGlobal({
           slug: 'pageProjects',
           locale,
+          draft: false,
         }),
         listPublishedCollection({ slug: 'services', payload, locale }),
         getProjectListData({
           locale,
           params,
         }),
-        payload.find({ collection: 'services', locale }),
+        payload.find({ collection: 'services', locale, draft: false }),
       ])
 
       const { title, heroImage, meta } = pageProjects

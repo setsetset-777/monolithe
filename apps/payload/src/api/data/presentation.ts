@@ -28,6 +28,7 @@ export const getPresentationData = async ({
       payload.findGlobal({
         slug: 'pagePresentation',
         locale,
+        draft: false,
       }),
       listPublishedCollection({ slug: 'parutions', locale, payload }),
       listPublishedCollection({ slug: 'testimonials', locale, payload }),

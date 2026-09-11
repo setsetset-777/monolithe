@@ -26,10 +26,12 @@ export const getContactData = async ({
       payload.findGlobal({
         slug: 'pageContact',
         locale,
+        draft: false,
       }),
       payload.findGlobal({
         slug: 'general',
         locale,
+        draft: false,
       }),
     ])
 

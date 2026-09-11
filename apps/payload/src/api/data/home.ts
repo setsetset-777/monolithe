@@ -28,6 +28,7 @@ export const getHomeData = async ({
       payload.findGlobal({
         slug: 'pageHome',
         locale,
+        draft: false,
       }),
       getRoutes(locale),
       listPublishedCollection({ slug: 'services', payload, locale }),

@@ -68,6 +68,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
       const global = await payload.findGlobal({
         slug: slug as RoutedGlobalSlug,
         locale: locale as Locale,
+        draft: false,
       })
 
       const doc: RoutedPages = global
@@ -92,6 +93,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
           collection: children.slug as RoutedCollectionSlug,
           locale: locale as Locale,
           pagination: false,
+          draft: false,
         })
 
         for (const collection of collections.docs) {
