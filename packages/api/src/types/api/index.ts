@@ -1,6 +1,3 @@
-// TODO: Move data types and transformations to api package
-// TODO: Use namespaces for pages (General, Presentation, etc.)
-
 export * from '../shared'
 export * from './general'
 export * from './home'

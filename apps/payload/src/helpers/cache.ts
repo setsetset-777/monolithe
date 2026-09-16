@@ -12,15 +12,15 @@ const pending = new Map<Tag, Promise<any>>()
 
 export function cached<T>(fn: () => Promise<T>, key: Tag): Promise<T> {
   if (store.has(key)) {
-    console.log(`>>>> cache: hitting cache for ${key}`)
+    // console.log(`>>>> cache: hitting cache for ${key}`)
     return store.get(key)
   }
   if (pending.has(key)) {
-    console.log(`>>>> cache: pending cache for ${key}`)
+    // console.log(`>>>> cache: pending cache for ${key}`)
     return pending.get(key) as Promise<T>
   }
 
-  console.log(`>>>> cache: missing cache for ${key}`)
+  // console.log(`>>>> cache: missing cache for ${key}`)
 
   const promise = fn()
     .then((result) => {

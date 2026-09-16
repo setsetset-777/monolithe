@@ -4,7 +4,9 @@ import type { APIRoute } from 'astro'
 
 export const GET: APIRoute = async ({ site, url }) => {
   const baseUrl = site?.href ?? url.origin
-  const { routes } = await getGeneral()
+  const data = await getGeneral()
+
+  const routes = data?.routes ?? {}
 
   const urls = Object.values(routes)
     .map(({ path, updatedAt }) => {
