@@ -1,5 +1,3 @@
-import debounce from '@/lib/debounce'
-
 export default class Sidebar {
   menuItemSelector = '[data-menu-item]'
   sidebarSelector = '[data-sidebar]'
@@ -9,9 +7,13 @@ export default class Sidebar {
   body: HTMLBodyElement | null = null
   element: HTMLElement | null = null
   items: HTMLElement[] = []
-  #scrollPosition: number = 0
-  scrollDebounce: NodeJS.Timeout | null = null
+  scrollPosition: number = 0
   #isOpened = false
+  scrollTicking = false
+  scrollDirection: 'north' | 'south' | null = null
+  scrollDistance = 0
+  scrollHeroTreshold = 0
+  scrollTreshold = 25
 
   constructor() {}
 
@@ -89,18 +91,51 @@ export default class Sidebar {
   }
 
   initScroll() {
-    const treshold = this.body?.querySelector('.hero')?.getBoundingClientRect().bottom ?? 0
-    document.addEventListener(
-      'scroll',
-      debounce(() => {
-        if (!this.element) return
-        const position = window.scrollY || document.documentElement.scrollTop
-        const direction = position > this.scrollPosition ? 'south' : 'north'
-        const hideMenu = direction === 'south' && position > treshold && !this.isOpened
-        this.element.dataset.slideOut = hideMenu ? 'true' : 'false'
-        this.scrollPosition = position
-      }),
-    )
+    this.scrollHeroTreshold = this.body?.querySelector('.hero')?.getBoundingClientRect().bottom ?? 0
+
+    document.addEventListener('scroll', () => {
+      if (!this.scrollTicking) {
+        requestAnimationFrame(() => {
+          this.updateScroll()
+          this.scrollTicking = false
+        })
+
+        this.scrollTicking = true
+      }
+    })
+  }
+
+  updateScroll() {
+    if (!this.element || this.isOpened) {
+      return
+    }
+    const position = window.scrollY || document.documentElement.scrollTop
+
+    if (position < this.scrollHeroTreshold) {
+      this.element.dataset.slideOut = 'false'
+      this.scrollDistance = 0
+      return
+    }
+
+    const delta = position - this.scrollPosition
+
+    if (Math.abs(delta) > 1) {
+      const direction = delta > 0 ? 'south' : 'north'
+
+      if (direction !== this.scrollDirection) {
+        this.scrollDistance = 0
+        this.scrollDirection = direction
+      }
+
+      this.scrollDistance += Math.abs(delta)
+
+      if (this.scrollDistance >= this.scrollTreshold) {
+        this.element.dataset.slideOut = direction === 'south' ? 'true' : 'false'
+        this.scrollDistance = 0
+      }
+
+      this.scrollPosition = position
+    }
   }
 
   private toggleSidebar(state?: boolean) {
@@ -130,13 +165,5 @@ export default class Sidebar {
 
   private get isOpened(): boolean {
     return this.#isOpened
-  }
-
-  private set scrollPosition(value: number) {
-    this.#scrollPosition = value
-  }
-
-  private get scrollPosition() {
-    return this.#scrollPosition
   }
 }
