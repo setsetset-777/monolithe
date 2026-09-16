@@ -36,19 +36,19 @@ const herbierCentre = getHerbier('centre')
   data-open="false"
   data-direction="north"
 >
-  <div class="container">
-    <div class="content">
-      <div class="header">
-        <a href={home?.url ?? '/'} aria-label={home?.linkLabel ?? 'Accueil'}>
-          <Logo class:list={'logo'} />
-        </a>
-        <SidebarSwitch />
-      </div>
-      <div class="main">
-        <div class="main__inner">
-          <Separator />
-          {
-            menu && (
+  <div class="sidebar__container">
+    <div class="sidebar__inner">
+      <div class="sidebar__content">
+        <div class="header">
+          <a href={home?.url ?? '/'} aria-label={home?.linkLabel ?? 'Accueil'}>
+            <Logo class:list={'logo'} />
+          </a>
+          <SidebarSwitch />
+        </div>
+        <div class="main">
+          <div class="main__inner">
+            <Separator />
+            {menu && (
               <Fragment>
                 <nav class="menu">
                   <ul class="menu__list" data-menu>
@@ -71,32 +71,28 @@ const herbierCentre = getHerbier('centre')
                 </nav>
                 <Separator />
               </Fragment>
-            )
-          }
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="plants plants--left" data-plants>
-      {
-        herbierLeft.map(({ slug, index }) => {
+      <div class="plants plants--left" data-plants>
+        {herbierLeft.map(({ slug, index }) => {
           return (
             <div class="plants__item" data-slug={slug}>
               <Plant type="left" index={index} />
             </div>
           )
-        })
-      }
-    </div>
-    <div class="plants plants--centre" data-plants>
-      {
-        herbierCentre.map(({ slug, index }) => {
+        })}
+      </div>
+      <div class="plants plants--centre" data-plants>
+        {herbierCentre.map(({ slug, index }) => {
           return (
             <div class="plants__item" data-slug={slug}>
               <Plant type="centre" index={index} />
             </div>
           )
-        })
-      }
+        })}
+      </div>
     </div>
   </div>
 </aside>
@@ -125,7 +121,6 @@ const herbierCentre = getHerbier('centre')
     --content-gap: clamp(var(--space-16), 6dvh, var(--space-48));
     --logo-height: var(--sidebar-logo-height);
     --container-padding-y: var(--content-padding-y);
-    view-transition-name: none;
 
     height: 100%;
     display: flex;
@@ -134,48 +129,55 @@ const herbierCentre = getHerbier('centre')
     position: fixed;
     z-index: 2;
     color: var(--color-gray-100);
+    view-transition-name: none;
 
-    &:after {
-      content: '';
-      display: block;
-      width: var(--sidebar-skew-size);
-      background: var(--color-gold-40);
-      clip-path: polygon(0 0, 100% 0, calc(100% - var(--sidebar-skew-size)) 100%, 0 100%);
-      flex-shrink: 0;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 100%;
-      z-index: 1;
+    &__container {
+      flex-grow: 1;
+      position: relative;
+      display: flex;
+
+      &:after {
+        content: '';
+        display: block;
+        width: var(--sidebar-skew-size);
+        background: var(--color-gold-40);
+        clip-path: polygon(0 0, 100% 0, calc(100% - var(--sidebar-skew-size)) 100%, 0 100%);
+        flex-shrink: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 100%;
+        z-index: 1;
+      }
     }
-  }
 
-  .container {
-    background: var(--color-gold-40);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    padding: var(--container-padding-y) 0 var(--container-padding-y) var(--content-padding-x);
-    justify-content: space-between;
-    width: var(--sidebar-width);
-    @include transition(width);
-
-    &:before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 100%;
-      bottom: 0;
-      width: 100vw;
+    &__inner {
       background: var(--color-gold-40);
-    }
-  }
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      padding: var(--container-padding-y) 0 var(--container-padding-y) var(--content-padding-x);
+      justify-content: space-between;
+      width: var(--sidebar-width);
+      @include transition(width);
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--content-gap);
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 100%;
+        bottom: 0;
+        width: 100vw;
+        background: var(--color-gold-40);
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--content-gap);
+    }
   }
 
   .main {
@@ -275,34 +277,58 @@ const herbierCentre = getHerbier('centre')
       --main-opacity: 1;
       --main-inner-top-padding: var(--content-gap);
 
+      $root: &;
+
       position: sticky;
       bottom: initial;
       right: 0;
       top: 0;
-      @include transition(transform, long);
 
-      &:after {
-        clip-path: polygon(0 0, 100% calc(100% - var(--sidebar-skew-size)), 100% 0, 0 100%);
-        left: 0;
-        right: 0;
-        bottom: unset;
-        top: 100%;
-        width: auto;
-        height: var(--sidebar-skew-size);
+      &__container {
+        @include transition(top, long);
+        will-change: top;
+        position: relative;
+        top: 0;
+
+        &:after {
+          clip-path: polygon(0 0, 100% calc(100% - var(--sidebar-skew-size)), 100% 0, 0 100%);
+          left: 0;
+          right: 0;
+          bottom: unset;
+          top: 100%;
+          width: auto;
+          height: var(--sidebar-skew-size);
+        }
       }
-    }
 
-    .container {
-      width: 100%;
-      align-items: stretch;
-      padding-right: var(--content-padding-x);
-      padding-bottom: var(--container-padding-bottom);
-      @include transition('padding', medium);
-    }
+      &__inner {
+        width: 100%;
+        align-items: stretch;
+        padding-right: var(--content-padding-x);
+        padding-bottom: var(--container-padding-bottom);
+        @include transition('padding', medium);
+      }
 
-    .content {
-      align-items: center;
-      gap: 0;
+      &__content {
+        align-items: center;
+        gap: 0;
+      }
+
+      &[data-open='false'] {
+        --plants-size: #{pxToRem(30px)};
+        --logo-height: var(--sidebar-logo-height-s);
+        --container-padding-bottom: var(--container-padding-y);
+        --plants-bottom: var(--container-padding-y);
+        --main-rows: 0fr;
+        --main-opacity: 0;
+        --main-inner-top-padding: 0;
+
+        &[data-slide-out='true'] {
+          #{$root}__container {
+            top: calc(-100% - var(--sidebar-skew-size));
+          }
+        }
+      }
     }
 
     .main {
@@ -354,20 +380,6 @@ const herbierCentre = getHerbier('centre')
 
       &--centre {
         display: block;
-      }
-    }
-
-    .sidebar[data-open='false'] {
-      --plants-size: #{pxToRem(30px)};
-      --logo-height: var(--sidebar-logo-height-s);
-      --container-padding-bottom: var(--container-padding-y);
-      --plants-bottom: var(--container-padding-y);
-      --main-rows: 0fr;
-      --main-opacity: 0;
-      --main-inner-top-padding: 0;
-
-      &[data-slide-out='true'] {
-        transform: translateY(calc(-100% - var(--sidebar-skew-size)));
       }
     }
   }
