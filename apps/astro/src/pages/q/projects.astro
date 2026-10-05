@@ -8,13 +8,14 @@ const services = params.getAll('service') ?? undefined
 const page = params.get('page') ?? undefined
 const limit = params.get('limit') ?? undefined
 
-const {
-  docs,
-  hasNextPage,
-  totalDocs,
-  totalPages,
-  page: currentPage,
-} = await api.projects({ service: services, page, limit })
+const req = await api.projects({ service: services, page, limit })
+
+if (!req) {
+  Astro.response.status = 404
+  return
+}
+
+const { docs, hasNextPage, totalDocs, totalPages, page: currentPage } = req
 
 Astro.response.headers.set('Has-More', String(hasNextPage))
 Astro.response.headers.set('Total-Docs', String(totalDocs))

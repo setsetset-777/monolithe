@@ -28,7 +28,7 @@ export const getProjectsData = async ({
         config,
       })
 
-      const [pageProjects, services, projects, test] = await Promise.all([
+      const [pageProjects, services, projects] = await Promise.all([
         payload.findGlobal({
           slug: 'pageProjects',
           locale,
@@ -39,7 +39,6 @@ export const getProjectsData = async ({
           locale,
           params,
         }),
-        payload.find({ collection: 'services', locale, draft: false }),
       ])
 
       const { title, heroImage, meta } = pageProjects
