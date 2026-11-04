@@ -74,6 +74,9 @@ export const Projects: CollectionConfig = {
           en: 'The image used to represent the project, eg. on the project list or the project hero.',
           fr: "L'image utilisée pour représenter le projet, par exemple sur la liste de projets ou l'entête de la page du projet.",
         },
+        components: {
+          Cell: '@/components/ImageCell',
+        },
       },
     },
     {
