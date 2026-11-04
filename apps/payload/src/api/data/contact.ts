@@ -35,7 +35,7 @@ export const getContactData = async ({
       }),
     ])
 
-    const { title, heroImage, place, email, phone, meta } = pageContact
+    const { title, heroImage, name, place, email, phone, meta } = pageContact
     return {
       meta: {
         title: meta?.title ?? undefined,
@@ -50,6 +50,7 @@ export const getContactData = async ({
         },
         info: {
           logoCatch: general.footer.logoCatch ?? undefined,
+          name: name ?? undefined,
           place: place ?? undefined,
           email: email ?? undefined,
           phone: phone ?? undefined,

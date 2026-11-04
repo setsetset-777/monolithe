@@ -1,5 +1,11 @@
+@use './link' as *;
+
 .payload-richtext {
   p {
     margin-bottom: var(--space-8);
+  }
+
+  a {
+    @extend .link;
   }
 }

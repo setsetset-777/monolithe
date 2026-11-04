@@ -1,0 +1,12 @@
+@use './transition' as *;
+
+.link {
+  color: var(--color-gray-10);
+  @include transition(color);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-gra-00y);
+  }
+}

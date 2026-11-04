@@ -17,6 +17,14 @@ export const PageContact: GlobalConfig = {
     ...urlFields({ source: 'title', slug: 'pageContact' }),
     heroImageField(),
     {
+      name: 'name',
+      type: 'text',
+      label: {
+        en: 'Name',
+        fr: 'Nom',
+      },
+    },
+    {
       name: 'place',
       type: 'text',
       label: {

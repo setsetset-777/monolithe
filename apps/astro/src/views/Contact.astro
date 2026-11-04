@@ -12,7 +12,7 @@ type Props = {
 
 const {
   hero,
-  info: { logoCatch, place, email, phone },
+  info: { logoCatch, name, place, email, phone },
 } = Astro.props
 ---
 
@@ -27,21 +27,18 @@ const {
         {logoCatch && <p class="logo-catch">{logoCatch}</p>}
       </div>
       <div class="info__contact">
+        {place && <p class="name">{name}</p>}
         {place && <p class="place">{place}</p>}
-        {
-          email && (
-            <button data-email={btoa(email)} type="button" class="email">
-              &nbsp;
-            </button>
-          )
-        }
-        {
-          phone && (
-            <button data-tel={btoa(phone)} type="button" class="phone">
-              &nbsp;
-            </button>
-          )
-        }
+        {email && (
+          <button data-email={btoa(email)} type="button" class="email link">
+            &nbsp;
+          </button>
+        )}
+        {phone && (
+          <button data-tel={btoa(phone)} type="button" class="phone link">
+            &nbsp;
+          </button>
+        )}
       </div>
     </section>
     <Separator />
@@ -90,7 +87,6 @@ const {
     &__company {
       display: flex;
       flex-direction: column;
-      justify-content: end;
       gap: var(--space-8);
     }
 
@@ -99,6 +95,7 @@ const {
       flex-direction: column;
       justify-content: end;
       gap: var(--space-8);
+      align-items: start;
     }
   }
 
@@ -107,15 +104,16 @@ const {
     width: pxToRem(90px);
   }
 
-  .place {
+  .name {
+    color: var(--color-gold-30);
     font-weight: bold;
+  }
+
+  .place {
   }
 
   .email,
   .phone {
-    text-decoration: underline;
-    cursor: pointer;
-    display: inline-flex;
   }
 
   @include from(mobile) {

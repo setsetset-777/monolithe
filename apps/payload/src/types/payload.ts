@@ -955,6 +955,7 @@ export interface PageContact {
    */
   urlSlug: string;
   heroImage: string | Media;
+  name?: string | null;
   place?: string | null;
   email?: string | null;
   phone?: string | null;
@@ -1162,6 +1163,7 @@ export interface PageContactSelect<T extends boolean = true> {
   title?: T;
   urlSlug?: T;
   heroImage?: T;
+  name?: T;
   place?: T;
   email?: T;
   phone?: T;
