@@ -57,6 +57,7 @@ export const getContactData = async ({
           phone: phone ?? undefined,
         },
         form: {
+          email: form?.email,
           title: form?.title,
           introduction: form?.introduction ?? undefined,
           actionLabel: form?.actionLabel,

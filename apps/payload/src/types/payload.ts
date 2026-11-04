@@ -960,6 +960,7 @@ export interface PageContact {
   email?: string | null;
   phone?: string | null;
   form: {
+    email: string;
     title: string;
     introduction?: string | null;
     actionLabel: string;
@@ -1171,6 +1172,7 @@ export interface PageContactSelect<T extends boolean = true> {
   form?:
     | T
     | {
+        email?: T;
         title?: T;
         introduction?: T;
         actionLabel?: T;

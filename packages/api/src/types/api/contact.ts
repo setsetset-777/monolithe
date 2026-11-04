@@ -10,6 +10,7 @@ export namespace Contact {
   }
 
   export interface Form {
+    email: string
     title: string
     introduction?: string
     successMessage: string

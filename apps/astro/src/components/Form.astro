@@ -1,11 +1,12 @@
 ---
 import Field from '@/components/Field.astro'
 import Action from '@/components/Action.astro'
+import { mail } from '@/lib/mail'
 import type { Contact } from '@monolithe/api/types'
 
 type Props = Contact.Form
 
-const { title, introduction, successMessage, actionLabel, slug } = Astro.props
+const { title, introduction, successMessage, actionLabel, slug, email: to } = Astro.props
 
 let name, email, phone, message
 
@@ -16,14 +17,47 @@ if (Astro.request.method === 'POST') {
     email = data.get('email') as string
     phone = data.get('phone') as string
     message = data.get('message') as string
+
+    const from = email
+    const subject = 'Monilithe – Formulaire  de contact'
+    const phoneBlock = phone
+      ? `<p>
+      <b>Téléphone :</b> ${phone}
+      </p>`
+      : ''
+    const html = `<p>Chère Monolothe,</p>
+      <p>Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.</p>
+
+      <p>
+      <b>Nom :</b> ${name}
+      </p>
+
+      <p>
+      <b>Email :</b> ${email}
+      </p>
+
+      ${phoneBlock}
+<p>
+<b>Message : </b>
+<br /><br />
+${message}
+</p>
+`
+
+    const params = {
+      from,
+      subject,
+      to,
+      html,
+    }
+
+    await mail(params)
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message)
     }
   }
 }
-
-console.log('>>> message', message)
 ---
 
 <form class="form" id={slug} method="post">

@@ -53,6 +53,15 @@ export const PageContact: GlobalConfig = {
       type: 'group',
       fields: [
         {
+          name: 'email',
+          type: 'email',
+          required: true,
+          label: {
+            en: 'Contact e-mail',
+            fr: 'Email de contact',
+          },
+        },
+        {
           name: 'title',
           type: 'text',
           required: true,
