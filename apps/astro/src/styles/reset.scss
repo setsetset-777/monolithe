@@ -46,3 +46,13 @@ fieldset {
   margin: 0;
   min-width: 0;
 }
+
+input,
+textarea {
+  outline: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}

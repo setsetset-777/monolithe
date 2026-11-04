@@ -5,6 +5,7 @@ import { getRoutes } from '@/helpers/routes'
 import listPublishedCollection from '@/helpers/listPublishedCollection'
 import { cached, tags } from '@/helpers/cache'
 import config from '@payload-config'
+import { contactSlug } from '@/helpers/slugify'
 
 type Props = {
   locale: Locale
@@ -16,10 +17,11 @@ export const getGeneralData = async ({ locale }: Props): Promise<API.General.Dat
       config,
     })
 
-    const [routes, general, pageServices, services] = await Promise.all([
+    const [routes, general, pageServices, pageContact, services] = await Promise.all([
       getRoutes(locale),
       payload.findGlobal({ slug: 'general', draft: false }),
       payload.findGlobal({ slug: 'pageServices', draft: false }),
+      payload.findGlobal({ slug: 'pageContact', draft: false }),
       listPublishedCollection({ slug: 'services', payload, locale }),
     ])
 
@@ -53,7 +55,7 @@ export const getGeneralData = async ({ locale }: Props): Promise<API.General.Dat
         contact: {
           text: general.footer!.contactText!,
           label: general.footer!.contactLabel!,
-          url: routes.pageContact.path,
+          url: `${routes.pageContact.path}#${contactSlug(pageContact.form?.title)}`,
         },
         services: {
           title: pageServices.title,

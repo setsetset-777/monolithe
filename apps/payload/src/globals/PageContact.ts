@@ -55,6 +55,7 @@ export const PageContact: GlobalConfig = {
         {
           name: 'title',
           type: 'text',
+          required: true,
           label: {
             en: 'Title',
             fr: 'Titre',
@@ -71,9 +72,19 @@ export const PageContact: GlobalConfig = {
         {
           name: 'actionLabel',
           type: 'text',
+          required: true,
           label: {
             en: 'Label for form submit button',
             fr: "Intitulé pour bouton d'envoi",
+          },
+        },
+        {
+          name: 'successMessage',
+          type: 'textarea',
+          required: true,
+          label: {
+            en: 'Success message',
+            fr: 'Message de succès',
           },
         },
       ],

@@ -3,6 +3,7 @@ import type { Locale } from '@/types'
 import { getPayload } from 'payload'
 import { cached, tags } from '@/helpers/cache'
 import config from '@payload-config'
+import { contactSlug } from '@/helpers/slugify'
 
 interface Props {
   locale: Locale
@@ -35,7 +36,7 @@ export const getContactData = async ({
       }),
     ])
 
-    const { title, heroImage, name, place, email, phone, meta } = pageContact
+    const { title, heroImage, name, place, email, phone, meta, form } = pageContact
     return {
       meta: {
         title: meta?.title ?? undefined,
@@ -54,6 +55,13 @@ export const getContactData = async ({
           place: place ?? undefined,
           email: email ?? undefined,
           phone: phone ?? undefined,
+        },
+        form: {
+          title: form?.title,
+          introduction: form?.introduction ?? undefined,
+          actionLabel: form?.actionLabel,
+          successMessage: form?.successMessage,
+          slug: contactSlug(form?.title),
         },
       },
     }

@@ -87,6 +87,7 @@ const buildRoutes = async (payload: BasePayload): Promise<Routes> => {
           image: (doc.meta?.image as Media) ?? undefined,
         },
       }
+
       if (children) {
         const parent = doc
         const collections = await payload.find({

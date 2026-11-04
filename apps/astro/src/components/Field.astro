@@ -1,0 +1,61 @@
+---
+interface Props {
+  name: string
+  type: 'text' | 'textarea' | 'tel' | 'email'
+  label: string
+  required: boolean
+  value?: string | null
+  placeholder?: string
+}
+
+const { name, type, label, required, value } = Astro.props
+---
+
+<label class="field">
+  <span class="field__label">
+    {label}
+    {required && <span class="field__required">&nbsp;*</span>}
+  </span>
+  <div class="field__input">
+    {type === 'textarea' && <textarea required={required} name={name} rows="4">{value}</textarea>}
+    {(type === 'text' || type === 'email' || type === 'tel') && (
+      <input type={type} required={required} name={name} value={value} />
+    )}
+  </div>
+</label>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    align-items: stretch;
+
+    &__required {
+      color: var(--color-gold-30);
+    }
+
+    &__input {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+
+      input,
+      textarea {
+        --border-color: var(--color-gray-20);
+
+        background: var(--color-gray-50);
+        border: var(--border-color) solid 1px;
+        border-radius: var(--radius-2);
+        @include transition('border-color');
+        padding: var(--space-12) var(--space-16);
+
+        &:focus-visible {
+          --border-color: var(--color-gray-00);
+        }
+      }
+    }
+  }
+</style>

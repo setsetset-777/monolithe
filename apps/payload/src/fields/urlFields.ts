@@ -1,4 +1,4 @@
-import { slugify } from 'payload/shared'
+import { slugifyWithAccents } from '@/helpers/slugify'
 import type {
   TextField,
   LabelFunction,
@@ -22,12 +22,6 @@ type UrlFieldsProps = {
 const defaultLabel = {
   en: 'URL slug',
   fr: "Segment d'URL",
-}
-
-// Transforms aceented letters to the letter before applying Payload's slugify method
-const slugifyWithAccents = (value: string) => {
-  const slug = value.normalize('NFKD').replace(/[\u0300-\u036F]/g, '')
-  return slugify(slug)
 }
 
 const trimWhitespace: FieldHook = ({ value }) => {

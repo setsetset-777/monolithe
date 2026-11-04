@@ -9,8 +9,17 @@ export namespace Contact {
     phone?: string
   }
 
+  export interface Form {
+    title: string
+    introduction?: string
+    successMessage: string
+    actionLabel: string
+    slug: string
+  }
+
   export interface Data {
     hero: Hero
     info: Info
+    form: Form
   }
 }

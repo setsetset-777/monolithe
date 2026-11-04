@@ -959,10 +959,11 @@ export interface PageContact {
   place?: string | null;
   email?: string | null;
   phone?: string | null;
-  form?: {
-    title?: string | null;
+  form: {
+    title: string;
     introduction?: string | null;
-    actionLabel?: string | null;
+    actionLabel: string;
+    successMessage: string;
   };
   meta?: {
     title?: string | null;
@@ -1173,6 +1174,7 @@ export interface PageContactSelect<T extends boolean = true> {
         title?: T;
         introduction?: T;
         actionLabel?: T;
+        successMessage?: T;
       };
   meta?:
     | T

@@ -1,0 +1,94 @@
+---
+import Field from '@/components/Field.astro'
+import Action from '@/components/Action.astro'
+import type { Contact } from '@monolithe/api/types'
+
+type Props = Contact.Form
+
+const { title, introduction, successMessage, actionLabel, slug } = Astro.props
+
+let name, email, phone, message
+
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData()
+    name = data.get('name') as string
+    email = data.get('email') as string
+    phone = data.get('phone') as string
+    message = data.get('message') as string
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    }
+  }
+}
+
+console.log('>>> message', message)
+---
+
+<form class="form" id={slug} method="post">
+  <h2 class="form__title">{title}</h2>
+  {introduction && <p class="form__intro">{introduction}</p>}
+  <div class="form__fields">
+    <Field
+      label="Nom"
+      required={true}
+      name="name"
+      type="text"
+      placeholder="Jeane Dupont"
+      value={name}
+    />
+
+    <Field
+      label="Email"
+      required={true}
+      name="email"
+      type="email"
+      placeholder="jeanne.dupont@mail.fr"
+      value={email}
+    />
+
+    <Field
+      label="Téléphone"
+      required={false}
+      name="phone"
+      type="tel"
+      placeholder="0612345678"
+      value={phone}
+    />
+
+    <Field
+      label="Message"
+      required={true}
+      name="message"
+      type="textarea"
+      value={message}
+      placeholder="Demande de renseignement, de devis..."
+    />
+
+    <Action type="submit">{actionLabel}</Action>
+  </div>
+</form>
+
+<style lang="scss">
+  @use '../styles/utilities' as *;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    max-width: pxToRem(600px);
+
+    &__title {
+      font-family: var(--font-family-heading);
+      font-size: var(--font-size-xl);
+    }
+
+    &__fields {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-24);
+      align-items: stretch;
+    }
+  }
+</style>

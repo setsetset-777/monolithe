@@ -1,20 +1,27 @@
 ---
+import { undefined } from 'astro:schema'
+
 type Props = {
-  href: string
+  href?: string
   className?: string
+  type: 'link' | 'submit' | 'button'
 }
 
-const { className, href } = Astro.props
+const { className, href, type } = Astro.props
+
+const isLink = type === 'link' || href
+const As = isLink ? 'a' : `button`
 ---
 
-<a href={href} class:list={[className]}>
+<As href={href} class:list={[className]} type={!isLink ? type : null}>
   <slot />
-</a>
+</As>
 
 <style lang="scss">
   @use '../styles/utilities' as *;
 
-  a {
+  a,
+  button {
     $size: var(--space-2);
 
     background-color: var(--color-gold-40);
@@ -32,6 +39,7 @@ const { className, href } = Astro.props
     @include transition('backbround-color, color');
     box-shadow: 2px 2px var(--color-gray-100);
     align-self: start;
+    cursor: pointer;
 
     &:hover {
       background-color: var(--color-gray-100);
