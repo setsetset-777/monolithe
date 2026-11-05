@@ -100,7 +100,7 @@ ${data.message}
 }
 ---
 
-<form class="form" id={slug} method="post" novalidate>
+<form class="form" id={slug} method="post" novalidate action={`#${slug}`}>
   <h2 class="form__title">{title}</h2>
   {introduction && <p class="form__intro">{introduction}</p>}
   {errorMessage && <Callout type="error">{errorMessage}</Callout>}

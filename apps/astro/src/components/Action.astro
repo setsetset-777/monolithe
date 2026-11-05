@@ -4,10 +4,10 @@ import { undefined } from 'astro:schema'
 type Props = {
   href?: string
   className?: string
-  type: 'link' | 'submit' | 'button'
+  type?: 'link' | 'submit' | 'button'
 }
 
-const { className, href, type } = Astro.props
+const { className, href, type = 'link' } = Astro.props
 
 const isLink = type === 'link' || href
 const As = isLink ? 'a' : `button`

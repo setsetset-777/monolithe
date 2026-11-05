@@ -97,14 +97,11 @@ export default buildConfig({
         // }
 
         req.payload.logger.info('Hiiting endpoint /general')
-        const presentation = await req.payload.findGlobal({
-          slug: 'pagePresentation',
-        })
 
         const start = performance.now()
 
         const data = await fetchGeneral(req)
-        req.payload.logger.info(data, `Fetched data for general`)
+        // req.payload.logger.info(data, `Fetched data for general`)
 
         req.payload.logger.info(`fetch /page took ${Math.round(performance.now() - start)}ms`)
 
