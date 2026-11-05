@@ -24,6 +24,8 @@ FROM base AS front
 WORKDIR /front
 
 # Copy front source
+COPY --from=build /out/front/node_modules ./node_modules
+COPY --from=build /out/front/package.json ./package.json
 COPY --from=build /app/apps/astro/dist ./dist
 
 ENV HOST=0.0.0.0
