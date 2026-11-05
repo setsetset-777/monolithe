@@ -1,0 +1,42 @@
+---
+import ErrorSvg from '@/assets/svgs/error.svg'
+import SuccessSvg from '@/assets/svgs/success.svg'
+interface Props {
+  type: 'success' | 'error'
+}
+
+const { type } = Astro.props
+---
+
+<div class={`callout callout--${type}`}>
+  <span class="callout__icon">
+    {type === 'error' && <ErrorSvg />}
+    {type === 'success' && <SuccessSvg />}
+  </span>
+  <div>
+    <slot />
+  </div>
+</div>
+
+<style lang="scss">
+  .callout {
+    $callout: &;
+
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-2);
+    padding: var(--space-24);
+    display: flex;
+    gap: var(--space-16);
+    align-items: top;
+
+    &__icon {
+      #{$callout}--error & {
+        color: var(--color-red-30);
+      }
+
+      #{$callout}--success & {
+        color: var(--color-gold-30);
+      }
+    }
+  }
+</style>

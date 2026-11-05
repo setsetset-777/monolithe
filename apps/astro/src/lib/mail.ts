@@ -10,6 +10,8 @@ let credentials = {
 
 const isTestAccount = process.env.NODE_ENV !== 'production'
 
+export const honeyName = 'abcde'
+
 if (isTestAccount) {
   const {
     smtp: { host, port },

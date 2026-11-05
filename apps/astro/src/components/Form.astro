@@ -1,6 +1,9 @@
 ---
 import Field from '@/components/Field.astro'
 import Action from '@/components/Action.astro'
+import HoneyPot from '@/components/HoneyPot.astro'
+import Callout from '@/components/Callout.astro'
+import { honeyName } from '@/lib/mail'
 import { mail } from '@/lib/mail'
 import type { Contact } from '@monolithe/api/types'
 
@@ -8,15 +11,22 @@ type Props = Contact.Form
 
 const { title, introduction, successMessage, actionLabel, slug, email: to } = Astro.props
 
-let name, email, phone, message
+let name, email, phone, message, errorMessage, success
+
+let data = new FormData()
 
 if (Astro.request.method === 'POST') {
   try {
-    const data = await Astro.request.formData()
+    let data = await Astro.request.formData()
     name = data.get('name') as string
     email = data.get('email') as string
     phone = data.get('phone') as string
     message = data.get('message') as string
+    const honey = data.get(honeyName)
+
+    if (!(honey === null || honey === '' || typeof honey === 'undefined')) {
+      throw new Error("Vous n'êtes pas autorisé à utiliser ce formulaire.")
+    }
 
     const from = email
     const subject = 'Monilithe – Formulaire  de contact'
@@ -52,9 +62,13 @@ ${message}
     }
 
     await mail(params)
+
+    success = true
+    data = new FormData()
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message)
+      errorMessage = error.message
     }
   }
 }
@@ -63,45 +77,52 @@ ${message}
 <form class="form" id={slug} method="post">
   <h2 class="form__title">{title}</h2>
   {introduction && <p class="form__intro">{introduction}</p>}
-  <div class="form__fields">
-    <Field
-      label="Nom"
-      required={true}
-      name="name"
-      type="text"
-      placeholder="Jeane Dupont"
-      value={name}
-    />
+  {errorMessage && <Callout type="error">{errorMessage}</Callout>}
+  {success ? (
+    <Callout type="success">{successMessage}</Callout>
+  ) : (
+    <div class="form__fields">
+      <Field
+        label="Nom"
+        required={true}
+        name="name"
+        type="text"
+        placeholder="Jeane Dupont"
+        value={data.get('name') as string}
+      />
 
-    <Field
-      label="Email"
-      required={true}
-      name="email"
-      type="email"
-      placeholder="jeanne.dupont@mail.fr"
-      value={email}
-    />
+      <Field
+        label="Email"
+        required={true}
+        name="email"
+        type="email"
+        placeholder="jeanne.dupont@mail.fr"
+        value={data.get('email') as string}
+      />
 
-    <Field
-      label="Téléphone"
-      required={false}
-      name="phone"
-      type="tel"
-      placeholder="0612345678"
-      value={phone}
-    />
+      <Field
+        label="Téléphone"
+        required={false}
+        name="phone"
+        type="tel"
+        placeholder="0612345678"
+        value={data.get('phone') as string}
+      />
 
-    <Field
-      label="Message"
-      required={true}
-      name="message"
-      type="textarea"
-      value={message}
-      placeholder="Demande de renseignement, de devis..."
-    />
+      <Field
+        label="Message"
+        required={true}
+        name="message"
+        type="textarea"
+        value={data.get('message') as string}
+        placeholder="Demande de renseignement, de devis..."
+      />
 
-    <Action type="submit">{actionLabel}</Action>
-  </div>
+      <HoneyPot />
+
+      <Action type="submit">{actionLabel}</Action>
+    </div>
+  )}
 </form>
 
 <style lang="scss">

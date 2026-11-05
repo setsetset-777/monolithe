@@ -13,7 +13,7 @@ const isLink = type === 'link' || href
 const As = isLink ? 'a' : `button`
 ---
 
-<As href={href} class:list={[className]} type={!isLink ? type : null}>
+<As href={href} class:list={[className]} type={!isLink ? type : null} tabindex="0">
   <slot />
 </As>
 
@@ -41,13 +41,17 @@ const As = isLink ? 'a' : `button`
     align-self: start;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:active,
+    &:focus-within {
       background-color: var(--color-gray-100);
       color: var(--color-gold-30);
     }
 
-    &:active {
+    &:active,
+    &:focus-within {
       box-shadow: none;
+      outline: var(--color-gray-00) solid 1px;
     }
 
     &:before,
