@@ -2,18 +2,21 @@
 import ErrorSvg from '@/assets/svgs/error.svg'
 import SuccessSvg from '@/assets/svgs/success.svg'
 interface Props {
-  type: 'success' | 'error'
+  type: 'success' | 'error' | null
+  hidden: boolean
 }
 
-const { type } = Astro.props
+const { type, hidden } = Astro.props
 ---
 
-<div class={`callout callout--${type}`}>
-  <span class="callout__icon">
-    {type === 'error' && <ErrorSvg />}
-    {type === 'success' && <SuccessSvg />}
+<div class="callout" data-status data-type={type} hidden={hidden || type === null}>
+  <span class="callout__icon callout__icon--error">
+    <ErrorSvg />
   </span>
-  <div>
+  <span class="callout__icon callout__icon--success">
+    <SuccessSvg />
+  </span>
+  <div data-status-content>
     <slot />
   </div>
 </div>
@@ -27,15 +30,22 @@ const { type } = Astro.props
     padding: var(--space-24);
     display: flex;
     gap: var(--space-16);
-    align-items: top;
+
+    &[hidden] {
+      display: none;
+    }
 
     &__icon {
-      #{$callout}--error & {
+      display: none;
+
+      #{$callout}[data-type='error'] &--error {
         color: var(--color-red-30);
+        display: block;
       }
 
-      #{$callout}--success & {
+      #{$callout}[data-type='success'] &--success {
         color: var(--color-gold-30);
+        display: block;
       }
     }
   }

@@ -1,19 +1,12 @@
-import api from '@monolithe/api'
 import type { Form } from '@monolithe/api/types'
 import { mail } from '@/lib/mail'
 import { formEmailHtml, formEmailText } from './format'
 
-export const sendForm = async (input: Form.Data) => {
-  const response = await api.form()
-
-  if (!response) {
-    throw new Error("Couldn't retrieve form data")
-  }
-
+export const sendForm = async (input: Form.Data, to: string) => {
   const params = {
     from: input.email,
     subject: 'Monolithe – Formulaire  de contact',
-    to: response.email,
+    to,
     html: formEmailHtml(input),
     text: formEmailText(input),
   }

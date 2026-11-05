@@ -248,6 +248,7 @@ export default buildConfig({
 
           const data = {
             email: pageContact.form.email,
+            message: pageContact.form.successMessage,
           }
 
           return Response.json({

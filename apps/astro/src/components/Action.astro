@@ -1,6 +1,4 @@
 ---
-import { undefined } from 'astro:schema'
-
 type Props = {
   href?: string
   className?: string
@@ -62,6 +60,11 @@ const As = isLink ? 'a' : `button`
       height: $size;
       background-color: currentColor;
       transform: rotate(45deg);
+    }
+
+    &:disabled {
+      cursor-pointer: none;
+      opacity: 0.5;
     }
   }
 </style>

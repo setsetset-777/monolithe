@@ -10,7 +10,7 @@ type Props = {
   hero: Hero
   info: Contact.Info
   form: Contact.Form
-  post: Contact.Post
+  post?: Contact.Post
 }
 
 const {
@@ -48,7 +48,7 @@ const {
     </section>
     <Separator />
     <section class="form">
-      <Form {...form} {...post} />
+      <Form {...form} post={post} />
     </section>
   </div>
 </div>

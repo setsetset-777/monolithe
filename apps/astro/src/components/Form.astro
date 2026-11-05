@@ -6,64 +6,183 @@ import Callout from '@/components/Callout.astro'
 import type { Contact } from '@monolithe/api/types'
 import { actions } from 'astro:actions'
 
-type Props = Contact.Form & Contact.Post
+type Props = Contact.Form & {
+  post?: Contact.Post
+}
 
-const { title, introduction, successMessage, actionLabel, slug, success, errorMessage, errors } =
-  Astro.props
+const {
+  title,
+  introduction,
+  successMessage,
+  actionLabel,
+  slug,
+  post: { success, errorMessage, errors } = {},
+} = Astro.props
+
+let status: {
+  type: 'success' | 'error' | null
+  message: string | null
+} = {
+  type: null,
+  message: null,
+}
+
+if (errorMessage) {
+  status = {
+    type: 'error',
+    message: errorMessage,
+  }
+} else if (success) {
+  status = {
+    type: 'success',
+    message: successMessage,
+  }
+}
 ---
 
 <form class="form" id={slug} method="post" novalidate action={actions.form}>
   <h2 class="form__title">{title}</h2>
   {introduction && <p class="form__intro">{introduction}</p>}
-  {errorMessage && <Callout type="error">{errorMessage}</Callout>}
-  {success ? (
-    <Callout type="success">{successMessage}</Callout>
-  ) : (
-    <div class="form__fields">
-      <Field
-        label="Nom"
-        required={true}
-        name="name"
-        type="text"
-        placeholder="Jeane Dupont"
-        error={errors.name}
-      />
+  <Callout type={status.type} hidden={!status.type}>
+    {status.message}
+  </Callout>
 
-      <Field
-        label="Email"
-        required={true}
-        name="email"
-        type="email"
-        placeholder="jeanne.dupont@mail.fr"
-        error={errors.email}
-      />
+  <div class="form__fields">
+    <Field
+      label="Nom"
+      required={true}
+      name="name"
+      type="text"
+      placeholder="Jeane Dupont"
+      error={errors?.name && errors?.name[0]}
+    />
 
-      <Field
-        label="Téléphone"
-        required={false}
-        name="phone"
-        type="tel"
-        placeholder="0612345678"
-        error={errors.phone}
-      />
+    <Field
+      label="Email"
+      required={true}
+      name="email"
+      type="email"
+      placeholder="jeanne.dupont@mail.fr"
+      error={errors?.email && errors?.email[0]}
+    />
 
-      <Field
-        label="Message"
-        required={true}
-        name="message"
-        type="textarea"
-        placeholder="Demande de renseignement, de devis..."
-        error={errors.message}
-      />
+    <Field
+      label="Téléphone"
+      required={false}
+      name="phone"
+      type="tel"
+      placeholder="0612345678"
+      error={errors?.phone && errors?.phone[0]}
+    />
 
-      <HoneyPot />
+    <Field
+      label="Message"
+      required={true}
+      name="message"
+      type="textarea"
+      placeholder="Demande de renseignement, de devis..."
+      error={errors?.message && errors?.message[0]}
+    />
 
-      <div class="form__footer">
-        <Action type="submit">{actionLabel}</Action>
-      </div>
+    <HoneyPot />
+
+    <div class="form__footer">
+      <Action type="submit">{actionLabel}</Action>
     </div>
-  )}
+  </div>
 </form>
+
+<script>
+  import { actions, isInputError } from 'astro:actions'
+  import locales from '@monolithe/api/locales'
+
+  initForm()
+
+  function clearErrors(form: HTMLFormElement) {
+    form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'))
+    form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((el) => {
+      el.textContent = ''
+      el.hidden = true
+    })
+  }
+
+  function setFieldError(form: HTMLFormElement, name: string, message: string) {
+    const input = form.elements.namedItem(name) as HTMLElement | null
+    const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`)
+    input?.setAttribute('aria-invalid', 'true')
+
+    if (slot) {
+      slot.textContent = message
+      slot.hidden = false
+    }
+  }
+
+  function setStatus(form: HTMLFormElement, message: string, type: 'error' | 'success') {
+    const status = form.querySelector<HTMLElement>('[data-status]')!
+    status.querySelector('[data-status-content]')!.textContent = message
+    status.dataset.type = type
+    status.hidden = false
+  }
+
+  function initForm() {
+    const form = document.querySelector<HTMLFormElement>(`form`)
+    const button = form?.querySelector<HTMLButtonElement>('[type=submit]')
+
+    if (!button) {
+      throw new Error('No form button found')
+    }
+
+    // Clear a field's error as soon as the user edits it
+    form?.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement
+      if (target.getAttribute('aria-invalid') !== 'true') return
+      target.removeAttribute('aria-invalid')
+      const slot = form.querySelector<HTMLElement>(`[data-error-for="${target.name}"]`)
+      if (slot) {
+        slot.textContent = ''
+        slot.hidden = true
+      }
+    })
+
+    form?.addEventListener('submit', async (e) => {
+      if (!(e.target instanceof HTMLFormElement)) {
+        return
+      }
+
+      button.disabled = true
+      clearErrors(e.target)
+
+      e.preventDefault()
+
+      const body = new FormData(e.target)
+      const { error, data } = await actions.form(body)
+      button.disabled = false
+
+      if (data?.sent) {
+        form.reset()
+        setStatus(form, data.message, 'success')
+        return
+      }
+
+      if (error && isInputError(error)) {
+        const fields = error.fields as Record<string, string[] | undefined>
+        let firstInvalid: HTMLElement | null = null
+
+        for (const [name, messages] of Object.entries(fields)) {
+          if (!messages?.length) continue
+          setFieldError(form, name, messages[0])
+          firstInvalid ??= form.elements.namedItem(name) as HTMLElement
+        }
+
+        setStatus(form, locales.errors.check, 'error')
+        firstInvalid?.focus()
+        return
+      }
+
+      setStatus(form, locales.errors.general, 'error')
+    })
+  }
+</script>
 
 <style lang="scss">
   @use '../styles/utilities' as *;

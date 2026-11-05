@@ -25,7 +25,9 @@ const { name, type, label, required, value, error } = Astro.props
       <input type={type} required={required} name={name} value={value} />
     )}
   </div>
-  {error && <span class="field__error">{error}</span>}
+  <span class="field__error" data-error-for={name} hidden={!error}>
+    {error}
+  </span>
 </label>
 
 <style lang="scss">
@@ -62,7 +64,8 @@ const { name, type, label, required, value, error } = Astro.props
           --border-color: var(--color-gray-00);
         }
 
-        #{$field}--error & {
+        #{$field}--error &,
+        &[aria-invalid='true'] {
           --border-color: var(--color-red-30);
         }
       }
@@ -70,6 +73,10 @@ const { name, type, label, required, value, error } = Astro.props
 
     &__error {
       color: var(--color-red-30);
+
+      &[hidden] {
+        visibility: hidden;
+      }
     }
   }
 </style>

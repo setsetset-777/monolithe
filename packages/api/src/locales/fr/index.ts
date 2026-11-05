@@ -1,7 +1,7 @@
 const fr = {
   errors: {
     required: 'Ce champ est obligatoire.',
-    invalid: 'Cet champ est invalide.',
+    invalid: 'Ce champ est invalide.',
     check: 'Vérifiez vos informations.',
     general: "Une erreur est survenue. Merci d'essayer plus tard.",
     tooLong: 'Le champs entré est trop long',

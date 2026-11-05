@@ -19,15 +19,15 @@ export namespace Contact {
   }
 
   export interface Post {
-    success: boolean
-    errorMessage: string
-    errors: Record<string, string>
+    success?: boolean
+    errorMessage?: string
+    errors?: Record<string, string[]>
   }
 
   export interface Data {
     hero: Hero
     info: Info
     form: Form
-    post: Post
+    post?: Post
   }
 }
