@@ -6,51 +6,75 @@ import Callout from '@/components/Callout.astro'
 import { honeyName } from '@/lib/mail'
 import { mail } from '@/lib/mail'
 import type { Contact } from '@monolithe/api/types'
+import * as z from 'zod'
+import { ZodError } from 'astro:schema'
+import { hit } from '@/lib/rateLimit'
 
 type Props = Contact.Form
 
 const { title, introduction, successMessage, actionLabel, slug, email: to } = Astro.props
 
-let name, email, phone, message, errorMessage, success
+let errorMessage, success
 
-let data = new FormData()
+const errorMessages = {
+  required: 'Ce champ est obligatoire.',
+  email: 'Cet email est invalide.',
+  check: 'Vérifiez vos informations.',
+  general: "Une erreur est survenue. Merci d'essayer plus tard.",
+  tooLong: 'Le champs entré est trop long',
+}
+
+let data
+
+const schema = z.object({
+  name: z.string().min(1, errorMessages.required).max(100, errorMessages.tooLong),
+  email: z.email(errorMessages.email).max(200, errorMessages.tooLong),
+  phone: z.string().max(20, errorMessages.tooLong).optional(),
+  message: z.string().min(1, errorMessages.required).max(10000, errorMessages.tooLong),
+})
+
+let errors: Record<string, string> = {}
 
 if (Astro.request.method === 'POST') {
+  if (!hit(`ip:${Astro.clientAddress}`, 3, 10 * 60_000) || !hit('global', 50, 60 * 60_000)) {
+    return new Response('Too many requests', { status: 429 })
+  }
+
   try {
-    let data = await Astro.request.formData()
-    name = data.get('name') as string
-    email = data.get('email') as string
-    phone = data.get('phone') as string
-    message = data.get('message') as string
-    const honey = data.get(honeyName)
+    const formData = await Astro.request.formData()
+
+    const honey = formData.get(honeyName)
 
     if (!(honey === null || honey === '' || typeof honey === 'undefined')) {
-      throw new Error("Vous n'êtes pas autorisé à utiliser ce formulaire.")
+      throw new Error(errorMessages.general)
     }
 
-    const from = email
-    const subject = 'Monilithe – Formulaire  de contact'
-    const phoneBlock = phone
+    data = Object.fromEntries(formData)
+    data = schema.parse(data)
+
+    const from = data.email
+    const subject = 'Monolithe – Formulaire  de contact'
+    const phoneBlock = data.phone
       ? `<p>
-      <b>Téléphone :</b> ${phone}
+      <b>Téléphone :</b> ${data.phone}
       </p>`
       : ''
-    const html = `<p>Chère Monolothe,</p>
+    const html = `<p>Chère Monolithe,</p>
       <p>Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.</p>
 
       <p>
-      <b>Nom :</b> ${name}
+      <b>Nom :</b> ${data.name}
       </p>
 
       <p>
-      <b>Email :</b> ${email}
+      <b>Email :</b> ${data.email}
       </p>
 
       ${phoneBlock}
 <p>
 <b>Message : </b>
 <br /><br />
-${message}
+${data.message}
 </p>
 `
 
@@ -64,17 +88,19 @@ ${message}
     await mail(params)
 
     success = true
-    data = new FormData()
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof ZodError) {
+      errorMessage = errorMessages.check
+      errors = error.flatten((issue) => issue.message).fieldErrors
+    } else if (error instanceof Error) {
       console.error(error.message)
-      errorMessage = error.message
+      errorMessage = errorMessages.general
     }
   }
 }
 ---
 
-<form class="form" id={slug} method="post">
+<form class="form" id={slug} method="post" novalidate>
   <h2 class="form__title">{title}</h2>
   {introduction && <p class="form__intro">{introduction}</p>}
   {errorMessage && <Callout type="error">{errorMessage}</Callout>}
@@ -88,7 +114,8 @@ ${message}
         name="name"
         type="text"
         placeholder="Jeane Dupont"
-        value={data.get('name') as string}
+        value={data?.name ? (data?.name as string) : null}
+        error={errors.name}
       />
 
       <Field
@@ -97,7 +124,8 @@ ${message}
         name="email"
         type="email"
         placeholder="jeanne.dupont@mail.fr"
-        value={data.get('email') as string}
+        value={data?.email ? (data?.email as string) : null}
+        error={errors.email}
       />
 
       <Field
@@ -106,7 +134,8 @@ ${message}
         name="phone"
         type="tel"
         placeholder="0612345678"
-        value={data.get('phone') as string}
+        value={data?.phone ? (data?.phone as string) : null}
+        error={errors.phone}
       />
 
       <Field
@@ -114,13 +143,16 @@ ${message}
         required={true}
         name="message"
         type="textarea"
-        value={data.get('message') as string}
+        value={data?.message ? (data?.message as string) : null}
         placeholder="Demande de renseignement, de devis..."
+        error={errors.message}
       />
 
       <HoneyPot />
 
-      <Action type="submit">{actionLabel}</Action>
+      <div class="form__footer">
+        <Action type="submit">{actionLabel}</Action>
+      </div>
     </div>
   )}
 </form>
@@ -144,6 +176,11 @@ ${message}
       flex-direction: column;
       gap: var(--space-24);
       align-items: stretch;
+    }
+
+    &__footer {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 </style>

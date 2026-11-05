@@ -23,12 +23,18 @@ importers:
       astro:
         specifier: ^7.1.6
         version: 7.3.5(@types/node@22.19.9)(sass@1.105.1)(tsx@4.22.4)(yaml@2.9.1)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       nodemailer:
         specifier: ^10.3.1
         version: 10.3.1
       sass:
         specifier: ^1.102.0
         version: 1.105.1
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
