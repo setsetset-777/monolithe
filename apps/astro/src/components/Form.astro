@@ -4,7 +4,7 @@ import Action from '@/components/Action.astro'
 import HoneyPot from '@/components/HoneyPot.astro'
 import Callout from '@/components/Callout.astro'
 import { honeyName } from '@/lib/mail'
-import { mail } from '@/lib/mail'
+import { mail, textToHtml } from '@/lib/mail'
 import type { Contact } from '@monolithe/api/types'
 import * as z from 'zod'
 import { ZodError } from 'astro:schema'
@@ -14,7 +14,7 @@ type Props = Contact.Form
 
 const { title, introduction, successMessage, actionLabel, slug, email: to } = Astro.props
 
-let errorMessage, success
+let errorMessage, success, data
 
 const errorMessages = {
   required: 'Ce champ est obligatoire.',
@@ -24,7 +24,42 @@ const errorMessages = {
   tooLong: 'Le champs entré est trop long',
 }
 
-let data
+const formatMailHtml = ({ name, email, phone, message }: z.infer<typeof schema>) => {
+  const phoneBlock = phone
+    ? `<p>
+    <b>Téléphone :</b> ${phone}
+    </p>`
+    : ''
+  return `<p>Chère Monolithe,</p>
+    <p>Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.</p>
+
+    <p>
+    <b>Nom :</b> ${name}
+    </p>
+
+    <p>
+    <b>Email :</b> ${email}
+    </p>
+
+    ${phoneBlock}
+<p>
+<b>Message : </b>
+<br /><br />
+${textToHtml(message)}
+</p>
+`
+}
+
+const formatMailText = ({ name, email, phone, message }: z.infer<typeof schema>) => {
+  const phoneBlock = phone ? `Téléphone : ${phone}\n\n` : ''
+  return `Chère Monolithe, \n\n
+Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.\n\n
+Nom : ${name}\n\n
+Email : ${email}\n\n
+${phoneBlock}
+Message : \n\n
+${message}`
+}
 
 const schema = z.object({
   name: z.string().min(1, errorMessages.required).max(100, errorMessages.tooLong),
@@ -52,37 +87,12 @@ if (Astro.request.method === 'POST') {
     data = Object.fromEntries(formData)
     data = schema.parse(data)
 
-    const from = data.email
-    const subject = 'Monolithe – Formulaire  de contact'
-    const phoneBlock = data.phone
-      ? `<p>
-      <b>Téléphone :</b> ${data.phone}
-      </p>`
-      : ''
-    const html = `<p>Chère Monolithe,</p>
-      <p>Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.</p>
-
-      <p>
-      <b>Nom :</b> ${data.name}
-      </p>
-
-      <p>
-      <b>Email :</b> ${data.email}
-      </p>
-
-      ${phoneBlock}
-<p>
-<b>Message : </b>
-<br /><br />
-${data.message}
-</p>
-`
-
     const params = {
-      from,
-      subject,
+      from: data.email,
+      subject: 'Monolithe – Formulaire  de contact',
       to,
-      html,
+      html: formatMailHtml(data),
+      text: formatMailText(data),
     }
 
     await mail(params)

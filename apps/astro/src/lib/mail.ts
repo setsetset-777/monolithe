@@ -32,6 +32,19 @@ const transporter = nodemailer.createTransport({
   greetingTimeout: 10000,
 })
 
+const escapeHtml = (str: string): string => {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+export const textToHtml = (str: string): string => {
+  return escapeHtml(str.replace(/\r\n?/g, '\n')).replace(/\n/g, '<br>')
+}
+
 export const mail = async ({
   from,
   to,
@@ -51,10 +64,10 @@ export const mail = async ({
 
   try {
     const params = {
-      from: process.env.FROM_EMAIL,
+      from: `"Monolithe." <${process.env.FROM_EMAIL}>`,
       replyTo: from,
-      to,
-      subject,
+      to: escapeHtml(to),
+      subject: subject.replace(/[\r\n]+/g, ' ').slice(0, 150),
       text,
       html,
     }
