@@ -3,111 +3,28 @@ import Field from '@/components/Field.astro'
 import Action from '@/components/Action.astro'
 import HoneyPot from '@/components/HoneyPot.astro'
 import Callout from '@/components/Callout.astro'
-import { honeyName } from '@/lib/mail'
-import { mail, textToHtml } from '@/lib/mail'
 import type { Contact } from '@monolithe/api/types'
-import * as z from 'zod'
-import { ZodError } from 'astro:schema'
-import { hit } from '@/lib/rateLimit'
+import type { Data } from '@/lib/mail'
 
-type Props = Contact.Form
-
-const { title, introduction, successMessage, actionLabel, slug, email: to } = Astro.props
-
-let errorMessage, success, data
-
-const errorMessages = {
-  required: 'Ce champ est obligatoire.',
-  email: 'Cet email est invalide.',
-  check: 'Vérifiez vos informations.',
-  general: "Une erreur est survenue. Merci d'essayer plus tard.",
-  tooLong: 'Le champs entré est trop long',
+type Props = Contact.Form & {
+  errorMessage?: string
+  success?: boolean
+  data: Data
+  errors: Record<string, string>
 }
 
-const formatMailHtml = ({ name, email, phone, message }: z.infer<typeof schema>) => {
-  const phoneBlock = phone
-    ? `<p>
-    <b>Téléphone :</b> ${phone}
-    </p>`
-    : ''
-  return `<p>Chère Monolithe,</p>
-    <p>Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.</p>
-
-    <p>
-    <b>Nom :</b> ${name}
-    </p>
-
-    <p>
-    <b>Email :</b> ${email}
-    </p>
-
-    ${phoneBlock}
-<p>
-<b>Message : </b>
-<br /><br />
-${textToHtml(message)}
-</p>
-`
-}
-
-const formatMailText = ({ name, email, phone, message }: z.infer<typeof schema>) => {
-  const phoneBlock = phone ? `Téléphone : ${phone}\n\n` : ''
-  return `Chère Monolithe, \n\n
-Quelqu'un vous a contacté via le formulaire de votre site. Vous pouvez envoyer un message directement en répondant à cet email.\n\n
-Nom : ${name}\n\n
-Email : ${email}\n\n
-${phoneBlock}
-Message : \n\n
-${message}`
-}
-
-const schema = z.object({
-  name: z.string().min(1, errorMessages.required).max(100, errorMessages.tooLong),
-  email: z.email(errorMessages.email).max(200, errorMessages.tooLong),
-  phone: z.string().max(20, errorMessages.tooLong).optional(),
-  message: z.string().min(1, errorMessages.required).max(10000, errorMessages.tooLong),
-})
-
-let errors: Record<string, string> = {}
-
-if (Astro.request.method === 'POST') {
-  if (!hit(`ip:${Astro.clientAddress}`, 3, 10 * 60_000) || !hit('global', 50, 60 * 60_000)) {
-    return new Response('Too many requests', { status: 429 })
-  }
-
-  try {
-    const formData = await Astro.request.formData()
-
-    const honey = formData.get(honeyName)
-
-    if (!(honey === null || honey === '' || typeof honey === 'undefined')) {
-      throw new Error(errorMessages.general)
-    }
-
-    data = Object.fromEntries(formData)
-    data = schema.parse(data)
-
-    const params = {
-      from: data.email,
-      subject: 'Monolithe – Formulaire  de contact',
-      to,
-      html: formatMailHtml(data),
-      text: formatMailText(data),
-    }
-
-    await mail(params)
-
-    success = true
-  } catch (error) {
-    if (error instanceof ZodError) {
-      errorMessage = errorMessages.check
-      errors = error.flatten((issue) => issue.message).fieldErrors
-    } else if (error instanceof Error) {
-      console.error(error.message)
-      errorMessage = errorMessages.general
-    }
-  }
-}
+const {
+  title,
+  introduction,
+  successMessage,
+  actionLabel,
+  slug,
+  email: to,
+  errorMessage,
+  success,
+  data,
+  errors,
+} = Astro.props
 ---
 
 <form class="form" id={slug} method="post" novalidate action={`#${slug}`}>
