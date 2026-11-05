@@ -3,10 +3,6 @@ import HeroView from '@/components/HeroPlant.astro'
 import Logo from '@/assets/svgs/logo.svg'
 import Separator from '@/components/Separator.astro'
 import Form from '@/components/Form.astro'
-import { ZodError } from 'astro:schema'
-import { hit } from '@/lib/rateLimit'
-import { honeyName, type Data } from '@/lib/mail'
-import { mail, schema, errorMessages, formatMailHtml, formatMailText } from '@/lib/mail'
 
 import type { Contact, Hero } from '@monolithe/api/types'
 
@@ -14,56 +10,15 @@ type Props = {
   hero: Hero
   info: Contact.Info
   form: Contact.Form
+  post: Contact.Post
 }
 
 const {
   hero,
   info: { logoCatch, name, place, email, phone },
   form,
+  post,
 } = Astro.props
-
-let errorMessage, success, data
-
-let errors: Record<string, string> = {}
-
-if (Astro.request.method === 'POST') {
-  if (!hit(`ip:${Astro.clientAddress}`, 3, 10 * 60_000) || !hit('global', 50, 60 * 60_000)) {
-    return new Response('Too many requests', { status: 429 })
-  }
-
-  try {
-    const formData = await Astro.request.formData()
-
-    const honey = formData.get(honeyName)
-
-    if (!(honey === null || honey === '' || typeof honey === 'undefined')) {
-      throw new Error(errorMessages.general)
-    }
-
-    data = Object.fromEntries(formData)
-    data = schema.parse(data)
-
-    const params = {
-      from: data.email,
-      subject: 'Monolithe – Formulaire  de contact',
-      to: form.email,
-      html: formatMailHtml(data),
-      text: formatMailText(data),
-    }
-
-    await mail(params)
-
-    success = true
-  } catch (error) {
-    if (error instanceof ZodError) {
-      errorMessage = errorMessages.check
-      errors = error.flatten((issue) => issue.message).fieldErrors
-    } else if (error instanceof Error) {
-      console.error(error.message)
-      errorMessage = errorMessages.general
-    }
-  }
-}
 ---
 
 <div class="page">
@@ -93,13 +48,7 @@ if (Astro.request.method === 'POST') {
     </section>
     <Separator />
     <section class="form">
-      <Form
-        {...form}
-        success={success}
-        errorMessage={errorMessage}
-        data={data as Data}
-        errors={errors}
-      />
+      <Form {...form} {...post} />
     </section>
   </div>
 </div>

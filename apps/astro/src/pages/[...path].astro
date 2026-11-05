@@ -5,7 +5,8 @@ import { getPage } from '@/lib/page'
 import NotFound from '@/layouts/NotFound.astro'
 import Error from '@/layouts/Error.astro'
 import Page from '@/layouts/Page.astro'
-
+import locales from '@monolithe/api/locales'
+import { actions, isInputError } from 'astro:actions'
 import type { PageData } from '@monolithe/api/types'
 
 const { path } = Astro.params
@@ -23,6 +24,24 @@ try {
 
 if (!page) {
   Astro.response.status = 404
+}
+
+if (page?.slug === 'pageContact') {
+  const result = Astro.getActionResult(actions.form)
+
+  const success = result?.data?.sent === true
+  const errorMessage = result?.error
+    ? isInputError(result.error)
+      ? locales.errors.check
+      : result.error.message
+    : undefined
+  const errors = result?.error && isInputError(result.error) ? result.error.fields : {}
+
+  page.data.post = {
+    success: success,
+    errorMessage: errorMessage,
+    errors: errors,
+  }
 }
 ---
 

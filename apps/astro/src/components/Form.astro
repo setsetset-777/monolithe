@@ -4,30 +4,15 @@ import Action from '@/components/Action.astro'
 import HoneyPot from '@/components/HoneyPot.astro'
 import Callout from '@/components/Callout.astro'
 import type { Contact } from '@monolithe/api/types'
-import type { Data } from '@/lib/mail'
+import { actions } from 'astro:actions'
 
-type Props = Contact.Form & {
-  errorMessage?: string
-  success?: boolean
-  data: Data
-  errors: Record<string, string>
-}
+type Props = Contact.Form & Contact.Post
 
-const {
-  title,
-  introduction,
-  successMessage,
-  actionLabel,
-  slug,
-  email: to,
-  errorMessage,
-  success,
-  data,
-  errors,
-} = Astro.props
+const { title, introduction, successMessage, actionLabel, slug, success, errorMessage, errors } =
+  Astro.props
 ---
 
-<form class="form" id={slug} method="post" novalidate action={`#${slug}`}>
+<form class="form" id={slug} method="post" novalidate action={actions.form}>
   <h2 class="form__title">{title}</h2>
   {introduction && <p class="form__intro">{introduction}</p>}
   {errorMessage && <Callout type="error">{errorMessage}</Callout>}
@@ -41,7 +26,6 @@ const {
         name="name"
         type="text"
         placeholder="Jeane Dupont"
-        value={data?.name ? (data?.name as string) : null}
         error={errors.name}
       />
 
@@ -51,7 +35,6 @@ const {
         name="email"
         type="email"
         placeholder="jeanne.dupont@mail.fr"
-        value={data?.email ? (data?.email as string) : null}
         error={errors.email}
       />
 
@@ -61,7 +44,6 @@ const {
         name="phone"
         type="tel"
         placeholder="0612345678"
-        value={data?.phone ? (data?.phone as string) : null}
         error={errors.phone}
       />
 
@@ -70,7 +52,6 @@ const {
         required={true}
         name="message"
         type="textarea"
-        value={data?.message ? (data?.message as string) : null}
         placeholder="Demande de renseignement, de devis..."
         error={errors.message}
       />

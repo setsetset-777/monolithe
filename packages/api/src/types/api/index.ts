@@ -6,6 +6,7 @@ export * from './services'
 export * from './projects'
 export * from './project'
 export * from './contact'
+export * from './form'
 
 import type { Home } from './home'
 import type { Presentation } from './presentation'

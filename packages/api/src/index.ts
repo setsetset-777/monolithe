@@ -1,6 +1,6 @@
 import { init, request, buildUrl } from './api'
 import { ProjectsSearchParams } from './schemas/projects-search-params'
-import type { General, PageData, Projects } from './types/api'
+import type { General, PageData, Projects, Form } from './types/api'
 import type { Payload } from './types/payload'
 
 init({
@@ -53,8 +53,20 @@ const projects = async (
   )
 }
 
+const form = async (locale?: Payload.Locale): Promise<Form.Response | null> => {
+  return request(
+    buildUrl({
+      slug: 'form',
+      params: {
+        locale,
+      },
+    }),
+  )
+}
+
 export default {
   general,
   page,
   projects,
+  form,
 }

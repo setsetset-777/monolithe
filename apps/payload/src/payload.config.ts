@@ -235,6 +235,40 @@ export default buildConfig({
       },
     },
     {
+      path: '/form',
+      method: 'get',
+      handler: async (req) => {
+        req.payload.logger.info('Hiiting endpoint /form')
+
+        try {
+          const pageContact = await req.payload.findGlobal({
+            slug: 'pageContact',
+            draft: false,
+          })
+
+          const data = {
+            email: pageContact.form.email,
+          }
+
+          return Response.json({
+            ok: true,
+            ...data,
+          })
+        } catch (e) {
+          console.error(`Error retrieving form data`, e)
+          return Response.json(
+            {
+              ok: false,
+              message: e instanceof Error ? e.message : String(e),
+            },
+            {
+              status: 500,
+            },
+          )
+        }
+      },
+    },
+    {
       path: '/regenerate-media',
       method: 'post',
       handler: async (req) => {

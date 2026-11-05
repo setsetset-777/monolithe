@@ -19,6 +19,10 @@
     "./config": {
       "default": "./src/config/index.ts",
       "types": "./src/config/index.ts"
+    },
+    "./locales": {
+      "default": "./src/locales/index.ts",
+      "types": "./src/locales/index.ts"
     }
   },
   "scripts": {
